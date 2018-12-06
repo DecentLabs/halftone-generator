@@ -107,13 +107,27 @@ export default {
 
         let x2, y2
 
-        if (this.deg === 45 || this.deg === -45) {
+        if (this.deg === 45) {
           let directions = [-1, 1]
           let cx = Math.round(Math.random())
           let cy = Math.round(Math.random())
           x2 = x + directions[cx]
           y2 = y + directions[cy]
         }
+        else if (this.deg < 45) {
+          let directions = [-1, 1]
+          // let cx = Math.round(Math.random())
+          let cy = Math.round(Math.random())
+          x2 = x
+          y2 = y + directions[cy]
+        }
+        if (this.deg > 45) {
+          let directions = [-1, 1]
+          let cx = Math.round(Math.random())
+          x2 = x + directions[cx]
+          y2 = y
+        }
+
 
         sketch.strokeWeight(0)
         sketch.ellipse(
