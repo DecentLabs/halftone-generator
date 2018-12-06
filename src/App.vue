@@ -1,21 +1,44 @@
 <template>
   <div id="app">
-    <attributes></attributes>
-    <preview :layout="'Brigi'"
+    <attributes @change="attributesChanged"
+                @gridChange="gridChange"
+                @paintChange="paintChange"></attributes>
+    <!-- <preview :layout="'Brigi'"
              :nodeNum="1000"
              :color="'black'"
-             :shapeSize="50"></preview>
+             :shapeSize="50"></preview> -->
+     <preview-new :attributes="attributes"
+                  :gridProp="grid"
+                  :paint="paint"></preview-new>
   </div>
 </template>
 
 <script>
 
 import attributes from './components/attributes.vue'
-import preview from './components/preview.vue'
+import previewNew from './components/preview-new.vue'
 
 export default {
   name: 'app',
-  components: { attributes, preview }
+  components: { attributes, previewNew },
+  data: function () {
+    return {
+      attributes: null,
+      grid: null,
+      paint: null
+    }
+  },
+  methods: {
+    attributesChanged (e) {
+      this.attributes = e
+    },
+    gridChange (e) {
+      this.grid = e
+    },
+    paintChange (e) {
+      this.paint = e
+    }
+  }
 }
 </script>
 
@@ -35,6 +58,5 @@ html, body, #app {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
