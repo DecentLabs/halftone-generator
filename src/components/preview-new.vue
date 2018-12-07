@@ -2,7 +2,8 @@
   <div class="preview">
     <vue-p5
         @setup="setup"
-        @draw="draw">
+        @draw="draw"
+        @preload="preload">
     </vue-p5>
   </div>
 </template>
@@ -28,7 +29,8 @@ export default {
       gridType: 'beer',
       transformedData: {},
       loop: true,
-      redraw: null
+      redraw: null,
+      baseUrl: process.env.BASE_URL
     }
   },
   mounted () {
@@ -78,6 +80,9 @@ export default {
       this.transformGrid()
       this.select(this.number)
     },
+    preload(sketch) {
+      this.image = sketch.loadImage('./assets/heart2.png')
+    },
     setup (sketch) {
       this.redraw = function () {
         sketch.redraw()
@@ -90,7 +95,7 @@ export default {
       }
     },
     draw (sketch) {
-      sketch.background('white')
+      sketch.background(this.image)
       this.drawGrid(sketch)
       this.findPairs(sketch)
     },
@@ -278,5 +283,10 @@ export default {
   .preview {
     width: 100%;
     height: 80%;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
   }
 </style>
