@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="preview">
     <vue-p5
-        @sketch="sketch"
         @setup="setup"
         @draw="draw">
     </vue-p5>
@@ -25,11 +24,11 @@ export default {
       number: 10,
       marginLeft: null,
       marginTop: 100,
-      deg: 45,
-      selected: {
-        x: [],
-        y: []
-      }
+      direction: 45,
+      gridType: 'beer',
+      transformedData: {},
+      loop: true,
+      redraw: null
     }
   },
   mounted () {
@@ -38,9 +37,13 @@ export default {
   watch: {
     attributes: {
       handler (e) {
-        this.deg = e.degree
+        this.direction = e.degree
         this.step = e.distance
         this.size = e.size
+        if (!this.loop && this.redraw) {
+          this.init()
+          this.redraw()
+        }
       },
       deep: true
     },
@@ -48,13 +51,19 @@ export default {
       handler (e) {
         this.gridSize = e
         this.init()
+        if (!this.loop && this.redraw) {
+          this.redraw()
+        }
       },
       deep: true
     },
     paint: {
       handler (e) {
         this.number = e
-        this.select(this.number)
+        this.init()
+        if (!this.loop && this.redraw) {
+          this.redraw()
+        }
       },
       deep: true
     }
@@ -66,25 +75,57 @@ export default {
       this.marginLeft = (this.canvasSize - width) / 2
 
       this.generateGrid()
+      this.transformGrid()
       this.select(this.number)
-      console.log(this.selected, 's');
-    },
-    sketch (sketch) {
-      sketch.draw = () => {
-        sketch.background('white')
-      };
     },
     setup (sketch) {
+      this.redraw = function () {
+        sketch.redraw()
+      }
       sketch.createCanvas(this.canvasSize, this.canvasSize)
-      // sketch.noLoop()
-      sketch.frameRate(3)
+      if (this.loop) {
+        sketch.frameRate(3)
+      } else {
+        sketch.noLoop()
+      }
     },
     draw (sketch) {
+      sketch.background('white')
       this.drawGrid(sketch)
       this.findPairs(sketch)
     },
     generateGrid() {
       this.grid = []
+      if (this.gridType === 'simple') {
+        this.simpleGrid()
+      } else if (this.gridType === 'beer') {
+        this.beerGrid()
+      }
+    },
+    beerGrid () {
+      this.grid = [
+        [0, 0, 3, 0, 3, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 3, 0, 3, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 3, 0, 3, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0],
+        [0, 0, 3, 0, 3, 0, 0],
+        [0, 3, 0, 1, 0, 3, 0],
+        [3, 0, 1, 0, 1, 0, 3],
+        [0, 1, 0, 1, 0, 1, 0],
+        [3, 0, 1, 0, 1, 0, 3],
+        [0, 1, 0, 1, 0, 1, 0],
+        [3, 0, 1, 0, 1, 0, 3],
+        [0, 1, 0, 1, 0, 1, 0],
+        [3, 0, 1, 0, 1, 0, 3],
+        [0, 1, 0, 1, 0, 1, 0],
+        [3, 0, 1, 0, 1, 0, 3],
+        [0, 1, 0, 1, 0, 1, 0],
+        [3, 0, 3, 0, 3, 0, 3],
+      ]
+    },
+    simpleGrid () {
       for (let y = 0; y < this.gridSize[1]; y++) {
         let newLine = []
         let evenY = y % 2 === 0
@@ -100,28 +141,44 @@ export default {
         this.grid.push(newLine)
       }
     },
-    findPairs(sketch) {
-      for (let i = 0; i < this.selected.x.length; i++) {
-        let x = this.selected.x[i]
-        let y = this.selected.y[i]
+    transformGrid () {
+      this.transformedData = {
+        0: [],
+        1: [],
+        2: [],
+        3: []
+      }
+
+      this.grid.forEach((line, yi) => {
+        line.forEach((item, xi) => {
+          this.transformedData[item].push({
+            x: xi,
+            y: yi
+          })
+        })
+      })
+    },
+    findPairs (sketch) {
+      for (let i = 0; i < this.transformedData['2'].length; i++) {
+        let x = this.transformedData['2'][i].x
+        let y = this.transformedData['2'][i].y
 
         let x2, y2
 
-        if (this.deg === 45) {
+        if (this.direction === 45) {
           let directions = [-1, 1]
           let cx = Math.round(Math.random())
           let cy = Math.round(Math.random())
           x2 = x + directions[cx]
           y2 = y + directions[cy]
         }
-        else if (this.deg < 45) {
+        else if (this.direction < 45) {
           let directions = [-1, 1]
-          // let cx = Math.round(Math.random())
           let cy = Math.round(Math.random())
           x2 = x
           y2 = y + directions[cy]
         }
-        if (this.deg > 45) {
+        if (this.direction > 45) {
           let directions = [-1, 1]
           let cx = Math.round(Math.random())
           x2 = x + directions[cx]
@@ -130,6 +187,12 @@ export default {
 
 
         sketch.strokeWeight(0)
+        sketch.ellipse(
+          x * this.step + this.marginLeft,
+          y * this.step + this.marginTop,
+          this.size * 2,
+          this.size * 2
+        )
         sketch.ellipse(
           x2 * this.step + this.marginLeft,
           y2 * this.step + this.marginTop,
@@ -149,51 +212,64 @@ export default {
     drawGrid (sketch) {
       sketch.strokeWeight(0)
 
-      this.grid.forEach((line, i) => {
-        line.forEach((p, pi) => {
-          let hitY = this.selected.y.indexOf(i)
-          let hitX = hitY !== -1 ? this.selected.x[hitY] === pi : false
-          if (p === 1) {
-            let size = Math.random() * (this.size * 2-5) + 5
-            sketch.fill('black')
-            sketch.ellipse(
-              pi * this.step + this.marginLeft,
-              i * this.step + this.marginTop,
-              size,
-              size
-            )
-          }
+      this.transformedData['1'].forEach((dot) => {
+        let size = Math.random() * (this.size * 2-5) + 5
+        sketch.fill('black')
+        sketch.ellipse(
+          dot.x * this.step + this.marginLeft,
+          dot.y * this.step + this.marginTop,
+          size,
+          size
+        )
+      })
 
-          if (hitX && hitY !== -1) {
-            sketch.ellipse(
-              pi * this.step + this.marginLeft,
-              i * this.step + this.marginTop,
-              this.size * 2,
-              this.size * 2
-            )
-          }
-
-        })
+      this.transformedData['3'].forEach((dot) => {
+        sketch.fill('black')
+        sketch.ellipse(
+          dot.x * this.step + this.marginLeft,
+          dot.y * this.step + this.marginTop,
+          this.size * 2,
+          this.size * 2
+        )
       })
     },
-    select (number, cb) {
-      if (!cb) {
-        this.selected = { x: [], y: [] } }
-      for (let i = 0; i< number; i++) {
-        let y = Math.round(Math.random() * (this.grid.length - 1))
-        let x = Math.round(Math.random() * (this.grid[0].length - 1))
+    select (number) {
+      let selected = []
+      for (let n = 0; n < number; n++) {
+        let length = this.transformedData['1'].length-1
+        let index = Math.round(Math.random() * length)
+        let item = this.transformedData['1'][index]
 
-        let valid = this.grid[y][x] === 1
-        if (!valid) {
-          this.select(1, true)
-        } else {
-          this.selected.x.push(x)
-          this.selected.y.push(y)
+        let included = selected.find((saved) => {
+          return saved.x === item.x && saved.y === item.y
+        })
+        if (!included) {
+          selected.push(item)
+          this.transformedData['2'].push(item)
+          this.transformedData['1'].splice(index, 1)
+          this.grid[item.y][item.x] = 2
         }
       }
-      console.log(this.selected, 'selected');
+      return selected
     }
-
+    // select (number, cb) {
+    //   if (!cb) {
+    //     this.selected = { x: [], y: [] } }
+    //   for (let i = 0; i< number; i++) {
+    //     let y = Math.round(Math.random() * (this.grid.length - 1))
+    //     let x = Math.round(Math.random() * (this.grid[0].length - 1))
+    //
+    //     let valid = this.grid[y][x] === 1
+    //     if (!valid) {
+    //       this.select(1, true)
+    //     } else {
+    //       this.selected.x.push(x)
+    //       this.selected.y.push(y)
+    //
+    //       this.grid[y][x] = 2
+    //     }
+    //   }
+    // }
   }
 }
 </script>
