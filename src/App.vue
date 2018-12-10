@@ -1,44 +1,15 @@
 <template>
   <div id="app">
-    <attributes @change="attributesChanged"
-                @gridChange="gridChange"
-                @paintChange="paintChange"></attributes>
-    <!-- <preview :layout="'Brigi'"
-             :nodeNum="1000"
-             :color="'black'"
-             :shapeSize="50"></preview> -->
-     <preview-new :attributes="attributes"
-                  :gridProp="grid"
-                  :paint="paint"></preview-new>
+    <generator></generator>
   </div>
 </template>
 
 <script>
-
-import attributes from './components/attributes.vue'
-import previewNew from './components/preview-new.vue'
+import generator from './components/generator.vue'
 
 export default {
   name: 'app',
-  components: { attributes, previewNew },
-  data: function () {
-    return {
-      attributes: null,
-      grid: null,
-      paint: null
-    }
-  },
-  methods: {
-    attributesChanged (e) {
-      this.attributes = e
-    },
-    gridChange (e) {
-      this.grid = e
-    },
-    paintChange (e) {
-      this.paint = e
-    }
-  }
+  components: { generator },
 }
 </script>
 
