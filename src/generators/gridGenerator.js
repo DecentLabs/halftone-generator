@@ -26,7 +26,7 @@ function simpleGrid (sizeX, sizeY) {
 function imageGrid (url, resolution) {
   return new Promise((resolve, reject) => {
     const image = new Image()
-    image.src = './assets/heart3.jpg'
+    image.src = './assets/beer.png'
 
     image.onload = function() {
       let canvas = document.createElement('canvas')
@@ -59,7 +59,7 @@ function imageGrid (url, resolution) {
           if (colorResult.opacity < 150) {
             line.push(0)
           } else {
-            if (colorResult.color < 210) {
+            if (colorResult.color < 220) {
               line.push(1)
             } else {
               line.push(0)
@@ -77,24 +77,24 @@ function imageGrid (url, resolution) {
   })
 }
 
-function edgeDetection (line, even) {
+function edgeDetection (line, yEven) {
   let newLine = []
-  
+
   for (let i = 0; i<line.length; i++) {
 
     if (line[i] === 1) {
       let first = line[i] > line[i-1]
       let last = line[i] > line[i+1]
+      let xEven = i % 2 === 0
 
-      if (first || last) {
-        newLine.push(2)
-      } else {
-        let xEven = i % 2 === 0
-        if ((xEven && even) || (!xEven && !even)) {
-          newLine.push(1)
+      if ((xEven && yEven) || (!xEven && !yEven)) {
+        if (first || last) {
+          newLine.push(2)
         } else {
-          newLine.push(0)
+          newLine.push(1)
         }
+      } else {
+        newLine.push(0)
       }
     } else {
       newLine.push(line[i])
