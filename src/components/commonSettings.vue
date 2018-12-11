@@ -42,6 +42,7 @@ export default {
     radius: {
       set(val) {
         this.$store.commit('updateRadius', val)
+        this.$store.commit('redraw')
       },
       get() {
         return this.$store.state.radius
@@ -50,6 +51,7 @@ export default {
     paintNum: {
       set(val) {
         this.$store.commit('updatePaintNum', val)
+        this.$store.commit('redraw')
       },
       get() {
         return this.$store.state.paintNum
@@ -58,6 +60,7 @@ export default {
     direction: {
       set(val) {
         this.$store.commit('updateDirection', val)
+        this.$store.commit('redraw')
       },
       get() {
         return this.$store.state.direction

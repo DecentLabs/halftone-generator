@@ -30,6 +30,7 @@ export default {
     imageRes: {
       set(val) {
         this.$store.commit('updateImageRes', val)
+        this.$store.dispatch('generateGrid')
       },
       get () {
         return this.$store.state.imageRes

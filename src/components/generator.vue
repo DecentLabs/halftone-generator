@@ -8,7 +8,7 @@
     </div>
 
     <form>
-      <div class="settings type-settings" v-if="generatorType && settings">
+      <div class="settings type-settings" v-if="generatorType">
         <image-settings v-if="generatorType === 'image'"></image-settings>
         <grid-settings v-if="generatorType === 'grid'"></grid-settings>
         <template-settings v-if="generatorType === 'template'"></template-settings>
@@ -42,10 +42,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('generateGrid')
-  },
-  data: function () {
-    return {
-    }
+    this.$store.dispatch('transformData')
   },
   computed: {
     loop: {
@@ -59,14 +56,12 @@ export default {
     generatorType() {
       return this.$store.getters.getGeneratorType
     },
-    commonSettings() {
-      return this.$store.getters.getCommonSettings
-    },
-    settings() {
-      return this.$store.getters.getSettings
-    }
-  },
-  methods: {
+    // commonSettings() {
+    //   return this.$store.getters.getCommonSettings
+    // },
+    // settings() {
+    //   return this.$store.getters.getSettings
+    // }
   }
 }
 </script>

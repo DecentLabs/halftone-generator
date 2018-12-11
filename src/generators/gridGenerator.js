@@ -1,25 +1,5 @@
 import TEMPLATES from './../templates'
 
-function gridGenerator (generatorType, settings) {
-
-  this.grid = []
-
-  if (generatorType === 'grid') {
-    this.grid = simpleGrid(settings.gridSize.x, settings.gridSize.y)
-  } else if (generatorType === 'template') {
-    this.grid = templateGrid(settings.templateName)
-  } else if (generatorType === 'image') {
-    this.grid = imageGrid(settings.imageUrl, settings.imageRes)
-  }
-
-  return this.grid
-}
-
-
-function imageGrid (url, res) {
-  return []
-}
-
 function templateGrid (name) {
   return TEMPLATES[name]
 }
@@ -43,4 +23,110 @@ function simpleGrid (sizeX, sizeY) {
   return grid
 }
 
-export default gridGenerator
+function imageGrid (url, resolution) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.src = './assets/heart3.jpg'
+
+    image.onload = function() {
+      let canvas = document.createElement('canvas')
+      canvas.width = this.naturalWidth
+      canvas.height = this.naturalHeight
+
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(this, 0, 0)
+
+      let grid = []
+      let counter = 0
+
+      for (let i = 0; i < this.height; i += resolution) {
+        let line = []
+        counter += 1
+        for (let j = 0; j < this.width; j += resolution) {
+          let resolutionX = resolution
+          let resolutionY = resolution
+
+          if (j + resolution > this.width) {
+            resolutionX = resolution - ((j+resolution) - this.width)
+          }
+          if (i + resolutionY > this.height) {
+            resolutionY = resolution - ((i+resolution) - this.height)
+          }
+
+          let imageData = ctx.getImageData(j, i, resolutionX, resolutionY)
+          let colorResult = extractColorFromImage(imageData)
+
+          if (colorResult.opacity < 150) {
+            line.push(0)
+          } else {
+            if (colorResult.color < 210) {
+              line.push(1)
+            } else {
+              line.push(0)
+            }
+          }
+        }
+
+        let even = counter % 2 === 0
+        let tLine = edgeDetection(line, even)
+
+        grid.push(tLine)
+      }
+      return resolve(grid)
+    }
+  })
+}
+
+function edgeDetection (line, even) {
+  let newLine = []
+  
+  for (let i = 0; i<line.length; i++) {
+
+    if (line[i] === 1) {
+      let first = line[i] > line[i-1]
+      let last = line[i] > line[i+1]
+
+      if (first || last) {
+        newLine.push(2)
+      } else {
+        let xEven = i % 2 === 0
+        if ((xEven && even) || (!xEven && !even)) {
+          newLine.push(1)
+        } else {
+          newLine.push(0)
+        }
+      }
+    } else {
+      newLine.push(line[i])
+    }
+  }
+  return newLine
+}
+
+function extractColorFromImage (imageData) {
+  if (imageData.data && imageData.data.length) {
+    const d = imageData.data
+    const q = d.length/4
+    let color = 0
+    let opacity = 0
+
+    for (let i=0; i<d.length; i+=4) {
+      color += d[i] + d[i+1] + d[i+2]
+      opacity += d[i+3]
+    }
+
+    return {
+      color: color / (q*3),
+      opacity: opacity / q
+    }
+  }
+  else {
+    return { color: 255, opacity: 0 }
+  }
+}
+
+export default {
+  imageGrid,
+  templateGrid,
+  simpleGrid
+}

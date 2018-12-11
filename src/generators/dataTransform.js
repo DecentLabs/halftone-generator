@@ -22,7 +22,7 @@ function dataTransform (grid, paintNum, radius, direction) {
 }
 
 function selectPaints (number, data, direction) {
-  number = number <= data['1'].length ? number : length
+  number = number <= data['1'].length ? number : data['1'].length
 
   let directions = [-1, 1]
 

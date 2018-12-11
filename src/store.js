@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import generators from './generators'
+import gridGenerator from './generators/gridGenerator.js'
+import dataTransform from './generators/dataTransform.js'
 
 Vue.use(Vuex)
 
@@ -22,64 +23,32 @@ const TEMPLATES = {
 
 export default new Vuex.Store({
   state: {
-    generatorType: GENERATOR_TYPES.GRID,
+    generatorType: GENERATOR_TYPES.IMAGE,
     templateName: TEMPLATES.BEER,
-    gridSize: {x: 10, y: 10},
+    gridSize: {x: 5, y: 5},
     imageUrl: './assets/heart2.png',
-    imageRes: 10,
+    imageRes: 20,
     distance: 30,
     direction: DIRECTIONS.DIAGONAL,
     radius: 10,
     paintNum: 10,
     grid: [],
     transformedData: null,
-    loop: false
+    loop: false,
+    update: false
   },
   getters: {
     getGeneratorType(state) {
       return state.generatorType
-    },
-    getSettings(state, getters) {
-      if (state.generatorType === GENERATOR_TYPES.GRID) {
-        return getters.getGridSettings
-      } else if (state.generatorType === GENERATOR_TYPES.IMAGE) {
-        return getters.getImageSettings
-      } else if (state.generatorType === GENERATOR_TYPES.TEMPLATE) {
-        return getters.getTemplateSettings
-      }
-    },
-    getCommonSettings(state) {
-      return {
-        distance: state.distance,
-        direction: state.direction,
-        radius: state.radius,
-        paintNum: state.paintNum
-      }
-    },
-    getImageSettings(state) {
-      return {
-        url: state.imageUrl,
-        resolution: state.imageRes
-      }
-    },
-    getTemplateSettings(state) {
-      return {
-        templateName: state.templateName
-      }
-    },
-    getGridSettings(state) {
-      return {
-        gridSize: state.gridSize
-      }
-    },
-    getGrid(state) {
-      return state.grid
     },
     getTransformedData(state) {
       return state.transformedData
     }
   },
   mutations: {
+    redraw(state) {
+      state.update = true
+    },
     updateGeneratorType (state, value) {
       state.generatorType = value
     },
@@ -118,23 +87,42 @@ export default new Vuex.Store({
     updateGrid (state, value) {
       state.grid = value
     },
-    transformData (state, value) {
+    updateTransformedData (state, value) {
       state.transformedData = value
     }
   },
   actions: {
     generateGrid(context) {
-      let grid = generators.gridGenerator(context.getters.getGeneratorType, context.getters.getSettings)
-      context.commit('updateGrid', grid)
-      if(!context.state.loop) {
-        let transformedData = generators.dataTransform(
-          grid,
-          context.state.paintNum,
-          context.state.radius,
-          context.state.direction
-        )
-        context.commit('transformData', transformedData)
+      let generatorType = context.state.generatorType
+
+      if (generatorType === 'image') {
+        gridGenerator.imageGrid(context.state.imageUrl, context.state.imageRes).then((res) => {
+          context.commit('updateGrid', res)
+          context.commit('redraw')
+        })
+      } else {
+        let grid = []
+
+        if (generatorType === 'grid') {
+          grid = gridGenerator.simpleGrid(context.state.gridSize.x, context.state.gridSize.y)
+        } else if (generatorType === 'template') {
+          grid = gridGenerator.templateGrid(context.state.templateName)
+        }
+
+        context.commit('updateGrid', grid)
+        context.commit('redraw')
       }
+    },
+    transformData(context) {
+      context.state.update = false
+
+      let transformedData = dataTransform(
+        context.state.grid,
+        context.state.paintNum,
+        context.state.radius,
+        context.state.direction
+      )
+      context.commit('updateTransformedData', transformedData)
     }
   }
 })
