@@ -3,17 +3,17 @@
 
       <div class="input">
         <label for="distance">Distance</label>
-        <input name="distance" v-model.number="distance">
+        <input type="number" name="distance" v-model.number="distance">
       </div>
 
       <div class="input">
         <label for="radius">Average point radius</label>
-        <input name="radius" v-model.number="radius">
+        <input type="number" name="radius" v-model.number="radius">
       </div>
 
       <div class="input">
         <label for="paintnum">Number of paints</label>
-        <input name="paintnum" v-model.number="paintNum">
+        <input type="number" name="paintnum" v-model.number="paintNum">
       </div>
 
       <div class="input">

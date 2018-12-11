@@ -55,19 +55,23 @@ export default {
       sketch.background('white')
 
       if(this.$store.state.loop) {
-        let transformedData = generators.dataTransform(this.grid, this.$store.state.paintNum, this.$store.state.radius)
+        let transformedData = generators.dataTransform(
+          this.grid,
+          this.$store.state.paintNum,
+          this.$store.state.radius,
+          this.$store.state.direction
+        )
         this.$store.commit('transformData', transformedData)
       }
 
       if (this.transformedData) {
         this.drawGrid(sketch)
-      } else {
-
       }
     },
     drawGrid (sketch) {
       sketch.strokeWeight(0)
-      sketch.fill('black')
+      sketch.fill('pink')
+      sketch.stroke('pink')
 
       this.transformedData['1'].forEach((dot) => {
         sketch.ellipse(
@@ -82,74 +86,27 @@ export default {
         sketch.ellipse(
           dot.x * this.cfg.distance,
           dot.y * this.cfg.distance,
-          this.cfg.radius,
-          this.cfg.radius
+          this.cfg.radius * 2,
+          this.cfg.radius * 2
         )
       })
 
       this.transformedData['3'].forEach((dot) => {
-        sketch.fill('pink')
-        sketch.ellipse(
-          dot.x * this.cfg.distance,
-          dot.y * this.cfg.distance,
-          this.cfg.radius,
-          this.cfg.radius
-        )
+        sketch.strokeWeight(0)
+
+        let x = dot.x * this.cfg.distance
+        let y = dot.y * this.cfg.distance
+        let x2 = dot.pair.x * this.cfg.distance
+        let y2 = dot.pair.y * this.cfg.distance
+        let size = this.cfg.radius
+
+        sketch.ellipse( x, y, size, size)
+        sketch.ellipse( x2, y2, size, size)
+
+        sketch.strokeWeight(size * 2.3)
+        sketch.line(x, y, x2, y2)
       })
-    },
-
-    // findPairs (sketch) {
-    //   for (let i = 0; i < this.transformedData['2'].length; i++) {
-    //     let x = this.transformedData['2'][i].x
-    //     let y = this.transformedData['2'][i].y
-    //
-    //     let x2, y2
-    //
-    //     if (this.direction === 45) {
-    //       let directions = [-1, 1]
-    //       let cx = Math.round(Math.random())
-    //       let cy = Math.round(Math.random())
-    //       x2 = x + directions[cx]
-    //       y2 = y + directions[cy]
-    //     }
-    //     else if (this.direction < 45) {
-    //       let directions = [-1, 1]
-    //       let cy = Math.round(Math.random())
-    //       x2 = x
-    //       y2 = y + directions[cy]
-    //     }
-    //     if (this.direction > 45) {
-    //       let directions = [-1, 1]
-    //       let cx = Math.round(Math.random())
-    //       x2 = x + directions[cx]
-    //       y2 = y
-    //     }
-    //
-    //
-    //     sketch.strokeWeight(0)
-    //     sketch.ellipse(
-    //       x * this.step + this.marginLeft,
-    //       y * this.step + this.marginTop,
-    //       this.size * 2,
-    //       this.size * 2
-    //     )
-    //     sketch.ellipse(
-    //       x2 * this.step + this.marginLeft,
-    //       y2 * this.step + this.marginTop,
-    //       this.size * 2,
-    //       this.size * 2
-    //     )
-    //
-    //     let px = (x * this.step + this.marginLeft)
-    //     let px2 = (x2 * this.step + this.marginLeft)
-    //     let py = (y * this.step + this.marginTop)
-    //     let py2 = (y2 * this.step + this.marginTop)
-    //
-    //     sketch.strokeWeight(this.size * 2.3)
-    //     sketch.line(px, py, px2, py2)
-    //   }
-    // },
-
+    }
   }
 }
 </script>

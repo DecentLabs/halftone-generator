@@ -127,7 +127,12 @@ export default new Vuex.Store({
       let grid = generators.gridGenerator(context.getters.getGeneratorType, context.getters.getSettings)
       context.commit('updateGrid', grid)
       if(!context.state.loop) {
-        let transformedData = generators.dataTransform(grid, context.state.paintNum, context.state.radius)
+        let transformedData = generators.dataTransform(
+          grid,
+          context.state.paintNum,
+          context.state.radius,
+          context.state.direction
+        )
         context.commit('transformData', transformedData)
       }
     }
