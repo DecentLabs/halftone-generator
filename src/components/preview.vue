@@ -10,6 +10,7 @@
 
 <script>
 import VueP5 from 'vue-p5'
+import generators from './../generators'
 
 export default {
   components: { 'vue-p5': VueP5 },
@@ -48,18 +49,21 @@ export default {
       this.init(sketch)
 
       sketch.createCanvas(this.width, this.height)
-      sketch.frameRate(1)
-      // sketch.noLoop()
+      sketch.frameRate(3)
     },
     draw (sketch) {
       sketch.background('white')
+
+      if(this.$store.state.loop) {
+        let transformedData = generators.dataTransform(this.grid, this.$store.state.paintNum, this.$store.state.radius)
+        this.$store.commit('transformData', transformedData)
+      }
 
       if (this.transformedData) {
         this.drawGrid(sketch)
       } else {
 
       }
-      // this.findPairs(sketch)
     },
     drawGrid (sketch) {
       sketch.strokeWeight(0)

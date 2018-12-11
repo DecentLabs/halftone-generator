@@ -2,6 +2,11 @@
   <div id="generator">
     <generator-type-selector v-if="generatorType"></generator-type-selector>
 
+    <div>
+      <label for="loop">loop</label>
+      <input type="checkbox" id="loop" v-model="loop">
+    </div>
+
     <form>
       <div class="settings type-settings" v-if="generatorType && settings">
         <image-settings v-if="generatorType === 'image'"></image-settings>
@@ -43,6 +48,14 @@ export default {
     }
   },
   computed: {
+    loop: {
+      set(val) {
+        this.$store.commit('updateLoop', val)
+      },
+      get() {
+        return this.$store.state.loop
+      }
+    },
     generatorType() {
       return this.$store.getters.getGeneratorType
     },

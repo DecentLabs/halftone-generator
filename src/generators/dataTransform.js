@@ -32,9 +32,11 @@ function selectPaints (number, data) {
       data['1'].splice(index, 1)
     }
   }
-
-  console.log(data);
   return data
+}
+
+function findPairs() {
+  
 }
 
 export default dataTransform

@@ -32,7 +32,8 @@ export default new Vuex.Store({
     radius: 10,
     paintNum: 10,
     grid: [],
-    transformedData: null
+    transformedData: null,
+    loop: false
   },
   getters: {
     getGeneratorType(state) {
@@ -82,6 +83,9 @@ export default new Vuex.Store({
     updateGeneratorType (state, value) {
       state.generatorType = value
     },
+    updateLoop (state, value) {
+      state.loop = value
+    },
     updateTemplateName (state, value) {
       state.templateName = value
     },
@@ -122,8 +126,10 @@ export default new Vuex.Store({
     generateGrid(context) {
       let grid = generators.gridGenerator(context.getters.getGeneratorType, context.getters.getSettings)
       context.commit('updateGrid', grid)
-      let transformedData = generators.dataTransform(grid, context.state.paintNum, context.state.radius)
-      context.commit('transformData', transformedData)
+      if(!context.state.loop) {
+        let transformedData = generators.dataTransform(grid, context.state.paintNum, context.state.radius)
+        context.commit('transformData', transformedData)
+      }
     }
   }
 })
