@@ -21,7 +21,7 @@ export default {
     imageUrl: {
       set(val) {
         this.$store.commit('updateImageUrl', val)
-        this.$store.dispatch('generateGrid')
+        // this.$store.dispatch('generateGrid')
       },
       get () {
         return this.$store.state.imageUrl
@@ -30,7 +30,7 @@ export default {
     imageRes: {
       set(val) {
         this.$store.commit('updateImageRes', val)
-        this.$store.dispatch('generateGrid')
+        // this.$store.dispatch('generateGrid')
       },
       get () {
         return this.$store.state.imageRes

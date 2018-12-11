@@ -12,6 +12,7 @@
         <image-settings v-if="generatorType === 'image'"></image-settings>
         <grid-settings v-if="generatorType === 'grid'"></grid-settings>
         <template-settings v-if="generatorType === 'template'"></template-settings>
+        <button type="button" name="button" @click="update">update</button>
       </div>
       <common-settings class="settings common-settings"></common-settings>
     </form>
@@ -55,13 +56,12 @@ export default {
     },
     generatorType() {
       return this.$store.getters.getGeneratorType
-    },
-    // commonSettings() {
-    //   return this.$store.getters.getCommonSettings
-    // },
-    // settings() {
-    //   return this.$store.getters.getSettings
-    // }
+    }
+  },
+  methods: {
+    update() {
+      this.$store.dispatch('generateGrid')
+    }
   }
 }
 </script>
