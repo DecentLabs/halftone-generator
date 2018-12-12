@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="preview">
     <vue-p5
+        class="p5"
         @setup="setup"
         @draw="draw">
     </vue-p5>
@@ -15,8 +16,7 @@ export default {
   components: { 'vue-p5': VueP5 },
   data: function () {
     return {
-      width: null,
-      height: null
+      resizeCanvas: null
     }
   },
   computed: {
@@ -31,13 +31,32 @@ export default {
     },
     update () {
       return this.$store.state.update
+    },
+    frameRate () {
+      return this.$store.state.frameRate
+    },
+    grid () {
+      return this.$store.state.grid
+    },
+    canvasHeight () {
+      return (this.grid.length-1) * this.distance + this.margin
+    },
+    canvasWidth () {
+      return (this.grid[0].length-1) * this.distance + this.margin
+    },
+    margin () {
+      return this.distance * 4
     }
   },
   watch: {
     update(val) {
       if (val) {
         this.redraw()
+        this.resizeCanvas(this.canvasWidth, this.canvasHeight)
       }
+    },
+    distance(val) {
+      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
     }
   },
   methods: {
@@ -45,11 +64,16 @@ export default {
       this.$store.dispatch('transformData')
     },
     setup (sketch) {
-      this.height = window.innerHeight * 0.8
-      this.width = window.innerWidth
-      sketch.createCanvas(this.width, this.height)
+      this.resizeCanvas = function (width, height) {
+        sketch.resizeCanvas(width, height)
+      }
 
-      sketch.frameRate(5)
+      sketch.createCanvas(this.canvasWidth, this.canvasHeight)
+      sketch.frameRate(this.frameRate)
+
+      let canvas = document.querySelector('canvas.p5Canvas')
+      canvas.style.border = '1px solid rgb(220, 220, 220)'
+
     },
     draw (sketch) {
       sketch.background('white')
@@ -68,8 +92,8 @@ export default {
 
       this.transformedData['1'].forEach((dot) => {
         sketch.ellipse(
-          dot.x * this.distance,
-          dot.y * this.distance,
+          dot.x * this.distance + this.margin/2,
+          dot.y * this.distance + this.margin/2,
           dot.size,
           dot.size
         )
@@ -77,8 +101,8 @@ export default {
 
       this.transformedData['2'].forEach((dot) => {
         sketch.ellipse(
-          dot.x * this.distance,
-          dot.y * this.distance,
+          dot.x * this.distance + this.margin/2,
+          dot.y * this.distance + this.margin/2,
           this.radius * 2,
           this.radius * 2
         )
@@ -87,10 +111,10 @@ export default {
       this.transformedData['3'].forEach((dot) => {
         sketch.strokeWeight(0)
 
-        let x = dot.x * this.distance
-        let y = dot.y * this.distance
-        let x2 = dot.pair.x * this.distance
-        let y2 = dot.pair.y * this.distance
+        let x = dot.x * this.distance + this.margin/2
+        let y = dot.y * this.distance + this.margin/2
+        let x2 = dot.pair.x * this.distance + this.margin/2
+        let y2 = dot.pair.y * this.distance + this.margin/2
         let size = this.radius
 
         sketch.ellipse( x, y, size, size)
@@ -106,12 +130,16 @@ export default {
 
 <style scoped>
   .preview {
-    width: 100%;
-    height: 80%;
+    flex: 1;
+    overflow: auto;
+    background-color: rgb(235, 235, 240);
   }
-
-  img {
-    width: 100px;
-    height: 100px;
+  .p5 {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 80px;
+    overflow: auto;
   }
 </style>

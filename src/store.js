@@ -31,21 +31,24 @@ export default new Vuex.Store({
   state: {
     generatorType: GENERATOR_TYPES.GRID,
     templateName: TEMPLATES.BEER,
-    gridSize: {x: 15, y: 15},
+    gridSize: {x: 10, y: 10},
     imageUrl: null,
     imageRes: 2,
-    distance: 6,
+    distance: 20,
     direction: DIRECTIONS.DIAGONAL,
-    radius: 3,
+    radius: 8,
     grid: [],
     transformedData: null,
     loop: false,
     update: false,
-    paintNum: 150,
+    paintNum: 30,
     animationMode: ANIMATION_MODE.BASIC,
     animationMax: 100,
     animationMin: 0,
-    animationPaint: 0
+    animationPaint: 0,
+    frameRate: 1,
+    opacityLimit: 150,
+    lightnessLimit: 220
   },
   getters: {
     getGeneratorType(state) {
@@ -93,6 +96,12 @@ export default new Vuex.Store({
     updateImageUrl (state, value) {
       state.imageUrl = value
     },
+    updateLightnessLimit (state, value) {
+      state.lightnessLimit = value
+    },
+    updateOpacityLimit (state, value) {
+      state.opacityLimit = value
+    },
     updateGridSize (state, value) {
       if (value.x) {
         state.gridSize.x = value.x
@@ -128,10 +137,14 @@ export default new Vuex.Store({
       let generatorType = context.state.generatorType
 
       if (generatorType === 'image') {
-        gridGenerator.imageGrid(context.state.imageUrl, context.state.imageRes).then((res) => {
-          context.commit('updateGrid', res)
-          context.commit('redraw')
-        })
+        gridGenerator.imageGrid(
+          context.state.imageUrl,
+          context.state.imageRes,
+          context.state.opacityLimit,
+          context.state.lightnessLimit).then((res) => {
+            context.commit('updateGrid', res)
+            context.commit('redraw')
+          })
       } else {
         let grid = []
 

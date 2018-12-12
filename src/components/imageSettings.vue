@@ -13,14 +13,37 @@
         <label for="">Image sample</label>
         <input type="number" v-model.number="imageRes">
       </div>
-    </div>
 
+      <div class="input">
+        <label>opacity</label>
+        <vue-slider class="slider"
+                    :tooltip-dir="'bottom'"
+                    :tooltip="'hover'"
+                    :min="0"
+                    :max="255"
+                    ref="slider"
+                    v-model="opacity"></vue-slider>
+      </div>
+
+      <div class="input">
+        <label>lightness</label>
+        <vue-slider class="slider"
+                    :tooltip-dir="'bottom'"
+                    :tooltip="'hover'"
+                    :min="0"
+                    :max="255"
+                    ref="slider"
+                    v-model="lightness"></vue-slider>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import vueSlider from 'vue-slider-component'
 export default {
   name: 'imageSettings',
+  components: { vueSlider },
   computed: {
     imageUrl: {
       set(val) {
@@ -36,6 +59,22 @@ export default {
       },
       get () {
         return this.$store.state.imageRes
+      }
+    },
+    opacity: {
+      set(val) {
+        this.$store.commit('updateOpacityLimit', val)
+      },
+      get () {
+        return this.$store.state.opacityLimit
+      }
+    },
+    lightness: {
+      set(val) {
+        this.$store.commit('updateLightnessLimit', val)
+      },
+      get () {
+        return this.$store.state.lightnessLimit
       }
     }
   },
@@ -66,5 +105,8 @@ export default {
     margin-left: 10px;
     cursor: pointer;
     align-items: center;
+  }
+  .slider {
+    margin-top: 15px;
   }
 </style>

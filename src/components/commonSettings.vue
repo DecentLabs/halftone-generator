@@ -38,7 +38,9 @@ export default {
   computed: {
     distance: {
       set(val) {
-        this.$store.commit('updateDistance', val)
+        if (val >= 1) {
+          this.$store.commit('updateDistance', val)
+        }
       },
       get() {
         return this.$store.state.distance
@@ -46,8 +48,10 @@ export default {
     },
     radius: {
       set(val) {
-        this.$store.commit('updateRadius', val)
-        this.$store.commit('redraw')
+        if (val > 0) {
+          this.$store.commit('updateRadius', val)
+          this.$store.commit('redraw')
+        }
       },
       get() {
         return this.$store.state.radius
@@ -55,8 +59,10 @@ export default {
     },
     paintNum: {
       set(val) {
-        this.$store.commit('updatePaintNum', val)
-        this.$store.commit('redraw')
+        if (val >= 0) {
+          this.$store.commit('updatePaintNum', val)
+          this.$store.commit('redraw')
+        }
       },
       get() {
         return this.$store.state.paintNum

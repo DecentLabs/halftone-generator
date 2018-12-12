@@ -23,10 +23,14 @@ function simpleGrid (sizeX, sizeY) {
   return grid
 }
 
-function imageGrid (url, resolution) {
+function imageGrid (url, resolution, opacityLimit, lignessLimit) {
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.src = url
+
+    if (!url) {
+      return []
+    }
 
     image.onload = function() {
       let canvas = document.createElement('canvas')
@@ -56,10 +60,10 @@ function imageGrid (url, resolution) {
           let imageData = ctx.getImageData(j, i, resolutionX, resolutionY)
           let colorResult = extractColorFromImage(imageData)
 
-          if (colorResult.opacity < 150) {
+          if (colorResult.opacity < opacityLimit) {
             line.push(0)
           } else {
-            if (colorResult.color < 220) {
+            if (colorResult.color < lignessLimit) {
               line.push(1)
             } else {
               line.push(0)

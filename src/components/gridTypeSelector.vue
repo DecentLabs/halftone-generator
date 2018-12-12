@@ -38,6 +38,7 @@ export default {
     justify-content: flex-start;
     background-color: rgb(220, 220, 220);
     border-bottom: 1px solid rgb(220, 220, 220);
+    flex-shrink: 0;
   }
   .generator-type-selector label {
     width: calc(100% / 3);

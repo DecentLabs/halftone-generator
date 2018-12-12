@@ -13,7 +13,7 @@ function dataTransform (grid, paintNum, radius, direction) {
       data[item].push({
         x: xi,
         y: yi,
-        size: Math.random() * (radius*2 - 0.5) + 0.5
+        size: (Math.random() * (radius*2 - radius/2)) + radius/2
       })
     })
   })

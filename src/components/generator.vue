@@ -88,10 +88,11 @@ export default {
 
 <style>
 #generator {
-  position: relative;
-}
-.preview {
-  /* position: absolute; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
 }
 form {
   background-color: black;
@@ -100,6 +101,7 @@ form {
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex-shrink: 0;
 }
 
 input, select, button {
