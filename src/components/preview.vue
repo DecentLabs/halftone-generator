@@ -49,7 +49,7 @@ export default {
       this.width = window.innerWidth
       sketch.createCanvas(this.width, this.height)
 
-      sketch.frameRate(3)
+      sketch.frameRate(5)
     },
     draw (sketch) {
       sketch.background('white')

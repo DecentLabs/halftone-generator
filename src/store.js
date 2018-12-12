@@ -21,6 +21,12 @@ const TEMPLATES = {
   BEER: 'beer'
 }
 
+const ANIMATION_MODE = {
+  INCREMENT: 'increment',
+  DECREMENT: 'decrement',
+  BASIC: 'basic'
+}
+
 export default new Vuex.Store({
   state: {
     generatorType: GENERATOR_TYPES.IMAGE,
@@ -31,11 +37,15 @@ export default new Vuex.Store({
     distance: 6,
     direction: DIRECTIONS.DIAGONAL,
     radius: 3,
-    paintNum: 1500,
     grid: [],
     transformedData: null,
     loop: false,
-    update: false
+    update: false,
+    paintNum: 150,
+    animationMode: ANIMATION_MODE.DECREMENT,
+    animationMax: 100,
+    animationMin: 0,
+    animationPaint: 0
   },
   getters: {
     getGeneratorType(state) {
@@ -46,6 +56,26 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateAnimationPaint(state, mode) {
+      if (mode === ANIMATION_MODE.INCREMENT) {
+        state.animationPaint += 10
+      }
+      if (mode === ANIMATION_MODE.DECREMENT) {
+        state.animationPaint -= 10
+      }
+    },
+    updateAnimationMode(state, value) {
+      console.log('update');
+      state.animationMode = value
+
+      if (state.animationMode === 'basic') {
+        state.animationPaint = state.paintNum
+      } else if (state.animationMode === 'increment') {
+        state.animationPaint = state.animationMin === 0 ? 0 : (state.animationMin/100) * (state.transformedData['1'].length-1)
+      } else if (state.animationMode === 'decrement') {
+        state.animationPaint = state.animationMax === 0 ? 0 : (state.animationMax/100) * (state.transformedData['1'].length-1)
+      }
+    },
     redraw(state) {
       state.update = true
     },
@@ -118,10 +148,11 @@ export default new Vuex.Store({
 
       let transformedData = dataTransform(
         context.state.grid,
-        context.state.paintNum,
+        context.state.animationPaint,
         context.state.radius,
         context.state.direction
       )
+      context.commit('updateAnimationPaint', context.state.animationMode)
       context.commit('updateTransformedData', transformedData)
     }
   }

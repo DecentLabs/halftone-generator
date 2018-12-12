@@ -7,6 +7,15 @@
       <input type="checkbox" id="loop" v-model="loop">
     </div>
 
+    <div class="input">
+      <label for="">Animation mode</label>
+      <select v-model="animationMode">
+        <option value="basic">basic</option>
+        <option value="increment">increment</option>
+        <option value="decrement">decrement</option>
+      </select>
+    </div>
+
     <form>
       <div class="settings type-settings" v-if="generatorType">
         <image-settings v-if="generatorType === 'image'"></image-settings>
@@ -44,6 +53,7 @@ export default {
   mounted () {
     this.$store.dispatch('generateGrid')
     this.$store.dispatch('transformData')
+    this.$store.commit('updateAnimationMode', 'basic')
   },
   computed: {
     loop: {
@@ -56,6 +66,14 @@ export default {
     },
     generatorType() {
       return this.$store.getters.getGeneratorType
+    },
+    animationMode: {
+      set(val) {
+        this.$store.commit('updateAnimationMode', val)
+      },
+      get() {
+        return this.$store.state.animationMode
+      }
     }
   },
   methods: {

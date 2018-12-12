@@ -26,7 +26,7 @@ function simpleGrid (sizeX, sizeY) {
 function imageGrid (url, resolution) {
   return new Promise((resolve, reject) => {
     const image = new Image()
-    image.src = './assets/beer.png'
+    image.src = './assets/apple2.png'
 
     image.onload = function() {
       let canvas = document.createElement('canvas')
