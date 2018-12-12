@@ -1,12 +1,17 @@
 <template lang="html">
   <div class="setting grid-settings">
+    <!-- <h2>Grid settings</h2> -->
 
-    <div class="input">
-      <label for="">Grid size</label>
-      <span>x:</span>
-      <input type="number" v-model.number="xSize">
-      <span>y:</span>
-      <input type="number" v-model.number="ySize">
+    <div class="section">
+      <div class="input">
+        <label>x</label>
+        <input type="number" v-model.number="xSize">
+      </div>
+
+      <div class="input">
+        <label>y</label>
+        <input type="number" v-model.number="ySize">
+      </div>
     </div>
 
   </div>

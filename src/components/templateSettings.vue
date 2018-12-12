@@ -1,10 +1,14 @@
 <template lang="html">
   <div class="setting template-settings">
-    <div class="input">
-      <label for="">Choose template</label>
-      <select v-model="templateName">
-        <option value="beer">beer</option>
-      </select>
+    <!-- <h2>Template settings</h2> -->
+
+    <div class="section">
+      <div class="input">
+        <label>Choose template</label>
+        <select v-model="templateName">
+          <option value="beer">beer</option>
+        </select>
+      </div>
     </div>
   </div>
 </template>

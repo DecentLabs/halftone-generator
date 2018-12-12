@@ -1,13 +1,12 @@
 <template lang="html">
   <div class="generator-type-selector">
-    <input type="radio" id="grid" value="grid" v-model="generatorType">
-    <label for="grid">grid</label>
 
-    <input type="radio" id="image" value="image" v-model="generatorType">
-    <label for="image">image</label>
+    <label for="grid" v-bind:class="generatorType === 'grid' ? 'selected': ''" @click="select('grid')">GRID</label>
 
-    <input type="radio" id="image" value="template" v-model="generatorType">
-    <label for="template">template</label>
+    <label for="image" v-bind:class="generatorType === 'image' ? 'selected': ''" @click="select('image')">IMAGE</label>
+
+    <label for="template" v-bind:class="generatorType === 'template' ? 'selected': ''" @click="select('template')">TEMPLATE</label>
+
   </div>
 </template>
 
@@ -24,9 +23,33 @@ export default {
         this.$store.dispatch('generateGrid')
       }
     }
+  },
+  methods: {
+    select(val) {
+      this.generatorType = val
+    }
   }
 }
 </script>
 
 <style lang="css">
+  .generator-type-selector {
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgb(220, 220, 220);
+    border-bottom: 1px solid rgb(220, 220, 220);
+  }
+  .generator-type-selector label {
+    width: calc(100% / 3);
+    display: inline-block;
+    padding: 10px;
+    cursor: pointer;
+    background-color: white;
+    border-left: 1px solid rgb(220, 220, 220);
+    font-weight: bold;
+  }
+  label.selected {
+    background-color: tomato;
+    color: white;
+  }
 </style>

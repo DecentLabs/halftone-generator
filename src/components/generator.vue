@@ -2,28 +2,30 @@
   <div id="generator">
     <generator-type-selector v-if="generatorType"></generator-type-selector>
 
-    <div>
-      <label for="loop">loop</label>
-      <input type="checkbox" id="loop" v-model="loop">
-    </div>
-
-    <div class="input">
-      <label for="">Animation mode</label>
-      <select v-model="animationMode">
-        <option value="basic">basic</option>
-        <option value="increment">increment</option>
-        <option value="decrement">decrement</option>
-      </select>
-    </div>
-
     <form>
+
       <div class="settings type-settings" v-if="generatorType">
-        <image-settings v-if="generatorType === 'image'"></image-settings>
-        <grid-settings v-if="generatorType === 'grid'"></grid-settings>
-        <template-settings v-if="generatorType === 'template'"></template-settings>
-        <button type="button" name="button" @click="update">update</button>
+        <div class="display-btn" @click="displaySwitch('type')">x</div>
+        <h2 @click="displaySwitch('type')">{{generatorType}} settings</h2>
+
+        <image-settings v-if="generatorType === 'image' && showTypeSettings"></image-settings>
+        <grid-settings v-if="generatorType === 'grid' && showTypeSettings"></grid-settings>
+        <template-settings v-if="generatorType === 'template' && showTypeSettings"></template-settings>
+        <button v-if="showTypeSettings" type="button" name="button" @click="update">Generate</button>
       </div>
-      <common-settings class="settings common-settings"></common-settings>
+
+      <div class="settings">
+        <div class="display-btn" @click="displaySwitch('common')">x</div>
+        <h2 @click="displaySwitch('common')">Common settings</h2>
+        <common-settings v-if="showCommonSettings"></common-settings>
+      </div>
+
+      <div class="settings">
+        <div class="display-btn" @click="displaySwitch('animation')">x</div>
+        <h2 @click="displaySwitch('animation')">Animation settings</h2>
+        <animation-settings v-if="showAnimSettings"></animation-settings>
+      </div>
+
     </form>
 
     <preview></preview>
@@ -38,7 +40,7 @@ import generatorTypeSelector from './gridTypeSelector.vue'
 import imageSettings from './imageSettings.vue'
 import gridSettings from './gridSettings.vue'
 import templateSettings from './templateSettings.vue'
-
+import animationSettings from './animationSettings.vue'
 
 export default {
   name: 'generator',
@@ -48,37 +50,37 @@ export default {
     generatorTypeSelector,
     gridSettings,
     imageSettings,
-    templateSettings
+    templateSettings,
+    animationSettings
   },
   mounted () {
     this.$store.dispatch('generateGrid')
     this.$store.dispatch('transformData')
-    this.$store.commit('updateAnimationMode', 'basic')
+  },
+  data: function () {
+    return {
+      showCommonSettings: true,
+      showAnimSettings: true,
+      showTypeSettings: true
+    }
   },
   computed: {
-    loop: {
-      set(val) {
-        this.$store.commit('updateLoop', val)
-      },
-      get() {
-        return this.$store.state.loop
-      }
-    },
     generatorType() {
       return this.$store.getters.getGeneratorType
-    },
-    animationMode: {
-      set(val) {
-        this.$store.commit('updateAnimationMode', val)
-      },
-      get() {
-        return this.$store.state.animationMode
-      }
     }
   },
   methods: {
     update() {
       this.$store.dispatch('generateGrid')
+    },
+    displaySwitch(val) {
+      if (val === 'type') {
+        this.showTypeSettings = !this.showTypeSettings
+      } else if (val === 'animation') {
+        this.showAnimSettings = !this.showAnimSettings
+      } else if (val === 'common') {
+        this.showCommonSettings = !this.showCommonSettings
+      }
     }
   }
 }
@@ -86,7 +88,10 @@ export default {
 
 <style>
 #generator {
-
+  position: relative;
+}
+.preview {
+  /* position: absolute; */
 }
 form {
   background-color: black;
@@ -95,30 +100,78 @@ form {
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: flex-start;
-  padding: 20px;
 }
-.settings, .setting {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+
+input, select, button {
+  font-size: 16px;
+  margin: 10px;
+  width: 200px;
+  height: 30px;
 }
-.input {
-  text-align: left;
-  min-width: 200px;
-  padding: 5px;
+select, input {
+  background-color: black;
+  color: white;
+  border-radius: 5px;
 }
 input {
-  padding: 7px;
-  width: 60px;
-  margin: 10px
+  padding: 15px;
+  border: 1px solid rgb(220, 220, 220);
 }
+button {
+  margin: 25px 20px 20px 20px;
+  border-radius: 5px;
+}
+
 label, span {
-  font-size: 1.3em;
+  font-size: 16px;
   display: inline-block;
-  height: 100%;
 }
 span {
   margin-left: 15px;
+}
+
+.display-btn {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+  color: black;
+  text-align: center;
+}
+
+.settings {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  text-align: left;
+  /* padding: 10px; */
+  width: 100%;
+  position: relative;
+}
+
+.setting {
+  padding: 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+}
+.input {
+  width: 220px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-right: 30px;
+}
+.input label {
+  text-align: center;
 }
 </style>

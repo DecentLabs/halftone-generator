@@ -1,6 +1,9 @@
 <template lang="html">
-  <div class="common-settings">
+  <div class="setting common-settings">
 
+    <!-- <h2>Common settings</h2> -->
+
+    <div class="section">
       <div class="input">
         <label for="distance">Distance</label>
         <input type="number" name="distance" v-model.number="distance">
@@ -24,6 +27,8 @@
           <option :value="'vertical'">vertical</option>
         </select>
       </div>
+    </div>
+
   </div>
 </template>
 
@@ -69,3 +74,8 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .common-settings {
+  }
+</style>

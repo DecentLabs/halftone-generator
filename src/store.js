@@ -29,10 +29,10 @@ const ANIMATION_MODE = {
 
 export default new Vuex.Store({
   state: {
-    generatorType: GENERATOR_TYPES.IMAGE,
+    generatorType: GENERATOR_TYPES.GRID,
     templateName: TEMPLATES.BEER,
-    gridSize: {x: 5, y: 5},
-    imageUrl: './assets/heart2.png',
+    gridSize: {x: 15, y: 15},
+    imageUrl: null,
     imageRes: 2,
     distance: 6,
     direction: DIRECTIONS.DIAGONAL,
@@ -42,7 +42,7 @@ export default new Vuex.Store({
     loop: false,
     update: false,
     paintNum: 150,
-    animationMode: ANIMATION_MODE.DECREMENT,
+    animationMode: ANIMATION_MODE.BASIC,
     animationMax: 100,
     animationMin: 0,
     animationPaint: 0
@@ -57,6 +57,9 @@ export default new Vuex.Store({
   },
   mutations: {
     updateAnimationPaint(state, mode) {
+      if (mode === ANIMATION_MODE.BASIC) {
+        state.animationPaint = state.paintNum
+      }
       if (mode === ANIMATION_MODE.INCREMENT) {
         state.animationPaint += 10
       }
@@ -65,7 +68,6 @@ export default new Vuex.Store({
       }
     },
     updateAnimationMode(state, value) {
-      console.log('update');
       state.animationMode = value
 
       if (state.animationMode === 'basic') {
@@ -145,6 +147,7 @@ export default new Vuex.Store({
     },
     transformData(context) {
       context.state.update = false
+      context.commit('updateAnimationPaint', context.state.animationMode)
 
       let transformedData = dataTransform(
         context.state.grid,
@@ -152,7 +155,7 @@ export default new Vuex.Store({
         context.state.radius,
         context.state.direction
       )
-      context.commit('updateAnimationPaint', context.state.animationMode)
+
       context.commit('updateTransformedData', transformedData)
     }
   }
