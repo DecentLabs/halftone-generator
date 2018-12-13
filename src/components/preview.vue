@@ -94,7 +94,7 @@ export default {
     draw (sketch) {
       sketch.background('white')
 
-      if(this.$store.state.loop) {
+      if(this.$store.state.loop && !this.generatorType === 'logo') {
         this.$store.dispatch('transformData')
       }
 
@@ -104,7 +104,7 @@ export default {
       sketch.strokeWeight(0)
       sketch.fill(this.color)
       // sketch.fill('black')
-      sketch.stroke('black')
+      // sketch.stroke('black')
 
       this.transformedData['1'].forEach((dot) => {
         sketch.ellipse(
@@ -126,16 +126,14 @@ export default {
 
       // sketch.fill(this.color)
       sketch.fill('black')
-
       this.transformedData['3'].forEach((dot) => {
-        sketch.strokeWeight(0)
-
         let x = dot.x * this.distance + this.margin/2
         let y = dot.y * this.distance + this.margin/2
         let x2 = dot.pair.x * this.distance + this.margin/2
         let y2 = dot.pair.y * this.distance + this.margin/2
         let size = this.radius
 
+        sketch.strokeWeight(0)
         sketch.ellipse( x, y, size, size)
         sketch.ellipse( x2, y2, size, size)
 
@@ -144,18 +142,44 @@ export default {
       })
 
       sketch.strokeWeight(0)
-      sketch.fill('red')
-      for (let a = 0; a <= this.project; a++) {
-        let dot = this.transformedData['logo'][a]
-        if (dot) {
+      sketch.fill(this.color)
+      this.transformedData['logo'].forEach((dot, i) => {
+
+        if( i <= this.project) {
           sketch.ellipse(
             dot.x * this.distance + this.margin/2,
             dot.y * this.distance + this.margin/2,
-            this.radius * 2,
-            this.radius * 2
+            this.radius *2,
+            this.radius*2
           )
+        } else {
+          // TODO
+          let x = dot.x * this.distance + this.margin/2
+          let y = dot.y * this.distance + this.margin/2
+          let x2 = (dot.x + 1) * this.distance + this.margin/2
+          let y2 = (dot.y +1) * this.distance + this.margin/2
+          let size = this.radius
+
+          sketch.strokeWeight(0)
+          sketch.ellipse( x, y, size, size)
+          sketch.ellipse( x2, y2, size, size)
+
+          sketch.strokeWeight(size * 2.3)
+          sketch.line(x, y, x2, y2)
         }
-      }
+
+      })
+      // for (let a = 0; a <= this.project; a++) {
+      //   let dot = this.transformedData['logo'][a]
+      //   if (dot) {
+      //     sketch.ellipse(
+      //       dot.x * this.distance + this.margin/2,
+      //       dot.y * this.distance + this.margin/2,
+      //       this.radius * 2,
+      //       this.radius * 2
+      //     )
+      //   }
+      // }
     }
   }
 }
