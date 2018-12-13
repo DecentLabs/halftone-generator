@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="setting template-settings">
-    <!-- <h2>Template settings</h2> -->
 
     <div class="section">
       <div class="input">

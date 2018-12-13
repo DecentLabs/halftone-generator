@@ -24,7 +24,6 @@ export default {
     xSize: {
       set(val) {
         this.$store.commit('updateGridSize', {x: val})
-        // this.$store.dispatch('generateGrid')
       },
       get() {
         return this.$store.state.gridSize.x
@@ -33,7 +32,6 @@ export default {
     ySize: {
       set(val) {
         this.$store.commit('updateGridSize', {y: val})
-        // this.$store.dispatch('generateGrid')
       },
       get() {
         return this.$store.state.gridSize.y
@@ -42,6 +40,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css">
-</style>

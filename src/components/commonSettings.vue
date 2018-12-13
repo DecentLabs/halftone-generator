@@ -50,7 +50,7 @@ export default {
       set(val) {
         if (val > 0) {
           this.$store.commit('updateRadius', val)
-          this.$store.commit('redraw')
+          this.$store.dispatch('transformData')
         }
       },
       get() {
@@ -61,7 +61,7 @@ export default {
       set(val) {
         if (val >= 0) {
           this.$store.commit('updatePaintNum', val)
-          this.$store.commit('redraw')
+          this.$store.dispatch('transformData')
         }
       },
       get() {
@@ -71,7 +71,7 @@ export default {
     direction: {
       set(val) {
         this.$store.commit('updateDirection', val)
-        this.$store.commit('redraw')
+        this.$store.dispatch('transformData')
       },
       get() {
         return this.$store.state.direction
@@ -82,6 +82,5 @@ export default {
 </script>
 
 <style scoped>
-  .common-settings {
-  }
+
 </style>

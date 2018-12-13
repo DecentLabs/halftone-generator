@@ -5,7 +5,16 @@ import dataTransform from './generators/dataTransform.js'
 
 Vue.use(Vuex)
 
+const PROJECT_STATES = {
+  archived: 0,
+  concept: 1,
+  prototype: 2,
+  published: 3,
+  spinoff: 4
+}
+
 const GENERATOR_TYPES = {
+  LOGO: 'logo',
   GRID: 'grid',
   IMAGE: 'image',
   TEMPLATE: 'template'
@@ -31,7 +40,7 @@ export default new Vuex.Store({
   state: {
     generatorType: GENERATOR_TYPES.GRID,
     templateName: TEMPLATES.BEER,
-    gridSize: {x: 10, y: 10},
+    gridSize: {x: 4, y: 4},
     imageUrl: null,
     imageRes: 2,
     distance: 20,
@@ -40,15 +49,15 @@ export default new Vuex.Store({
     grid: [],
     transformedData: null,
     loop: false,
-    update: false,
-    paintNum: 30,
+    paintNum: 5,
     animationMode: ANIMATION_MODE.BASIC,
     animationMax: 100,
     animationMin: 0,
     animationPaint: 0,
     frameRate: 1,
     opacityLimit: 150,
-    lightnessLimit: 220
+    lightnessLimit: 220,
+    color: '#000000'
   },
   getters: {
     getGeneratorType(state) {
@@ -56,9 +65,15 @@ export default new Vuex.Store({
     },
     getTransformedData(state) {
       return state.transformedData
+    },
+    getProjectStates () {
+      return PROJECT_STATES
     }
   },
   mutations: {
+    updateColor (state, value) {
+      state.color = value
+    },
     updateAnimationPaint(state, mode) {
       if (mode === ANIMATION_MODE.BASIC) {
         state.animationPaint = state.paintNum
@@ -81,11 +96,10 @@ export default new Vuex.Store({
         state.animationPaint = state.animationMax === 0 ? 0 : (state.animationMax/100) * (state.transformedData['1'].length-1)
       }
     },
-    redraw(state) {
-      state.update = true
-    },
     updateGeneratorType (state, value) {
-      state.generatorType = value
+      if (state.generatorType !== value) {
+        state.generatorType = value
+      }
     },
     updateLoop (state, value) {
       state.loop = value
@@ -134,16 +148,20 @@ export default new Vuex.Store({
   },
   actions: {
     generateGrid(context) {
+      console.log('GENERATE');
       let generatorType = context.state.generatorType
 
       if (generatorType === 'image') {
+        context.commit('updateGrid', [])
+        context.dispatch('transformData')
+
         gridGenerator.imageGrid(
           context.state.imageUrl,
           context.state.imageRes,
           context.state.opacityLimit,
           context.state.lightnessLimit).then((res) => {
             context.commit('updateGrid', res)
-            context.commit('redraw')
+            context.dispatch('transformData')
           })
       } else {
         let grid = []
@@ -152,13 +170,16 @@ export default new Vuex.Store({
           grid = gridGenerator.simpleGrid(context.state.gridSize.x, context.state.gridSize.y)
         } else if (generatorType === 'template') {
           grid = gridGenerator.templateGrid(context.state.templateName)
+        } else if (generatorType === 'logo') {
+          grid = gridGenerator.logoGrid()
         }
 
         context.commit('updateGrid', grid)
-        context.commit('redraw')
+        context.dispatch('transformData')
       }
     },
     transformData(context) {
+      console.log('TRANSFORM');
       context.state.update = false
       context.commit('updateAnimationPaint', context.state.animationMode)
 
@@ -166,7 +187,8 @@ export default new Vuex.Store({
         context.state.grid,
         context.state.animationPaint,
         context.state.radius,
-        context.state.direction
+        context.state.direction,
+        context.state.generatorType === 'logo'
       )
 
       context.commit('updateTransformedData', transformedData)

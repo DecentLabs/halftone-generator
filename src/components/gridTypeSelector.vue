@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="generator-type-selector">
 
+    <label for="template" v-bind:class="generatorType === 'logo' ? 'selected': ''" @click="select('logo')">LOGO</label>
+
     <label for="grid" v-bind:class="generatorType === 'grid' ? 'selected': ''" @click="select('grid')">GRID</label>
 
     <label for="image" v-bind:class="generatorType === 'image' ? 'selected': ''" @click="select('image')">IMAGE</label>
@@ -20,7 +22,6 @@ export default {
       },
       set(val) {
         this.$store.commit('updateGeneratorType', val)
-        this.$store.dispatch('generateGrid')
       }
     }
   },

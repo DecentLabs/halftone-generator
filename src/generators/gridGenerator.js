@@ -4,8 +4,14 @@ function templateGrid (name) {
   return TEMPLATES[name]
 }
 
+function logoGrid () {
+  return simpleGrid(4, 4)
+}
+
 function simpleGrid (sizeX, sizeY) {
   let grid = []
+  sizeX = sizeX*2-1
+  sizeY = sizeY*2-1
   for (let y = 0; y < sizeY; y++) {
     let newLine = []
     let evenY = y % 2 === 0
@@ -132,5 +138,6 @@ function extractColorFromImage (imageData) {
 export default {
   imageGrid,
   templateGrid,
-  simpleGrid
+  simpleGrid,
+  logoGrid
 }

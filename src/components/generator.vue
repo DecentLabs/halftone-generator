@@ -8,6 +8,7 @@
         <div class="display-btn" @click="displaySwitch('type')">x</div>
         <h2 @click="displaySwitch('type')">{{generatorType}} settings</h2>
 
+        <logo-settings v-if="generatorType === 'logo' && showTypeSettings"></logo-settings>
         <image-settings v-if="generatorType === 'image' && showTypeSettings"></image-settings>
         <grid-settings v-if="generatorType === 'grid' && showTypeSettings"></grid-settings>
         <template-settings v-if="generatorType === 'template' && showTypeSettings"></template-settings>
@@ -27,41 +28,41 @@
       </div>
 
     </form>
-
-    <preview></preview>
+    <decent-canvas></decent-canvas>
   </div>
 </template>
 
 <script>
 import generators from './../generators'
+import decentCanvas from './decentCanvas.vue'
 import commonSettings from './commonSettings.vue'
-import preview from './preview.vue'
 import generatorTypeSelector from './gridTypeSelector.vue'
 import imageSettings from './imageSettings.vue'
 import gridSettings from './gridSettings.vue'
 import templateSettings from './templateSettings.vue'
 import animationSettings from './animationSettings.vue'
+import logoSettings from './logoSettings.vue'
 
 export default {
   name: 'generator',
   components: {
     commonSettings,
-    preview,
+    decentCanvas,
     generatorTypeSelector,
     gridSettings,
     imageSettings,
     templateSettings,
-    animationSettings
+    animationSettings,
+    logoSettings
   },
   mounted () {
     this.$store.dispatch('generateGrid')
-    this.$store.dispatch('transformData')
   },
   data: function () {
     return {
-      showCommonSettings: true,
-      showAnimSettings: true,
-      showTypeSettings: true
+      showCommonSettings: false,
+      showAnimSettings: false,
+      showTypeSettings: false
     }
   },
   computed: {
@@ -151,7 +152,6 @@ span {
   justify-content: flex-start;
   border-bottom: 1px solid rgb(220, 220, 220);
   text-align: left;
-  /* padding: 10px; */
   width: 100%;
   position: relative;
 }

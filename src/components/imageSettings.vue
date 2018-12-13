@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="setting image-settings">
-    <!-- <h2>Image settings</h2> -->
 
     <div class="section">
 

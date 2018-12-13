@@ -1,25 +1,32 @@
 <template lang="html">
   <div class="preview">
-    <vue-p5
-        class="p5"
-        @setup="setup"
-        @draw="draw">
-    </vue-p5>
+    <!-- <button type="button" name="button" @click="save">save</button> -->
+      <vue-p5
+          class="canvas"
+          @setup="setup"
+          @draw="draw">
+      </vue-p5>
+
   </div>
 </template>
 
 <script>
 import VueP5 from 'vue-p5'
-import generators from './../generators'
 
 export default {
   components: { 'vue-p5': VueP5 },
+  props: ['project'],
   data: function () {
     return {
-      resizeCanvas: null
+      resizeCanvas: null,
+      saveCanvas: null,
+      canvas: null,
     }
   },
   computed: {
+    color () {
+      return this.$store.state.color
+    },
     transformedData () {
       return this.$store.getters.getTransformedData
     },
@@ -29,9 +36,6 @@ export default {
     radius () {
       return this.$store.state.radius
     },
-    update () {
-      return this.$store.state.update
-    },
     frameRate () {
       return this.$store.state.frameRate
     },
@@ -39,19 +43,29 @@ export default {
       return this.$store.state.grid
     },
     canvasHeight () {
-      return (this.grid.length-1) * this.distance + this.margin
+      if (this.grid.length) {
+        return (this.grid.length-1) * this.distance + this.margin
+      } else {
+        return 400
+      }
     },
     canvasWidth () {
-      return (this.grid[0].length-1) * this.distance + this.margin
+      if (this.grid.length) {
+        return (this.grid[0].length-1) * this.distance + this.margin
+      } else {
+        return 400
+      }
     },
     margin () {
       return this.distance * 4
+    },
+    generatorType () {
+      return this.$store.state.generatorType
     }
   },
   watch: {
-    update(val) {
-      if (val) {
-        this.redraw()
+    generatorType(val) {
+      if(this.resizeCanvas && val) {
         this.resizeCanvas(this.canvasWidth, this.canvasHeight)
       }
     },
@@ -60,34 +74,36 @@ export default {
     }
   },
   methods: {
-    redraw() {
-      this.$store.dispatch('transformData')
-    },
+    // save () {
+    //   this.saveCanvas('test', 'jpg')
+    // },
     setup (sketch) {
       this.resizeCanvas = function (width, height) {
         sketch.resizeCanvas(width, height)
       }
-
+      this.saveCanvas = function (name, type) {
+        sketch.saveCanvas(this.canvas, name, type)
+      }
       sketch.createCanvas(this.canvasWidth, this.canvasHeight)
       sketch.frameRate(this.frameRate)
 
-      let canvas = document.querySelector('canvas.p5Canvas')
-      canvas.style.border = '1px solid rgb(220, 220, 220)'
+      this.canvas = document.querySelector('canvas.p5Canvas')
+      this.canvas.style.border = '1px solid rgb(220, 220, 220)'
 
     },
     draw (sketch) {
       sketch.background('white')
 
       if(this.$store.state.loop) {
-        this.redraw()
+        this.$store.dispatch('transformData')
       }
 
       this.drawGrid(sketch)
-
     },
     drawGrid (sketch) {
       sketch.strokeWeight(0)
-      sketch.fill('black')
+      sketch.fill(this.color)
+      // sketch.fill('black')
       sketch.stroke('black')
 
       this.transformedData['1'].forEach((dot) => {
@@ -108,6 +124,9 @@ export default {
         )
       })
 
+      // sketch.fill(this.color)
+      sketch.fill('black')
+
       this.transformedData['3'].forEach((dot) => {
         sketch.strokeWeight(0)
 
@@ -123,23 +142,24 @@ export default {
         sketch.strokeWeight(size * 2.3)
         sketch.line(x, y, x2, y2)
       })
+
+      sketch.strokeWeight(0)
+      sketch.fill('red')
+      for (let a = 0; a <= this.project; a++) {
+        let dot = this.transformedData['logo'][a]
+        if (dot) {
+          sketch.ellipse(
+            dot.x * this.distance + this.margin/2,
+            dot.y * this.distance + this.margin/2,
+            this.radius * 2,
+            this.radius * 2
+          )
+        }
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-  .preview {
-    flex: 1;
-    overflow: auto;
-    background-color: rgb(235, 235, 240);
-  }
-  .p5 {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 80px;
-    overflow: auto;
-  }
 </style>
