@@ -14,7 +14,7 @@
       </div>
 
       <div class="input">
-        <label>opacity</label>
+        <label>Opacity</label>
         <vue-slider class="slider"
                     :tooltip-dir="'bottom'"
                     :tooltip="'hover'"
@@ -25,7 +25,7 @@
       </div>
 
       <div class="input">
-        <label>lightness</label>
+        <label>Lightness</label>
         <vue-slider class="slider"
                     :tooltip-dir="'bottom'"
                     :tooltip="'hover'"

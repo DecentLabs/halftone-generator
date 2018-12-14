@@ -38,7 +38,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     background-color: rgb(220, 220, 220);
-    border-bottom: 1px solid rgb(220, 220, 220);
+    border-bottom: 1px solid rgba(230, 230, 230);
     flex-shrink: 0;
   }
   .generator-type-selector label {
@@ -47,11 +47,11 @@ export default {
     padding: 10px;
     cursor: pointer;
     background-color: white;
-    border-left: 1px solid rgb(220, 220, 220);
+    border-left: 1px solid rgba(230, 230, 230);
     font-weight: bold;
   }
   label.selected {
-    background-color: tomato;
+    background-color: black;
     color: white;
   }
 </style>

@@ -1,15 +1,14 @@
 <template lang="html">
   <div class="setting grid-settings">
-    <!-- <h2>Grid settings</h2> -->
 
     <div class="section">
       <div class="input">
-        <label>x</label>
+        <label>Number of X segments</label>
         <input type="number" v-model.number="xSize">
       </div>
 
       <div class="input">
-        <label>y</label>
+        <label>Number of Y segments</label>
         <input type="number" v-model.number="ySize">
       </div>
     </div>

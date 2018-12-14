@@ -3,41 +3,40 @@
 
     <div class="section">
 
-      <div class="input color-input">
-        <!-- <label>Color</label> -->
+      <!-- <div class="input color-input">
         <div class="color-picker">
           <div :style="{backgroundColor: selectedColor}" class="selected-color" @click="selectColor"></div>
           <color-palette v-if="select" @closePalette="close"></color-palette>
         </div>
-      </div>
+      </div> -->
 
     </div>
   </div>
 </template>
 
 <script>
-import colorPalette from './colorPicker.vue'
+// import colorPalette from './colorPicker.vue'
 
 export default {
   name: 'logoSettings',
-  components: {colorPalette},
+  // components: {colorPalette},
   data: function () {
     return {
-      select: false
+      // select: false
     }
   },
   methods: {
-    selectColor() {
-      this.select = !this.select
-    },
-    close() {
-      this.select = false
-    }
+    // selectColor() {
+    //   this.select = !this.select
+    // },
+    // close() {
+    //   this.select = false
+    // }
   },
   computed: {
-    selectedColor() {
-      return this.$store.state.color
-    }
+    // selectedColor() {
+    //   return this.$store.state.color
+    // }
   }
 }
 </script>

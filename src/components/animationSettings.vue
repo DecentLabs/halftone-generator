@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="setting animation-settings">
 
-    <!-- <h2>Animation settings</h2> -->
-
     <div class="section">
       <div class="input">
         <label for="loop">loop</label>

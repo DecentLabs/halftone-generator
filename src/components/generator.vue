@@ -1,12 +1,10 @@
 <template>
   <div id="generator">
     <generator-type-selector v-if="generatorType"></generator-type-selector>
-
     <form>
-
       <div class="settings type-settings" v-if="generatorType">
         <div class="display-btn" @click="displaySwitch('type')">x</div>
-        <h2 @click="displaySwitch('type')">{{generatorType}} settings</h2>
+        <h2 class="setting-name" @click="displaySwitch('type')">{{generatorType}} settings</h2>
 
         <logo-settings v-if="generatorType === 'logo' && showTypeSettings"></logo-settings>
         <image-settings v-if="generatorType === 'image' && showTypeSettings"></image-settings>
@@ -17,15 +15,15 @@
 
       <div class="settings">
         <div class="display-btn" @click="displaySwitch('common')">x</div>
-        <h2 @click="displaySwitch('common')">Common settings</h2>
+        <h2 class="setting-name" @click="displaySwitch('common')">Common settings</h2>
         <common-settings v-if="showCommonSettings"></common-settings>
       </div>
 
-      <div class="settings">
+      <!-- <div class="settings">
         <div class="display-btn" @click="displaySwitch('animation')">x</div>
         <h2 @click="displaySwitch('animation')">Animation settings</h2>
         <animation-settings v-if="showAnimSettings"></animation-settings>
-      </div>
+      </div> -->
 
     </form>
     <decent-canvas></decent-canvas>
@@ -75,7 +73,9 @@ export default {
       this.$store.dispatch('generateGrid')
     },
     displaySwitch(val) {
+      console.log(val);
       if (val === 'type') {
+        console.log('switch');
         this.showTypeSettings = !this.showTypeSettings
       } else if (val === 'animation') {
         this.showAnimSettings = !this.showAnimSettings
@@ -95,9 +95,14 @@ export default {
   justify-content: flex-start;
   overflow: hidden;
 }
+.setting-name {
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 30px;
+}
 form {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -105,24 +110,33 @@ form {
   flex-shrink: 0;
 }
 
-input, select, button {
+input, select {
   font-size: 16px;
   margin: 10px;
-  width: 200px;
+  width: 150px;
   height: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+input[type="number"] {
+  width: 80px;
+  padding: 10px;
 }
 select, input {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
+  border: none;
   border-radius: 5px;
-}
-input {
-  padding: 15px;
-  border: 1px solid rgb(220, 220, 220);
+  border: 2px solid black;
 }
 button {
   margin: 25px 20px 20px 20px;
   border-radius: 5px;
+  width: 120px;
+  height: 40px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
 }
 
 label, span {
@@ -156,6 +170,11 @@ span {
   position: relative;
 }
 
+.type-settings {
+  padding-right: 150px;
+  position: relative;
+}
+
 .setting {
   padding: 10px;
 }
@@ -164,6 +183,7 @@ span {
   display: flex;
   flex-direction: row;
   padding-top: 10px;
+  min-height: 150px;
 }
 .input {
   width: 220px;

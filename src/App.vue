@@ -38,4 +38,13 @@ h2 {
   font-weight: normal;
   text-transform: capitalize;
 }
+button {
+  cursor: pointer;
+  font-size: 0.9em;
+  font-family: Helvetica;
+}
+button:hover {
+  background-color: black;
+  color: white;
+}
 </style>
