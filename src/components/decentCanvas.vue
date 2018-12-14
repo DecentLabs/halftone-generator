@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="decent-canvas">
+    <button type="button" name="button" @click="save">save</button>
 
     <div v-if="generatorType === 'logo'" v-for="(key, value) in projectStates" class="canvas-container">
       <h2>{{value}}</h2>
@@ -14,6 +15,7 @@
 
 <script>
 import preview from './preview.vue'
+import canvasToImage from 'canvas-to-image';
 
 export default {
   name: 'decentCanvas',
@@ -24,6 +26,21 @@ export default {
     },
     projectStates () {
       return this.$store.getters.getProjectStates
+    }
+  },
+  methods: {
+    save() {
+      const canvasId = 'defaultCanvas'
+      let canvasList = document.querySelectorAll('canvas')
+      canvasList.forEach((canvas, index) => {
+        let id = canvasId + index
+        canvasToImage(id, {
+          name: `canvas_${index}`,
+          type: 'png',
+          quality: 10
+        })
+      })
+
     }
   },
   watch: {

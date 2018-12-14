@@ -1,12 +1,10 @@
 <template lang="html">
   <div class="preview">
-    <!-- <button type="button" name="button" @click="save">save</button> -->
       <vue-p5
           class="canvas"
           @setup="setup"
           @draw="draw">
       </vue-p5>
-
   </div>
 </template>
 
@@ -22,7 +20,7 @@ export default {
     return {
       resizeCanvas: null,
       saveCanvas: null,
-      canvas: null,
+      canvas: null
     }
   },
   computed: {
@@ -59,14 +57,14 @@ export default {
       }
     },
     margin() {
-      return this.distance * 4
+      return this.distance * 8
     },
     generatorType() {
       return this.$store.state.generatorType
     }
   },
   watch: {
-    generatorType(val) {
+    grid (val) {
       if (this.resizeCanvas && val) {
         this.resizeCanvas(this.canvasWidth, this.canvasHeight)
       }
@@ -76,9 +74,6 @@ export default {
     }
   },
   methods: {
-    // save () {
-    //   this.saveCanvas('test', 'jpg')
-    // },
     setup(sketch) {
       this.resizeCanvas = function(width, height) {
         sketch.resizeCanvas(width, height)
@@ -98,8 +93,9 @@ export default {
 
       this.drawDot(sketch)
       this.drawFix(sketch)
-      this.drawPaint(sketch)
+
       this.drawLogo(sketch)
+      this.drawPaint(sketch)
     },
     drawDot(sketch) {
       // sketch.fill(this.color)
@@ -121,8 +117,9 @@ export default {
       })
     },
     drawPaint(sketch) {
-      sketch.stroke(this.color)
-      sketch.strokeWeight(this.radius * 2)
+      sketch.stroke('black')
+      let stroke = this.project !== undefined ? this.radius * (this.project/4 + 0.7) : this.radius * 2
+      sketch.strokeWeight(stroke)
 
       this.transformedData['3'].forEach((dot) => {
         let px = this.getPixels(dot)
@@ -138,10 +135,14 @@ export default {
         let px = this.getPixels(dot)
 
         if (i <= this.project) {
-          sketch.ellipse( px.x, px.y, this.radius * 2, this.radius * 2)
+          sketch.fill(this.color)
+          // sketch.strokeWeight(4)
+          // sketch.stroke(sketch.color(sketch.random(255), sketch.random(255), sketch.random(255)))
+          // sketch.ellipse( px.x, px.y, dot.size, dot.size)
+          sketch.ellipse( px.x, px.y, this.radius * (this.project/4 + 1), this.radius * (this.project/4 + 1))
         } else {
-          sketch.stroke(this.color)
-          sketch.strokeWeight(this.radius * 2)
+          sketch.stroke('black')
+          sketch.strokeWeight(this.radius * (this.project/4+0.7))
           sketch.line(px.x, px.y, px.x2, px.y2)
         }
       })

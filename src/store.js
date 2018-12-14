@@ -162,6 +162,7 @@ export default new Vuex.Store({
           context.state.lightnessLimit).then((res) => {
             context.commit('updateGrid', res)
             context.dispatch('transformData')
+
           })
       } else {
         let grid = []

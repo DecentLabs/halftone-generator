@@ -50,7 +50,6 @@ function dataTransform (grid, paintNum, radius, direction, logo) {
     }
   }
 
-  console.log(data, 'transformData');
   return data
 }
 
@@ -61,7 +60,6 @@ function selectProjectDots (data, direction) {
 
     if (item) {
       let pair = findPair(data, item, direction)
-      console.log(pair, 'pair');
       if (pair) {
         item.pair = pair
         data['logo'].push(item)
