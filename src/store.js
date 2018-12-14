@@ -54,7 +54,7 @@ export default new Vuex.Store({
     animationMax: 100,
     animationMin: 0,
     animationPaint: 0,
-    frameRate: 1,
+    frameRate: 3,
     opacityLimit: 150,
     lightnessLimit: 220,
     color: '#000000'
