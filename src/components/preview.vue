@@ -24,6 +24,9 @@ export default {
     }
   },
   computed: {
+    zoom () {
+      return this.$store.getters.getZoomValue
+    },
     color() {
       return this.$store.state.color
     },
@@ -31,7 +34,7 @@ export default {
       return this.$store.getters.getTransformedData
     },
     distance() {
-      return this.$store.state.distance
+      return this.$store.state.distance * this.zoom
     },
     radius() {
       return this.$store.state.radius
@@ -51,13 +54,13 @@ export default {
     },
     canvasWidth() {
       if (this.grid.length) {
-        return (this.grid[0].length - 1) * this.distance + this.margin
+        return (this.grid[0].length - 1) * this.distance  + this.margin
       } else {
         return 400
       }
     },
     margin() {
-      return this.distance * 8
+      return this.distance * 4
     },
     generatorType() {
       return this.$store.state.generatorType
@@ -104,7 +107,7 @@ export default {
 
       this.transformedData['1'].forEach((dot) => {
         let px = this.getPixels(dot)
-        sketch.ellipse( px.x, px.y, dot.size, dot.size)
+        sketch.ellipse( px.x, px.y, dot.size * this.zoom, dot.size * this.zoom)
       })
     },
     drawFix(sketch) {
@@ -113,12 +116,12 @@ export default {
 
       this.transformedData['2'].forEach((dot) => {
         let px = this.getPixels(dot)
-        sketch.ellipse( px.x, px.y, this.radius * 2, this.radius * 2)
+        sketch.ellipse( px.x, px.y, this.radius * 2 * this.zoom, this.radius * 2 * this.zoom)
       })
     },
     drawPaint(sketch) {
       sketch.stroke('black')
-      let stroke = this.project !== undefined ? this.radius * (this.project/4 + 0.7) : this.radius * 2
+      let stroke = this.project !== undefined ? this.radius * (this.project/4 + 0.7) * this.zoom : this.radius * 2 * this.zoom
       sketch.strokeWeight(stroke)
 
       this.transformedData['3'].forEach((dot) => {
@@ -139,10 +142,10 @@ export default {
           // sketch.strokeWeight(4)
           // sketch.stroke(sketch.color(sketch.random(255), sketch.random(255), sketch.random(255)))
           // sketch.ellipse( px.x, px.y, dot.size, dot.size)
-          sketch.ellipse( px.x, px.y, this.radius * (this.project/4 + 1), this.radius * (this.project/4 + 1))
+          sketch.ellipse( px.x, px.y, this.radius * (this.project/4 + 1) * this.zoom, this.radius * (this.project/4 + 1) * this.zoom)
         } else {
           sketch.stroke('black')
-          sketch.strokeWeight(this.radius * (this.project/4+0.7))
+          sketch.strokeWeight(this.radius * (this.project/4+0.7) * this.zoom)
           sketch.line(px.x, px.y, px.x2, px.y2)
         }
       })
@@ -166,6 +169,6 @@ export default {
 
 <style>
   canvas {
-    border: 1px solid rgba(220, 220, 220, 0.8)
+    border: 1px solid rgba(220, 220, 220, 0.8);
   }
 </style>

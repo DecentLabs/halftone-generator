@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="decent-canvas">
     <button type="button" name="button" @click="save">Download</button>
+    <zoom></zoom>
 
     <div v-if="generatorType === 'logo'" v-for="(key, value) in projectStates" class="canvas-container">
       <h2>{{value}}</h2>
@@ -16,10 +17,12 @@
 <script>
 import preview from './preview.vue'
 import canvasToImage from 'canvas-to-image';
+import zoom from './zoom.vue'
+import imageSaver from './../generators/imageSaver.js'
 
 export default {
   name: 'decentCanvas',
-  components: { preview },
+  components: { preview, zoom },
   computed: {
     generatorType () {
       return this.$store.state.generatorType
@@ -30,33 +33,33 @@ export default {
   },
   methods: {
     save() {
-      let canvasList = document.querySelectorAll('canvas')
-      canvasList.forEach((canvas, index) => {
-
-          canvas.toBlob(function(blob) {
-            let img = new Image()
-            let url = URL.createObjectURL(blob);
-            img.src = url;
-
-            let copy = document.createElement('canvas')
-            copy.width = '1000'
-            copy.height = '1000'
-            let ctx = copy.getContext('2d')
-
-            img.onload = function () {
-              console.log('alma');
-              ctx.drawImage(this, 0, 0, 1000, 1000)
-              let download = copy.toDataURL('image/jpg')
-              let a = document.createElement('a')
-              a.style.display = 'none'
-              document.body.appendChild(a)
-              a.href = download
-              a.download = 'canvas_' + index
-              a.click()
-              document.body.removeChild(a)
-            }
-          })
-      })
+      imageSaver()
+      // let canvasList = document.querySelectorAll('canvas')
+      // canvasList.forEach((canvas, index) => {
+      //
+      //     canvas.toBlob(function(blob) {
+      //       let img = new Image()
+      //       let url = URL.createObjectURL(blob);
+      //       img.src = url;
+      //
+      //       let copy = document.createElement('canvas')
+      //       copy.width = '1000'
+      //       copy.height = '1000'
+      //       let ctx = copy.getContext('2d')
+      //
+      //       img.onload = function () {
+      //         ctx.drawImage(this, 0, 0, 1000, 1000)
+      //         let download = copy.toDataURL('image/jpg')
+      //         let a = document.createElement('a')
+      //         a.style.display = 'none'
+      //         document.body.appendChild(a)
+      //         a.href = download
+      //         a.download = 'canvas_' + index
+      //         a.click()
+      //         document.body.removeChild(a)
+      //       }
+      //     })
+      // })
     }
   },
   watch: {

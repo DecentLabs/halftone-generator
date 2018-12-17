@@ -57,7 +57,8 @@ export default new Vuex.Store({
     frameRate: 3,
     opacityLimit: 150,
     lightnessLimit: 220,
-    color: '#000000'
+    color: '#000000',
+    zoomValue: 1
   },
   getters: {
     getGeneratorType(state) {
@@ -68,9 +69,19 @@ export default new Vuex.Store({
     },
     getProjectStates () {
       return PROJECT_STATES
+    },
+    getZoomValue (state) {
+      return state.zoomValue
     }
   },
   mutations: {
+    updateZoomValue (state, value) {
+      if (value === 'zoomIn') {
+        state.zoomValue = state.zoomValue * 1.5
+      } else {
+        state.zoomValue = state.zoomValue * 0.5
+      }
+    },
     updateColor (state, value) {
       state.color = value
     },
