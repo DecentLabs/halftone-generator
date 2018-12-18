@@ -4,11 +4,22 @@
     <div class="popup">
       <div class="close" @click="close">x</div>
 
-      <h2>Export settings: {{generatorType}}</h2>
+      <h2>Export: {{generatorType}}</h2>
       <form class="" action="index.html" method="post">
+
         <div class="row">
-          <h4>Name</h4>
-          <input type="text" name="" value="name">
+          <h4>File name</h4>
+          <input type="text" name="file-name" v-model="fileName">
+          <span>.zip</span>
+        </div>
+
+        <div class="row">
+          <h4>Export as</h4>
+          <select v-model="exportFormat">
+            <option value="png">png</option>
+            <option value="jpg">jpg</option>
+            <option value="gif">gif</option>
+          </select>
         </div>
 
         <div class="row">
@@ -16,26 +27,21 @@
         </div>
 
         <div class="row">
-          <div class="input">
-            <label for="">Thumbnail</label>
-            <input type="checkbox" name="" value="">
-          </div>
-
-          <div class="input">
-            <label for="">Medium</label>
-            <input type="checkbox" name="" value="">
-          </div>
-
-          <div class="input">
-            <label for="">Large</label>
-            <input type="checkbox" name="" value="">
+          <div class="input" v-for="(value, key) in constSizes">
+            <label>{{key}}</label>
+            <input type="checkbox" :name="key" v-model="sizes[key]">
           </div>
 
           <div class="input">
             <label for="">Custom</label>
-            <input type="checkbox" name="" value="">
+            <input type="checkbox" name="custom" v-model="useCustom">
           </div>
+        </div>
 
+        <div class="row" v-if="useCustom">
+          <h4>Custom size</h4>
+          <span>Width</span><input type="number" name="custom-w" v-model="custom.w">
+          <span>Height</span><input type="number" name="custom-h" v-model="custom.h">
         </div>
 
       </form>
@@ -47,8 +53,27 @@
 </template>
 
 <script>
+import { imageSizes } from './../cfg/constants.js'
 export default {
   name: 'export-settings',
+  created () {
+    Object.keys(imageSizes).forEach((size) => {
+      this.sizes[size] = true
+    })
+  },
+  data: function () {
+    return {
+      constSizes: imageSizes,
+      sizes: {},
+      useCustom: false,
+      custom: {
+        w: 1280,
+        h: 720
+      },
+      fileName: 'Decent',
+      exportFormat: 'png'
+    }
+  },
   computed: {
     generatorType () {
       return this.$store.state.generatorType
@@ -109,7 +134,7 @@ h4 {
 form {
   flex-direction: row;
 }
-input, input[type="checkbox"] {
+input, input[type="checkbox"], select {
   margin: 0;
 }
 .row {

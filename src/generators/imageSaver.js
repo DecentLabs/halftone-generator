@@ -4,21 +4,7 @@ import Store from './../store.js'
 import preview from './../components/preview.vue'
 import Vue from 'vue'
 import { PROJECT_STATES } from './../cfg/constants.js'
-
-const imageSizes = {
-  thumbnail: {
-    x: 50,
-    y: 50
-  },
-  medium: {
-    x: 500,
-    y: 500
-  },
-  large: {
-    x: 1000,
-    y: 1000
-  }
-}
+import { imageSizes } from './../cfg/constants.js'
 
 // TODO refactor
 function imageSaver(name = 'decent') {
@@ -90,7 +76,7 @@ function createCanvasList () {
   return canvasList
 
   function getComponent(name, project) {
-    return new Vue({
+    let vm = new Vue({
       ...preview,
       propsData: {
         exportZoom: 10,
@@ -99,6 +85,8 @@ function createCanvasList () {
       },
       store: Store
     }).$mount()
+
+    return vm
   }
 }
 

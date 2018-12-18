@@ -5,3 +5,18 @@ export const PROJECT_STATES = {
   published: 3,
   spinoff: 4
 }
+
+export const imageSizes = {
+  thumbnail: {
+    x: 50,
+    y: 50
+  },
+  medium: {
+    x: 500,
+    y: 500
+  },
+  large: {
+    x: 1000,
+    y: 1000
+  }
+}

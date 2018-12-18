@@ -76,7 +76,7 @@ export default {
     },
     name(val) {
       if (this.canvas && this.canvas.canvas) {
-          this.canvas.canvas.setAttribute('name', val)
+        this.canvas.canvas.setAttribute('name', val)
       }
     }
   },
@@ -86,7 +86,6 @@ export default {
         sketch.resizeCanvas(width, height)
       }
       this.canvas = sketch.createCanvas(this.canvasWidth, this.canvasHeight)
-      // this.setRenderSize()
       this.canvas.canvas.setAttribute('name', this.name)
       sketch.frameRate(this.frameRate)
     },

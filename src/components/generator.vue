@@ -127,10 +127,10 @@ input, select {
   height: 30px;
   margin-left: auto;
   margin-right: auto;
+  padding: 10px;
 }
 input[type="number"] {
   width: 80px;
-  padding: 10px;
 }
 select, input {
   background-color: white;
