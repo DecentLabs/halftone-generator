@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .export-settings {
   background-color: rgba(0, 0, 0, 0.8);
   width: 100vw;

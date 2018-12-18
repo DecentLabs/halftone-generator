@@ -19,12 +19,6 @@
         <common-settings v-if="showCommonSettings"></common-settings>
       </div>
 
-      <!-- <div class="settings">
-        <div class="display-btn" @click="displaySwitch('animation')">x</div>
-        <h2 @click="displaySwitch('animation')">Animation settings</h2>
-        <animation-settings v-if="showAnimSettings"></animation-settings>
-      </div> -->
-
     </form>
     <decent-canvas @showExportSettings="showExportSettings"></decent-canvas>
 
