@@ -15,11 +15,10 @@ export default {
   components: {
     'vue-p5': VueP5
   },
-  props: ['project'],
+  props: ['project', 'name'],
   data: function() {
     return {
       resizeCanvas: null,
-      saveCanvas: null,
       canvas: null
     }
   },
@@ -74,6 +73,11 @@ export default {
     },
     distance(val) {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+    },
+    name(val) {
+      if (this.canvas && this.canvas.canvas) {
+          this.canvas.canvas.setAttribute('name', val)
+      }
     }
   },
   methods: {
@@ -81,10 +85,8 @@ export default {
       this.resizeCanvas = function(width, height) {
         sketch.resizeCanvas(width, height)
       }
-      this.saveCanvas = function(name, type) {
-        sketch.saveCanvas(this.canvas, name, type)
-      }
-      sketch.createCanvas(this.canvasWidth, this.canvasHeight)
+      this.canvas = sketch.createCanvas(this.canvasWidth, this.canvasHeight)
+      this.canvas.canvas.setAttribute('name', this.name)
       sketch.frameRate(this.frameRate)
     },
     draw(sketch) {
@@ -101,7 +103,6 @@ export default {
       this.drawPaint(sketch)
     },
     drawDot(sketch) {
-      // sketch.fill(this.color)
       sketch.fill('black')
       sketch.strokeWeight(0)
 
@@ -130,7 +131,6 @@ export default {
       })
     },
     drawLogo(sketch) {
-      // sketch.fill('black')
       sketch.strokeWeight(0)
       sketch.fill(this.color)
 
@@ -139,9 +139,6 @@ export default {
 
         if (i <= this.project) {
           sketch.fill(this.color)
-          // sketch.strokeWeight(4)
-          // sketch.stroke(sketch.color(sketch.random(255), sketch.random(255), sketch.random(255)))
-          // sketch.ellipse( px.x, px.y, dot.size, dot.size)
           sketch.ellipse( px.x, px.y, this.radius * (this.project/4 + 1) * this.zoom, this.radius * (this.project/4 + 1) * this.zoom)
         } else {
           sketch.stroke('black')

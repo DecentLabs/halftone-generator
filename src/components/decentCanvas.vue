@@ -5,11 +5,13 @@
 
     <div v-if="generatorType === 'logo'" v-for="(key, value) in projectStates" class="canvas-container">
       <h2>{{value}}</h2>
-      <preview :project="key"></preview>
+      <preview :project="key"
+               :name="`${generatorType}_${value}`"></preview>
     </div>
 
     <preview class="canvas-simple"
-             v-if="generatorType !== 'logo'"></preview>
+             v-if="generatorType !== 'logo'"
+             :name="generatorType"></preview>
 
   </div>
 </template>
@@ -34,32 +36,6 @@ export default {
   methods: {
     save() {
       imageSaver()
-      // let canvasList = document.querySelectorAll('canvas')
-      // canvasList.forEach((canvas, index) => {
-      //
-      //     canvas.toBlob(function(blob) {
-      //       let img = new Image()
-      //       let url = URL.createObjectURL(blob);
-      //       img.src = url;
-      //
-      //       let copy = document.createElement('canvas')
-      //       copy.width = '1000'
-      //       copy.height = '1000'
-      //       let ctx = copy.getContext('2d')
-      //
-      //       img.onload = function () {
-      //         ctx.drawImage(this, 0, 0, 1000, 1000)
-      //         let download = copy.toDataURL('image/jpg')
-      //         let a = document.createElement('a')
-      //         a.style.display = 'none'
-      //         document.body.appendChild(a)
-      //         a.href = download
-      //         a.download = 'canvas_' + index
-      //         a.click()
-      //         document.body.removeChild(a)
-      //       }
-      //     })
-      // })
     }
   },
   watch: {
