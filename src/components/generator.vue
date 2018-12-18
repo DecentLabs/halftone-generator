@@ -10,7 +10,7 @@
         <image-settings v-if="generatorType === 'image' && showTypeSettings"></image-settings>
         <grid-settings v-if="generatorType === 'grid' && showTypeSettings"></grid-settings>
         <template-settings v-if="generatorType === 'template' && showTypeSettings"></template-settings>
-        <button v-if="showTypeSettings" type="button" name="button" @click="update">Generate</button>
+        <button id="generate-btn" v-if="showTypeSettings" type="button" name="button" @click="update">Generate</button>
       </div>
 
       <div class="settings">
@@ -26,7 +26,11 @@
       </div> -->
 
     </form>
-    <decent-canvas></decent-canvas>
+    <decent-canvas @showExportSettings="showExportSettings"></decent-canvas>
+
+    <export-settings v-if="exportSettingsPopup"
+                     @closeExportSettings="hideExportSettings"
+                     @save="save"></export-settings>
   </div>
 </template>
 
@@ -40,6 +44,8 @@ import gridSettings from './gridSettings.vue'
 import templateSettings from './templateSettings.vue'
 import animationSettings from './animationSettings.vue'
 import logoSettings from './logoSettings.vue'
+import exportSettings from './exportSettings.vue'
+import imageSaver from './../generators/imageSaver.js'
 
 export default {
   name: 'generator',
@@ -51,7 +57,8 @@ export default {
     imageSettings,
     templateSettings,
     animationSettings,
-    logoSettings
+    logoSettings,
+    exportSettings
   },
   mounted () {
     this.$store.dispatch('generateGrid')
@@ -60,7 +67,8 @@ export default {
     return {
       showCommonSettings: false,
       showAnimSettings: false,
-      showTypeSettings: false
+      showTypeSettings: false,
+      exportSettingsPopup: false
     }
   },
   computed: {
@@ -69,13 +77,21 @@ export default {
     }
   },
   methods: {
+    save() {
+      imageSaver()
+      this.hideExportSettings()
+    },
+    hideExportSettings() {
+      this.exportSettingsPopup = false
+    },
+    showExportSettings () {
+      this.exportSettingsPopup = true
+    },
     update() {
       this.$store.dispatch('generateGrid')
     },
     displaySwitch(val) {
-      console.log(val);
       if (val === 'type') {
-        console.log('switch');
         this.showTypeSettings = !this.showTypeSettings
       } else if (val === 'animation') {
         this.showAnimSettings = !this.showAnimSettings
@@ -134,6 +150,8 @@ button {
   border-radius: 5px;
   width: 120px;
   height: 40px;
+}
+.generate-btn {
   position: absolute;
   right: 0px;
   bottom: 0px;

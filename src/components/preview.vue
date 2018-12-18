@@ -15,7 +15,7 @@ export default {
   components: {
     'vue-p5': VueP5
   },
-  props: ['project', 'name'],
+  props: ['project', 'name', 'exportZoom'],
   data: function() {
     return {
       resizeCanvas: null,
@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     zoom () {
-      return this.$store.getters.getZoomValue
+      return this.exportZoom ? this.exportZoom : this.$store.getters.getZoomValue
     },
     color() {
       return this.$store.state.color
@@ -86,6 +86,7 @@ export default {
         sketch.resizeCanvas(width, height)
       }
       this.canvas = sketch.createCanvas(this.canvasWidth, this.canvasHeight)
+      // this.setRenderSize()
       this.canvas.canvas.setAttribute('name', this.name)
       sketch.frameRate(this.frameRate)
     },

@@ -1,5 +1,9 @@
 import JSZip from 'jszip'
 import saveAs from 'file-saver';
+import Store from './../store.js'
+import preview from './../components/preview.vue'
+import Vue from 'vue'
+import { PROJECT_STATES } from './../cfg/constants.js'
 
 const imageSizes = {
   thumbnail: {
@@ -23,8 +27,7 @@ function imageSaver(name = 'decent') {
 
   const zip = new JSZip();
   let folder = zip.folder('decent_generator')
-
-  let canvasList = document.querySelectorAll('canvas')
+  let canvasList = createCanvasList()
 
   canvasList.forEach((canvas, index) => {
     let canvasName = canvas.getAttribute('name')
@@ -70,6 +73,33 @@ function imageSaver(name = 'decent') {
       })
     })
   })
+}
+
+function createCanvasList () {
+  let generatorType = Store.state.generatorType
+  let canvasList = []
+
+  let data = generatorType === 'logo' ? PROJECT_STATES : { generatorType }
+
+  Object.keys(data).forEach((c) => {
+    let comp = getComponent(`${generatorType}_${c}`, data[c])
+    canvasList.push(comp.canvas.canvas)
+    comp.$destroy()
+  })
+
+  return canvasList
+
+  function getComponent(name, project) {
+    return new Vue({
+      ...preview,
+      propsData: {
+        exportZoom: 10,
+        name: name,
+        project: project
+      },
+      store: Store
+    }).$mount()
+  }
 }
 
 export default imageSaver

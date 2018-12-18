@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="decent-canvas">
-    <button type="button" name="button" @click="save">Download</button>
+    <button type="button" name="button" @click="showExportSettings">Export settings</button>
+
     <zoom></zoom>
 
     <div v-if="generatorType === 'logo'" v-for="(key, value) in projectStates" class="canvas-container">
@@ -20,7 +21,6 @@
 import preview from './preview.vue'
 import canvasToImage from 'canvas-to-image';
 import zoom from './zoom.vue'
-import imageSaver from './../generators/imageSaver.js'
 
 export default {
   name: 'decentCanvas',
@@ -34,8 +34,8 @@ export default {
     }
   },
   methods: {
-    save() {
-      imageSaver()
+    showExportSettings () {
+      this.$emit('showExportSettings')
     }
   },
   watch: {
@@ -77,4 +77,5 @@ button {
   width: 120px;
   height: 40px;
 }
+
 </style>
