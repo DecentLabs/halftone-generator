@@ -71,8 +71,8 @@ export default {
     }
   },
   methods: {
-    save() {
-      imageSaver()
+    save(options) {
+      imageSaver(options)
       this.hideExportSettings()
     },
     hideExportSettings() {

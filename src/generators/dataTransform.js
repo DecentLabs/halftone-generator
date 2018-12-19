@@ -49,7 +49,6 @@ function dataTransform (grid, paintNum, radius, direction, logo) {
       }
     }
   }
-
   return data
 }
 

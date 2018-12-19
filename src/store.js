@@ -2,39 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import gridGenerator from './generators/gridGenerator.js'
 import dataTransform from './generators/dataTransform.js'
+import { PROJECT_STATES, GENERATOR_TYPES, DIRECTIONS, TEMPLATES, ANIMATION_MODE } from './cfg/constants.js'
 
 Vue.use(Vuex)
-
-const PROJECT_STATES = {
-  archived: 0,
-  concept: 1,
-  prototype: 2,
-  published: 3,
-  spinoff: 4
-}
-
-const GENERATOR_TYPES = {
-  LOGO: 'logo',
-  GRID: 'grid',
-  IMAGE: 'image',
-  TEMPLATE: 'template'
-}
-
-const DIRECTIONS = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical',
-  DIAGONAL: 'diagonal'
-}
-
-const TEMPLATES = {
-  BEER: 'beer'
-}
-
-const ANIMATION_MODE = {
-  INCREMENT: 'increment',
-  DECREMENT: 'decrement',
-  BASIC: 'basic'
-}
 
 export default new Vuex.Store({
   state: {
@@ -58,7 +28,9 @@ export default new Vuex.Store({
     opacityLimit: 150,
     lightnessLimit: 220,
     color: '#000000',
-    zoomValue: 2
+    zoomValue: 2,
+    projectName: 'Decent',
+    fileFormat: 'png'
   },
   getters: {
     getGeneratorType(state) {
@@ -75,6 +47,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateProjectName (state, value) {
+      state.projectName = value
+    },
+    updateFileFormat (state, value) {
+      state.fileFormat = value
+    },
     updateZoomValue (state, value) {
       if (value === 'zoomIn') {
         state.zoomValue = state.zoomValue * 1.5
@@ -173,7 +151,6 @@ export default new Vuex.Store({
           context.state.lightnessLimit).then((res) => {
             context.commit('updateGrid', res)
             context.dispatch('transformData')
-
           })
       } else {
         let grid = []
@@ -192,7 +169,6 @@ export default new Vuex.Store({
     },
     transformData(context) {
       console.log('TRANSFORM');
-      context.state.update = false
       context.commit('updateAnimationPaint', context.state.animationMode)
 
       let transformedData = dataTransform(

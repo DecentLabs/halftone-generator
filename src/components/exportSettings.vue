@@ -8,14 +8,13 @@
       <form class="" action="index.html" method="post">
 
         <div class="row">
-          <h4>File name</h4>
-          <input type="text" name="file-name" v-model="fileName">
-          <span>.zip</span>
+          <h4>Project name</h4>
+          <input type="text" name="file-name" v-model="projectName">
         </div>
 
         <div class="row">
           <h4>Export as</h4>
-          <select v-model="exportFormat">
+          <select v-model="fileFormat">
             <option value="png">png</option>
             <option value="jpg">jpg</option>
             <option value="gif">gif</option>
@@ -32,10 +31,10 @@
             <input type="checkbox" :name="key" v-model="sizes[key]">
           </div>
 
-          <div class="input">
+          <!-- <div class="input">
             <label for="">Custom</label>
             <input type="checkbox" name="custom" v-model="useCustom">
-          </div>
+          </div> -->
         </div>
 
         <div class="row" v-if="useCustom">
@@ -53,35 +52,49 @@
 </template>
 
 <script>
-import { imageSizes } from './../cfg/constants.js'
+import { IMAGE_SIZES } from './../cfg/constants.js'
 export default {
   name: 'export-settings',
   created () {
-    Object.keys(imageSizes).forEach((size) => {
+    Object.keys(this.constSizes).forEach((size) => {
       this.sizes[size] = true
     })
   },
   data: function () {
     return {
-      constSizes: imageSizes,
+      constSizes: IMAGE_SIZES,
       sizes: {},
       useCustom: false,
       custom: {
         w: 1280,
         h: 720
-      },
-      fileName: 'Decent',
-      exportFormat: 'png'
+      }
     }
   },
   computed: {
+    fileFormat: {
+      get () {
+        return this.$store.state.fileFormat
+      },
+      set (val) {
+        this.$store.commit('updateFileFormat', val)
+      }
+    },
+    projectName: {
+      get () {
+        return this.$store.state.projectName
+      },
+      set (val) {
+        this.$store.commit('updateProjectName', val)
+      }
+    },
     generatorType () {
       return this.$store.state.generatorType
     }
   },
   methods: {
     save () {
-      this.$emit('save')
+      this.$emit('save', { exportSizes: this.sizes })
     },
     close() {
       this.$emit('closeExportSettings')

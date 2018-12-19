@@ -6,17 +6,31 @@ export const PROJECT_STATES = {
   spinoff: 4
 }
 
-export const imageSizes = {
-  thumbnail: {
-    x: 300,
-    y: 300
-  },
-  medium: {
-    x: 100,
-    y: 100
-  },
-  large: {
-    x: 2000,
-    y: 2000
-  }
+export const GENERATOR_TYPES = {
+  LOGO: 'logo',
+  GRID: 'grid',
+  IMAGE: 'image',
+  TEMPLATE: 'template'
+}
+
+export const DIRECTIONS = {
+  HORIZONTAL: 'horizontal',
+  VERTICAL: 'vertical',
+  DIAGONAL: 'diagonal'
+}
+
+export const TEMPLATES = {
+  BEER: 'beer'
+}
+
+export const ANIMATION_MODE = {
+  INCREMENT: 'increment',
+  DECREMENT: 'decrement',
+  BASIC: 'basic'
+}
+
+export const IMAGE_SIZES = {
+  thumbnail: 300,
+  medium: 1000,
+  large: 2000
 }

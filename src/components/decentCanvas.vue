@@ -4,10 +4,10 @@
 
     <zoom></zoom>
 
-    <div v-if="generatorType === 'logo'" v-for="(key, value) in projectStates" class="canvas-container">
-      <h2>{{value}}</h2>
-      <preview :project="key"
-               :name="`${generatorType}_${value}`"></preview>
+    <div v-if="generatorType === 'logo'" v-for="(value, key) in projectStates" class="canvas-container">
+      <h2>{{key}}</h2>
+      <preview :project="value"
+               :name="`${generatorType}_${key}`"></preview>
     </div>
 
     <preview class="canvas-simple"

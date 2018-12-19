@@ -3,25 +3,27 @@ import saveAs from 'file-saver';
 import Store from './../store.js'
 import preview from './../components/preview.vue'
 import Vue from 'vue'
-import { PROJECT_STATES } from './../cfg/constants.js'
-import { imageSizes } from './../cfg/constants.js'
+import { PROJECT_STATES, IMAGE_SIZES } from './../cfg/constants.js'
 
-// TODO refactor
-function imageSaver(name = 'decent') {
+// TODO refact
+function imageSaver(options) {
   let promises1 = []
   let promises2 = []
 
   const zip = new JSZip();
-  let folder = zip.folder('decent_generator')
+  let folder = zip.folder(Store.state.projectName)
   let canvasList = createCanvasList()
+  let exportSizes = Object.keys(IMAGE_SIZES).filter(defSize =>
+    options.exportSizes[defSize]).map(selected =>
+    IMAGE_SIZES[selected])
 
   canvasList.forEach((canvas, index) => {
     let canvasName = canvas.getAttribute('name')
     let aspect = canvas.width / canvas.height
 
-    promises1.push(new Promise(function(resolve, reject) {
-      canvas.toBlob(function(blob) {
-        let url = URL.createObjectURL(blob);
+    promises1.push(new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
         resolve({
           url: url,
           canvasName: canvasName,
@@ -31,15 +33,15 @@ function imageSaver(name = 'decent') {
     }))
   })
 
-  Promise.all(promises1).then(function(canvasData) {
+  Promise.all(promises1).then((canvasData) => {
     canvasData.forEach((canvasData, index) => {
-      Object.keys(imageSizes).forEach((size) => {
-        promises2.push(new Promise(function(resolve, reject) {
+      exportSizes.forEach((size) => {
+        promises2.push(new Promise((resolve, reject) => {
           let img = new Image()
           img.src = canvasData.url
 
-          let width = imageSizes[size].x * canvasData.aspect
-          let height = imageSizes[size].y
+          let width = Math.round(size * canvasData.aspect)
+          let height = size
           let copy = document.createElement('canvas')
 
           copy.width = width
@@ -50,7 +52,7 @@ function imageSaver(name = 'decent') {
             ctx.drawImage(this, 0, 0, width, height)
             copy.toBlob((blob) => {
               resolve({
-                name: `${canvasData.canvasName}/${canvasData.canvasName}_${size}_${index}.png`,
+                name: `${canvasData.canvasName}/${canvasData.canvasName}_${width}x${height}`,
                 data: blob
               })
             })
@@ -59,12 +61,13 @@ function imageSaver(name = 'decent') {
       })
     })
 
-    Promise.all(promises2).then(function (values) {
+    Promise.all(promises2).then((values) => {
+      let extension = Store.state.fileFormat
       values.forEach((val) => {
-        folder.file(val.name, val.data);
+        folder.file(`${val.name}.${extension}`, val.data);
       })
-      zip.generateAsync({type: 'blob'}).then(function(content) {
-        saveAs(content, `${name}.zip`);
+      zip.generateAsync({type: 'blob'}).then((content) => {
+        saveAs(content, `decent_generator.zip`);
       })
     })
   })
@@ -74,10 +77,10 @@ function createCanvasList () {
   let generatorType = Store.state.generatorType
   let canvasList = []
 
+  // TODO refact
   let data = generatorType === 'logo' ? PROJECT_STATES : { generatorType }
 
   Object.keys(data).forEach((c) => {
-    console.log(data, 'data');
     let comp = getComponent(`${generatorType}_${c}`, data[c])
     canvasList.push(comp.canvas.canvas)
     comp.$destroy()
@@ -86,7 +89,7 @@ function createCanvasList () {
   return canvasList
 
   function getComponent(name, project) {
-    let vm = new Vue({
+    return new Vue({
       ...preview,
       propsData: {
         exportZoom: 10,
@@ -95,8 +98,6 @@ function createCanvasList () {
       },
       store: Store
     }).$mount()
-
-    return vm
   }
 }
 
