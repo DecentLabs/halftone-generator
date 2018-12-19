@@ -17,10 +17,16 @@ function imageSaver(name = 'decent') {
 
   canvasList.forEach((canvas, index) => {
     let canvasName = canvas.getAttribute('name')
+    let aspect = canvas.width / canvas.height
+
     promises1.push(new Promise(function(resolve, reject) {
       canvas.toBlob(function(blob) {
         let url = URL.createObjectURL(blob);
-        resolve({url: url, canvas: canvasName})
+        resolve({
+          url: url,
+          canvasName: canvasName,
+          aspect: aspect
+        })
       })
     }))
   })
@@ -32,17 +38,19 @@ function imageSaver(name = 'decent') {
           let img = new Image()
           img.src = canvasData.url
 
+          let width = imageSizes[size].x * canvasData.aspect
+          let height = imageSizes[size].y
           let copy = document.createElement('canvas')
-          // TODO nem jok a meretek, torzit
-          copy.width = imageSizes[size].x
-          copy.height = imageSizes[size].y
+
+          copy.width = width
+          copy.height = height
           let ctx = copy.getContext('2d')
 
           img.onload = function() {
-            ctx.drawImage(this, 0, 0, imageSizes[size].x, imageSizes[size].y)
+            ctx.drawImage(this, 0, 0, width, height)
             copy.toBlob((blob) => {
               resolve({
-                name: `${canvasData.canvas}/${canvasData.canvas}_${size}_${index}.png`,
+                name: `${canvasData.canvasName}/${canvasData.canvasName}_${size}_${index}.png`,
                 data: blob
               })
             })
