@@ -33,6 +33,7 @@ function imageSaver(name = 'decent') {
           img.src = canvasData.url
 
           let copy = document.createElement('canvas')
+          // TODO nem jok a meretek, torzit
           copy.width = imageSizes[size].x
           copy.height = imageSizes[size].y
           let ctx = copy.getContext('2d')
@@ -68,6 +69,7 @@ function createCanvasList () {
   let data = generatorType === 'logo' ? PROJECT_STATES : { generatorType }
 
   Object.keys(data).forEach((c) => {
+    console.log(data, 'data');
     let comp = getComponent(`${generatorType}_${c}`, data[c])
     canvasList.push(comp.canvas.canvas)
     comp.$destroy()

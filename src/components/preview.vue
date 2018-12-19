@@ -122,7 +122,7 @@ export default {
     },
     drawPaint(sketch) {
       sketch.stroke('black')
-      let stroke = this.project !== undefined ? this.radius * (this.project/4 + 0.7) * this.zoom : this.radius * 2 * this.zoom
+      let stroke = typeof this.project === 'number'  ? this.radius * (this.project/4 + 0.7) * this.zoom : this.radius * 2 * this.zoom
       sketch.strokeWeight(stroke)
 
       this.transformedData['3'].forEach((dot) => {
