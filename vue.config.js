@@ -1,5 +1,5 @@
 module.exports = {
   lintOnSave: true,
+  baseUrl: '',
   outputDir: 'docs'
-  // assetsDir: 'build'
 };
