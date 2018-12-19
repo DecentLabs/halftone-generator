@@ -8,15 +8,15 @@ export const PROJECT_STATES = {
 
 export const imageSizes = {
   thumbnail: {
+    x: 300,
+    y: 300
+  },
+  medium: {
     x: 100,
     y: 100
   },
-  medium: {
-    x: 720,
-    y: 720
-  },
   large: {
-    x: 1500,
-    y: 1500
+    x: 2000,
+    y: 2000
   }
 }
