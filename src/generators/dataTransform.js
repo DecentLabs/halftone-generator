@@ -53,7 +53,7 @@ function dataTransform (grid, paintNum, radius, direction, logo) {
 }
 
 function selectProjectDots (data, direction) {
-  for (let d = 0; d < 5; d++) {
+  for (let d = 0; d < 11; d++) {
     let index = Math.round(Math.random() * (data['1'].length-1))
     let item = data['1'][index]
 
@@ -64,6 +64,7 @@ function selectProjectDots (data, direction) {
         data['logo'].push(item)
         data['1'].splice(index, 1)
       }
+      console.log(data, 'data');
     }
   }
 }

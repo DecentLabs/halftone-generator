@@ -9,7 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     generatorType: GENERATOR_TYPES.GRID,
-    templateName: TEMPLATES.BEER,
+    templateName: TEMPLATES.DECENT,
     gridSize: {x: 4, y: 4},
     imageUrl: null,
     imageRes: 2,

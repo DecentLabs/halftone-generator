@@ -6,6 +6,8 @@
         <label>Choose template</label>
         <select v-model="templateName">
           <option value="beer">beer</option>
+          <option value="decent">decent logo</option>
+          <!-- <option value="decent2">decent logo2</option> -->
         </select>
       </div>
     </div>

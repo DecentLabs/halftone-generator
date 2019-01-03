@@ -20,7 +20,8 @@ export const DIRECTIONS = {
 }
 
 export const TEMPLATES = {
-  BEER: 'beer'
+  BEER: 'beer',
+  DECENT: 'decent'
 }
 
 export const ANIMATION_MODE = {

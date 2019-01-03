@@ -117,12 +117,12 @@ export default {
 
       this.transformedData['2'].forEach((dot) => {
         let px = this.getPixels(dot)
-        sketch.ellipse( px.x, px.y, this.radius * 2 * this.zoom, this.radius * 2 * this.zoom)
+        sketch.ellipse( px.x, px.y, dot.size * this.zoom, dot.size * this.zoom)
       })
     },
     drawPaint(sketch) {
       sketch.stroke('black')
-      let stroke = typeof this.project === 'number'  ? this.radius * (this.project/4 + 0.7) * this.zoom : this.radius * 2 * this.zoom
+      let stroke = this.radius * 2 * this.zoom
       sketch.strokeWeight(stroke)
 
       this.transformedData['3'].forEach((dot) => {
@@ -136,13 +136,17 @@ export default {
 
       this.transformedData['logo'].forEach((dot, i) => {
         let px = this.getPixels(dot)
+        sketch.strokeWeight(0)
 
         if (i <= this.project) {
           sketch.fill(this.color)
-          sketch.ellipse( px.x, px.y, this.radius * (this.project/4 + 1) * this.zoom, this.radius * (this.project/4 + 1) * this.zoom)
+          sketch.ellipse(px.x, px.y, this.radius * 2 * this.zoom, this.radius * 2 * this.zoom)
+        } else if (i > 4) {
+          sketch.fill('black')
+          sketch.ellipse(px.x, px.y, dot.size * this.zoom, dot.size * this.zoom)
         } else {
           sketch.stroke('black')
-          sketch.strokeWeight(this.radius * (this.project/4+0.7) * this.zoom)
+          sketch.strokeWeight(this.radius * 2 * this.zoom)
           sketch.line(px.x, px.y, px.x2, px.y2)
         }
       })
