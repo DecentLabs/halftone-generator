@@ -19,7 +19,10 @@
         <common-settings v-if="showCommonSettings"></common-settings>
       </div>
 
+      <!-- <button class=""alma type="button" name="button">alma</button> -->
+
     </form>
+
     <decent-canvas @showExportSettings="showExportSettings"></decent-canvas>
 
     <export-settings v-if="exportSettingsPopup"
@@ -118,6 +121,12 @@ form {
   flex-wrap: wrap;
   justify-content: flex-start;
   flex-shrink: 0;
+  position: relative
+}
+.alma {
+  position: absolute;
+  bottom: -50px;
+  left: 30px;
 }
 
 input, select {

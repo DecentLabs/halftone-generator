@@ -3,6 +3,7 @@
       <vue-p5
           class="canvas"
           @setup="setup"
+          @preload="preload"
           @draw="draw">
       </vue-p5>
   </div>
@@ -10,6 +11,7 @@
 
 <script>
 import VueP5 from 'vue-p5'
+import font from './../../public/fonts/FilsonProMedium-Medium.otf'
 
 export default {
   components: {
@@ -46,7 +48,7 @@ export default {
     },
     canvasHeight() {
       if (this.grid.length) {
-        return (this.grid.length - 1) * this.distance + this.margin
+        return (this.grid.length - 1) * this.distance + this.margin + this.fontsize
       } else {
         return 400
       }
@@ -63,6 +65,9 @@ export default {
     },
     generatorType() {
       return this.$store.state.generatorType
+    },
+    fontsize () {
+      return (this.radius * 2 * this.zoom) * 1.5
     }
   },
   watch: {
@@ -81,12 +86,16 @@ export default {
     }
   },
   methods: {
+    preload(sketch) {
+      this.font = sketch.loadFont(font);
+    },
     setup(sketch) {
       this.resizeCanvas = function(width, height) {
         sketch.resizeCanvas(width, height)
       }
       this.canvas = sketch.createCanvas(this.canvasWidth, this.canvasHeight)
       this.canvas.canvas.setAttribute('name', this.name)
+
       sketch.frameRate(this.frameRate)
     },
     draw(sketch) {
@@ -98,9 +107,20 @@ export default {
 
       this.drawDot(sketch)
       this.drawFix(sketch)
-
+      //
       this.drawLogo(sketch)
       this.drawPaint(sketch)
+      this.drawText(sketch)
+    },
+    drawText(sketch) {
+      // Set text characteristics
+      sketch.textFont(this.font);
+      sketch.textSize(this.fontsize);
+      sketch.fill(0)
+      sketch.textAlign(sketch.CENTER, sketch.CENTER);
+
+      sketch.strokeWeight(1)
+      sketch.text('CryptoClimber', this.canvasWidth/2, this.canvasHeight - this.margin/3);
     },
     drawDot(sketch) {
       sketch.fill('black')

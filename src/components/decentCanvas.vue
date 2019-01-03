@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="decent-canvas">
     <button type="button" name="button" @click="showExportSettings">Export settings</button>
-
     <zoom></zoom>
 
     <div v-if="generatorType === 'logo'" v-for="(value, key) in projectStates" class="canvas-container">
