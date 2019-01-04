@@ -21,10 +21,13 @@ function dataTransform (grid, paintNum, radius, direction, logo) {
 
   paintNum = paintNum <= data['1'].length ? paintNum : data['1'].length
   let selectedNum = 0
+  let stucked = null
+  let maxAttemps = 100
 
   if (logo) {
     selectProjectDots(data, direction)
     while (data['1'].length) {
+      if (maxAttemps <= 0) break
       select()
     }
   } else {
@@ -34,8 +37,15 @@ function dataTransform (grid, paintNum, radius, direction, logo) {
   }
 
   function select () {
-    let index = Math.round(Math.random() * (data['1'].length-1))
-    let selected = data['1'][index]
+    let selected
+    let index
+    if (!stucked) {
+      index = Math.round(Math.random() * (data['1'].length-1))
+      selected = data['1'][index]
+    } else {
+      selected = stucked
+      index = data['1'].indexOf(selected)
+    }
 
     if (selected) {
       let pair = findPair(data,selected, direction)
@@ -46,6 +56,11 @@ function dataTransform (grid, paintNum, radius, direction, logo) {
 
         data['3'].push(selected)
         data['1'].splice(index, 1)
+        stucked = null
+        maxAttemps = 100
+      } else {
+        stucked = selected
+        maxAttemps -= 1
       }
     }
   }
@@ -64,7 +79,6 @@ function selectProjectDots (data, direction) {
         data['logo'].push(item)
         data['1'].splice(index, 1)
       }
-      console.log(data, 'data');
     }
   }
 }
