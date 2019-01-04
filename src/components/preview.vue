@@ -15,7 +15,7 @@ export default {
   components: {
     'vue-p5': VueP5
   },
-  props: ['project', 'name', 'exportZoom'],
+  props: ['project', 'name', 'exportZoom', 'transparent'],
   data: function() {
     return {
       resizeCanvas: null,
@@ -23,6 +23,9 @@ export default {
     }
   },
   computed: {
+    background () {
+      return this.transparent ? 'rgba(0, 0, 0, 0)' : 'white'
+    },
     zoom () {
       return this.exportZoom ? this.exportZoom : this.$store.getters.getZoomValue
     },
@@ -90,7 +93,8 @@ export default {
       sketch.frameRate(this.frameRate)
     },
     draw(sketch) {
-      sketch.background('white')
+      sketch.clear()
+      sketch.background(this.background)
 
       if (this.$store.state.loop && (this.generatorType !== 'logo')) {
         this.$store.dispatch('transformData')

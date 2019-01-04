@@ -30,7 +30,8 @@ export default new Vuex.Store({
     color: '#000000',
     zoomValue: 2,
     projectName: 'Decent',
-    fileFormat: 'png'
+    fileFormat: 'png',
+    alphaExport: true
   },
   getters: {
     getGeneratorType(state) {
@@ -47,6 +48,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateAlphaExport (state, value) {
+      state.alphaExport = value
+    },
     updateProjectName (state, value) {
       state.projectName = value
     },

@@ -22,6 +22,13 @@
         </div>
 
         <div class="row">
+          <h4>Export alpha</h4>
+          <div class="input">
+            <input type="checkbox" name="alpha" v-model="alphaExport">
+          </div>
+        </div>
+
+        <div class="row">
           <h4>Export sizes</h4>
         </div>
 
@@ -30,11 +37,6 @@
             <label>{{key}}</label>
             <input type="checkbox" :name="key" v-model="sizes[key]">
           </div>
-
-          <!-- <div class="input">
-            <label for="">Custom</label>
-            <input type="checkbox" name="custom" v-model="useCustom">
-          </div> -->
         </div>
 
         <div class="row" v-if="useCustom">
@@ -78,6 +80,14 @@ export default {
       },
       set (val) {
         this.$store.commit('updateFileFormat', val)
+      }
+    },
+    alphaExport: {
+      get () {
+        return this.$store.state.alphaExport
+      },
+      set (val) {
+        this.$store.commit('updateAlphaExport', val)
       }
     },
     projectName: {

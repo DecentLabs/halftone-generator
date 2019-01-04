@@ -34,10 +34,6 @@ function imageGrid (url, resolution, opacityLimit, lignessLimit) {
     const image = new Image()
     image.src = url
 
-    // if (!url) {
-    //   return []
-    // }
-
     image.onload = function() {
       let canvas = document.createElement('canvas')
       canvas.width = this.naturalWidth

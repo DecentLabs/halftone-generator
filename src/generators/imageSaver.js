@@ -49,6 +49,7 @@ function imageSaver(options) {
           let ctx = copy.getContext('2d')
 
           img.onload = function() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0)'
             ctx.drawImage(this, 0, 0, width, height)
             copy.toBlob((blob) => {
               resolve({
@@ -78,23 +79,32 @@ function createCanvasList () {
   let canvasList = []
 
   // TODO refact
-  let data = generatorType === 'logo' ? PROJECT_STATES : { generatorType }
+  let data = generatorType === 'logo' ? Object.keys(PROJECT_STATES) : [ generatorType]
 
-  Object.keys(data).forEach((c) => {
-    let comp = getComponent(`${generatorType}_${c}`, data[c])
+  data.forEach((c) => {
+    let name = generatorType === 'logo' ? `${generatorType}_${c}` : c
+
+    let comp = getComponent(name, data[c])
     canvasList.push(comp.canvas.canvas)
     comp.$destroy()
+
+    if (Store.state.alphaExport) {
+      let comp = getComponent(`${name}_alpha`, data[c], true)
+      canvasList.push(comp.canvas.canvas)
+      comp.$destroy()
+    }
   })
 
   return canvasList
 
-  function getComponent(name, project) {
+  function getComponent(name, project, transparent) {
     return new Vue({
       ...preview,
       propsData: {
         exportZoom: 10,
         name: name,
-        project: project
+        project: project,
+        transparent: transparent
       },
       store: Store
     }).$mount()
