@@ -3,13 +3,17 @@
       <vue-p5
           class="canvas"
           @setup="setup"
-          @draw="draw">
+          @draw="draw"
+          @preload="preload">
       </vue-p5>
   </div>
 </template>
 
 <script>
 import VueP5 from 'vue-p5'
+import Font_reg from './../../public/assets/century-gothic/GOTHIC.TTF'
+import Font_bold from './../../public/assets/century-gothic/GOTHIC_BOLD.TTF'
+
 
 export default {
   components: {
@@ -19,10 +23,18 @@ export default {
   data: function() {
     return {
       resizeCanvas: null,
-      canvas: null
+      canvas: null,
+      fontReg: null,
+      fontBold: null
     }
   },
   computed: {
+    fontSize () {
+      return 58 * this.zoom
+    },
+    subFontsize () {
+      return this.fontSize / 2.2
+    },
     background () {
       return this.transparent ? 'rgba(0, 0, 0, 0)' : 'white'
     },
@@ -49,7 +61,7 @@ export default {
     },
     canvasHeight() {
       if (this.grid.length) {
-        return (this.grid.length - 1) * this.distance + this.margin
+        return (this.grid.length - 1) * this.distance + this.margin + this.fontSize + this.subFontsize
       } else {
         return 400
       }
@@ -84,6 +96,10 @@ export default {
     }
   },
   methods: {
+    preload (sketch) {
+      this.fontReg = sketch.loadFont(Font_reg)
+      this.fontBold = sketch.loadFont(Font_bold)
+    },
     setup(sketch) {
       this.resizeCanvas = function(width, height) {
         sketch.resizeCanvas(width, height)
@@ -91,10 +107,22 @@ export default {
       this.canvas = sketch.createCanvas(this.canvasWidth, this.canvasHeight)
       this.canvas.canvas.setAttribute('name', this.name)
       sketch.frameRate(this.frameRate)
+
+      sketch.textFont(this.fontBold)
     },
     draw(sketch) {
       sketch.clear()
       sketch.background(this.background)
+
+      sketch.strokeWeight(0)
+      sketch.fill('black')
+      // sketch.textAlign(sketch.CENTER)
+
+      sketch.textSize(this.fontSize)
+      sketch.text('DECENT.', this.margin/2 - 2*this.radius, this.fontSize + 30)
+
+      sketch.textSize(this.subFontsize)
+      sketch.text('labs', this.margin/2 - this.radius, this.fontSize + this.subFontsize + 30)
 
       if (this.$store.state.loop && (this.generatorType !== 'logo')) {
         this.$store.dispatch('transformData')
@@ -158,12 +186,12 @@ export default {
     getPixels (dot) {
       let pixels = {
         x: dot.x * this.distance + this.margin / 2,
-        y: dot.y * this.distance + this.margin / 2
+        y: dot.y * this.distance + this.margin / 2 + this.fontSize + this.subFontsize
       }
 
       if (dot.pair) {
         pixels.x2 = dot.pair.x * this.distance + this.margin / 2
-        pixels.y2 = dot.pair.y * this.distance + this.margin / 2
+        pixels.y2 = dot.pair.y * this.distance + this.margin / 2 + this.fontSize + this.subFontsize
       }
 
       return pixels
