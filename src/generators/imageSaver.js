@@ -12,63 +12,75 @@ function imageSaver(options) {
 
   const zip = new JSZip();
   let folder = zip.folder(Store.state.projectName)
-  let canvasList = createCanvasList()
-  let exportSizes = Object.keys(IMAGE_SIZES).filter(defSize =>
-    options.exportSizes[defSize]).map(selected =>
-    IMAGE_SIZES[selected])
+  let canvasList = []
 
-  canvasList.forEach((canvas, index) => {
-    let canvasName = canvas.getAttribute('name')
-    let aspect = canvas.width / canvas.height
+  let result = createCanvasList()
+  let compList = result.compList
+  let canvasPromises = result.promises
 
-    promises1.push(new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        resolve({
-          url: url,
-          canvasName: canvasName,
-          aspect: aspect
+  Promise.all(canvasPromises).then((canvases) => {
+    let exportSizes = Object.keys(IMAGE_SIZES).filter(defSize =>
+      options.exportSizes[defSize]).map(selected =>
+      IMAGE_SIZES[selected])
+
+    canvases.forEach((c, index) => {
+      let canvas = c.canvas
+      let canvasName = canvas.getAttribute('name')
+      let aspect = canvas.width / canvas.height
+
+      promises1.push(new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          resolve({
+            url: url,
+            canvasName: canvasName,
+            aspect: aspect
+          })
         })
-      })
-    }))
-  })
-
-  Promise.all(promises1).then((canvasData) => {
-    canvasData.forEach((canvasData, index) => {
-      exportSizes.forEach((size) => {
-        promises2.push(new Promise((resolve, reject) => {
-          let img = new Image()
-          img.src = canvasData.url
-
-          let width = Math.round(size * canvasData.aspect)
-          let height = size
-          let copy = document.createElement('canvas')
-
-          copy.width = width
-          copy.height = height
-          let ctx = copy.getContext('2d')
-
-          img.onload = function() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0)'
-            ctx.drawImage(this, 0, 0, width, height)
-            copy.toBlob((blob) => {
-              resolve({
-                name: `${canvasData.canvasName}/${canvasData.canvasName}_${width}x${height}`,
-                data: blob
-              })
-            })
-          }
-        }))
-      })
+      }))
     })
 
-    Promise.all(promises2).then((values) => {
-      let extension = Store.state.fileFormat
-      values.forEach((val) => {
-        folder.file(`${val.name}.${extension}`, val.data);
+    compList.forEach((comp) => {
+      comp.$destroy()
+    })
+
+    Promise.all(promises1).then((canvasData) => {
+      canvasData.forEach((canvasData, index) => {
+        exportSizes.forEach((size) => {
+          promises2.push(new Promise((resolve, reject) => {
+            let img = new Image()
+            img.src = canvasData.url
+
+            let width = Math.round(size * canvasData.aspect)
+            let height = size
+            let copy = document.createElement('canvas')
+
+            copy.width = width
+            copy.height = height
+            let ctx = copy.getContext('2d')
+
+            img.onload = function() {
+              ctx.fillStyle = 'rgba(0, 0, 0, 0)'
+              ctx.drawImage(this, 0, 0, width, height)
+              copy.toBlob((blob) => {
+                resolve({
+                  name: `${canvasData.canvasName}/${canvasData.canvasName}_${width}x${height}`,
+                  data: blob
+                })
+              })
+            }
+          }))
+        })
       })
-      zip.generateAsync({type: 'blob'}).then((content) => {
-        saveAs(content, `decent_generator.zip`);
+
+      Promise.all(promises2).then((values) => {
+        let extension = Store.state.fileFormat
+        values.forEach((val) => {
+          folder.file(`${val.name}.${extension}`, val.data);
+        })
+        zip.generateAsync({type: 'blob'}).then((content) => {
+          saveAs(content, `decent_generator.zip`);
+        })
       })
     })
   })
@@ -76,26 +88,36 @@ function imageSaver(options) {
 
 function createCanvasList () {
   let generatorType = Store.state.generatorType
-  let canvasList = []
+  let compList = []
+  let data = generatorType === 'logo' ? Object.keys(PROJECT_STATES) : [ generatorType] // TODO refact
 
-  // TODO refact
-  let data = generatorType === 'logo' ? Object.keys(PROJECT_STATES) : [ generatorType]
+  let promises = []
 
   data.forEach((c) => {
     let name = generatorType === 'logo' ? `${generatorType}_${c}` : c
-
     let comp = getComponent(name, data[c])
-    canvasList.push(comp.canvas.canvas)
-    comp.$destroy()
+    compList.push(comp)
+    promises.push(new Promise((resolve) => {
+      setTimeout(() => { // TODO !!!
+        resolve(comp.canvas)
+      }, 500)
+    }))
 
     if (Store.state.alphaExport) {
       let comp = getComponent(`${name}_alpha`, data[c], true)
-      canvasList.push(comp.canvas.canvas)
-      comp.$destroy()
+      compList.push(comp)
+      promises.push(new Promise((resolve) => {
+        setTimeout(() => { // TODO !!!
+          resolve(comp.canvas)
+        }, 500)
+      }))
     }
   })
 
-  return canvasList
+  return {
+    compList: compList,
+    promises: promises
+  }
 
   function getComponent(name, project, transparent) {
     return new Vue({

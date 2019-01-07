@@ -32,15 +32,17 @@ export default new Vuex.Store({
     projectName: 'Decent',
     fileFormat: 'png',
     alphaExport: true,
-    fontSize: 58,
+    fontSize: 36,
     labelName : 'DECENT.',
-    subLabel: 'labs'
+    subLabel: 'labs',
+    labelPosition: 'top',
+    labelSize: 0
   },
   getters: {
     getFontSize (state) {
-      let size = 36
+      let size = 36 + state.labelSize
       if (state.generatorType === 'template') {
-        size = 56
+        size = 56 + state.labelSize
       }
       return size * state.zoomValue
     },
@@ -58,6 +60,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateLabelSize (state, value) {
+      state.labelSize = value
+    },
+    updateLabelPosition (state, value) {
+      state.labelPosition = value
+    },
     updateLabelName (state, value) {
       state.labelName = value
     },

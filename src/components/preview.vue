@@ -23,12 +23,15 @@ export default {
   data: function() {
     return {
       resizeCanvas: null,
-      canvas: null,
+      canvas: undefined,
       fontReg: null,
       fontBold: null
     }
   },
   computed: {
+    labelPosition () {
+      return this.$store.state.labelPosition
+    },
     label () {
       return this.$store.state.labelName
     },
@@ -36,7 +39,11 @@ export default {
       return this.$store.state.subLabel
     },
     fontSize () {
-      return this.$store.getters.getFontSize
+      let size = this.$store.state.fontSize + this.$store.state.labelSize
+      if (this.$store.state.generatorType === 'template') {
+        size = 56 + this.$store.state.labelSize
+      }
+      return size * this.zoom
     },
     subFontsize () {
       return this.fontSize / 2.2
@@ -67,14 +74,22 @@ export default {
     },
     canvasHeight() {
       if (this.grid.length) {
-        return (this.grid.length - 1) * this.distance + this.margin + this.fontSize + this.subFontsize
+        let height = (this.grid.length - 1) * this.distance + this.margin
+        if (this.labelPosition === 'top' || this.labelPosition === 'bottom') {
+          height += this.fontSize + this.subFontsize + this.distance
+        }
+        return height
       } else {
         return 400
       }
     },
     canvasWidth() {
       if (this.grid.length) {
-        return (this.grid[0].length - 1) * this.distance  + this.margin
+        let width = (this.grid[0].length - 1) * this.distance  + this.margin
+        if (this.labelPosition === 'right') {
+          width = 4 * width
+        }
+        return width
       } else {
         return 400
       }
@@ -99,6 +114,12 @@ export default {
       if (this.canvas && this.canvas.canvas) {
         this.canvas.canvas.setAttribute('name', val)
       }
+    },
+    fontSize (val) {
+      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+    },
+    labelPosition() {
+      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
     }
   },
   methods: {
@@ -120,15 +141,7 @@ export default {
       sketch.clear()
       sketch.background(this.background)
 
-      sketch.strokeWeight(0)
-      sketch.fill('black')
-      // sketch.textAlign(sketch.CENTER)
-
-      sketch.textSize(this.fontSize)
-      sketch.text(this.label, this.margin/2 - 2*this.radius, this.fontSize + 30)
-
-      sketch.textSize(this.subFontsize)
-      sketch.text(this.subLabel, this.margin/2 - this.radius, this.fontSize + this.subFontsize + 30)
+      this.drawLabels(sketch)
 
       if (this.$store.state.loop && (this.generatorType !== 'logo')) {
         this.$store.dispatch('transformData')
@@ -139,6 +152,32 @@ export default {
 
       this.drawLogo(sketch)
       this.drawPaint(sketch)
+    },
+    drawLabels (sketch) {
+      sketch.strokeWeight(0)
+      sketch.fill('black')
+      // sketch.textAlign(sketch.CENTER)
+
+      let positionY
+      let positionX
+
+      if (this.labelPosition === 'top') {
+        positionY = this.fontSize + this.distance
+        positionX = this.margin/2 - this.radius
+      } else if (this.labelPosition === 'bottom') {
+        positionY =  (this.grid.length - 1) * this.distance + this.margin + this.distance
+        positionX = this.margin/2 - this.radius
+      } else if (this.labelPosition === 'right') {
+        positionY =  ((this.grid.length - 1) * this.distance + this.margin) / 2
+        positionX = (this.grid[0].length - 1) * this.distance  + this.margin + this.distance
+      }
+
+
+      sketch.textSize(this.fontSize)
+      sketch.text(this.label, positionX, positionY)
+
+      sketch.textSize(this.subFontsize)
+      sketch.text(this.subLabel, positionX, positionY + this.subFontsize*1.2)
     },
     drawDot(sketch) {
       sketch.fill('black')
@@ -190,14 +229,15 @@ export default {
       })
     },
     getPixels (dot) {
+      let translateY = this.labelPosition === 'top' ? this.fontSize + this.subFontsize + this.distance : 0
       let pixels = {
         x: dot.x * this.distance + this.margin / 2,
-        y: dot.y * this.distance + this.margin / 2 + this.fontSize + this.subFontsize
+        y: dot.y * this.distance + this.margin / 2 + translateY
       }
 
       if (dot.pair) {
         pixels.x2 = dot.pair.x * this.distance + this.margin / 2
-        pixels.y2 = dot.pair.y * this.distance + this.margin / 2 + this.fontSize + this.subFontsize
+        pixels.y2 = dot.pair.y * this.distance + this.margin / 2 + translateY
       }
 
       return pixels

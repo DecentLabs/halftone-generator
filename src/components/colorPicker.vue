@@ -19,13 +19,13 @@ export default {
   data: function () {
     return {
       palette: [
-        '#233ec4',
-        '#8823c4',
-        '#c4239e',
-        '#000000',
-        '#ffffff',
-        '#fc5316',
-        '#16a09c',
+        '#f9f8ff',
+        '#e8a87c',
+        '#e27d60',
+        '#c38d9e',
+        '#8bcbc8',
+        '#40b3a3',
+        '#010208'
       ]
     }
   },
