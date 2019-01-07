@@ -29,8 +29,14 @@ export default {
     }
   },
   computed: {
+    label () {
+      return this.$store.state.labelName
+    },
+    subLabel () {
+      return this.$store.state.subLabel
+    },
     fontSize () {
-      return 58 * this.zoom
+      return this.$store.getters.getFontSize
     },
     subFontsize () {
       return this.fontSize / 2.2
@@ -119,10 +125,10 @@ export default {
       // sketch.textAlign(sketch.CENTER)
 
       sketch.textSize(this.fontSize)
-      sketch.text('DECENT.', this.margin/2 - 2*this.radius, this.fontSize + 30)
+      sketch.text(this.label, this.margin/2 - 2*this.radius, this.fontSize + 30)
 
       sketch.textSize(this.subFontsize)
-      sketch.text('labs', this.margin/2 - this.radius, this.fontSize + this.subFontsize + 30)
+      sketch.text(this.subLabel, this.margin/2 - this.radius, this.fontSize + this.subFontsize + 30)
 
       if (this.$store.state.loop && (this.generatorType !== 'logo')) {
         this.$store.dispatch('transformData')

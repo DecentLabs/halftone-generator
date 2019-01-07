@@ -19,6 +19,12 @@
         <common-settings v-if="showCommonSettings"></common-settings>
       </div>
 
+      <div class="settings">
+        <div class="display-btn" @click="displaySwitch('label')">x</div>
+        <h2 class="setting-name" @click="displaySwitch('label')">Label settings</h2>
+        <label-settings v-if="showLabelSettings"></label-settings>
+      </div>
+
     </form>
     <decent-canvas @showExportSettings="showExportSettings"></decent-canvas>
 
@@ -40,6 +46,7 @@ import animationSettings from './animationSettings.vue'
 import logoSettings from './logoSettings.vue'
 import exportSettings from './exportSettings.vue'
 import imageSaver from './../generators/imageSaver.js'
+import labelSettings from './labelSettings.vue'
 
 export default {
   name: 'generator',
@@ -52,7 +59,8 @@ export default {
     templateSettings,
     animationSettings,
     logoSettings,
-    exportSettings
+    exportSettings,
+    labelSettings
   },
   mounted () {
     this.$store.dispatch('generateGrid')
@@ -62,6 +70,7 @@ export default {
       showCommonSettings: false,
       showAnimSettings: false,
       showTypeSettings: false,
+      showLabelSettings: false,
       exportSettingsPopup: false
     }
   },
@@ -91,6 +100,8 @@ export default {
         this.showAnimSettings = !this.showAnimSettings
       } else if (val === 'common') {
         this.showCommonSettings = !this.showCommonSettings
+      } else if (val === 'label') {
+        this.showLabelSettings = !this.showLabelSettings
       }
     }
   }

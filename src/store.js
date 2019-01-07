@@ -31,9 +31,19 @@ export default new Vuex.Store({
     zoomValue: 2,
     projectName: 'Decent',
     fileFormat: 'png',
-    alphaExport: true
+    alphaExport: true,
+    fontSize: 58,
+    labelName : 'DECENT.',
+    subLabel: 'labs'
   },
   getters: {
+    getFontSize (state) {
+      let size = 36
+      if (state.generatorType === 'template') {
+        size = 56
+      }
+      return size * state.zoomValue
+    },
     getGeneratorType(state) {
       return state.generatorType
     },
@@ -48,6 +58,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateLabelName (state, value) {
+      state.labelName = value
+    },
+    updateSubLabel (state, value) {
+      state.subLabel = value
+    },
     updateAlphaExport (state, value) {
       state.alphaExport = value
     },
