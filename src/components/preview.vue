@@ -192,6 +192,11 @@ export default {
       let bboxSubLabel = this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize)
       sketch.textLeading(bboxLabel.advance)
 
+      console.log(bboxLabel, bboxSubLabel);
+
+      sketch.textSize(this.fontSize)
+      let descent = sketch.textDescent()
+
       if (this.labelPosition === 'top') {
         positionY = bboxLabel.h + this.distance
         positionX = this.distance
@@ -200,17 +205,16 @@ export default {
         positionX = this.distance
       } else if (this.labelPosition === 'right') {
         let top = (this.canvasHeight - (bboxLabel.h + bboxSubLabel.h)) / 2
-        positionY =  top + bboxLabel.h - (bboxLabel.advance - bboxSubLabel.advance)
+        positionY =  top + bboxLabel.h - descent
         positionX = this.gridWidth + this.distance
       }
 
-      sketch.textSize(this.fontSize)
       this.labelWidth = sketch.textWidth(this.label)
       sketch.text(this.label, positionX, positionY)
 
       sketch.textSize(this.subFontsize)
       this.subLabelWidth = sketch.textWidth(this.subLabel)
-      sketch.text(this.subLabel, positionX + bboxLabel.x - bboxSubLabel.advance , positionY + bboxSubLabel.h + bboxLabel.advance)
+      sketch.text(this.subLabel, positionX + bboxLabel.x - bboxSubLabel.advance , positionY + bboxSubLabel.h + descent)
     },
     drawDot(sketch) {
       sketch.fill('black')
