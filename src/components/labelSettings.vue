@@ -13,6 +13,16 @@
       </div>
 
       <div class="input">
+        <label>Show sublabel</label>
+        <input type="checkbox" v-model="showSubLabel">
+      </div>
+
+      <div class="input">
+        <label>Wrap label at space</label>
+        <input type="checkbox" v-model="wrapLabel">
+      </div>
+
+      <div class="input">
         <label>Label position preview</label>
         <select v-model="labelPosition">
           <option :value="'top'">Top</option>
@@ -42,6 +52,28 @@ export default {
   name: 'label-settings',
   components: { vueSlider },
   computed: {
+    showSubLabel: {
+      get () {
+        return this.$store.state.showSubLabel
+      },
+      set (val) {
+        this.$store.commit('updateShowSubLabel', val)
+        if (val) {
+          this.$store.commit('updateWrapLabel', false)
+        }
+      }
+    },
+    wrapLabel: {
+      get () {
+        return this.$store.state.wrapLabel
+      },
+      set (val) {
+        this.$store.commit('updateWrapLabel', val)
+        if (val) {
+          this.$store.commit('updateShowSubLabel', false)
+        }
+      }
+    },
     labelSize: {
       get () {
         return this.$store.labelSize

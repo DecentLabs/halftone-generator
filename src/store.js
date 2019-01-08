@@ -36,7 +36,9 @@ export default new Vuex.Store({
     labelName : 'DECENT.',
     subLabel: 'labs',
     labelPosition: 'top',
-    labelSize: 0
+    labelSize: 0,
+    showSubLabel: true,
+    wrapLabel: false
   },
   getters: {
     getFontSize (state) {
@@ -60,6 +62,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateShowSubLabel (state, value) {
+      state.showSubLabel = value
+    },
+    updateWrapLabel (state, value) {
+      state.wrapLabel = value
+    },
     updateLabelSize (state, value) {
       state.labelSize = value
     },

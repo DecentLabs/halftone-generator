@@ -29,7 +29,9 @@ export default {
       canvas: null,
       fontBold: null,
       labelWidth: 0,
-      subLabelWidth: 0
+      subLabelWidth: 0,
+      bboxLabel: null,
+      bboxSubLabel: null
     }
   },
   computed: {
@@ -96,8 +98,14 @@ export default {
     },
     canvasHeight() {
       let height = this.gridHeight
+      let labelH = this.bboxLabel ? this.bboxLabel.h : 0
+      let subH = this.bboxSubLabel ? this.bboxSubLabel.h : 0 // TODO ez itt nem jo!!!
       if (this.labelPosition === 'top' || this.labelPosition === 'bottom') {
-        height += this.fontSize + this.subFontsize + this.distance
+        if (this.showSubLabel && this.subLabel.length) {
+          height += labelH + subH + this.distance
+        } else {
+          height += labelH + this.distance
+        }
       }
       return height
     },
@@ -113,6 +121,12 @@ export default {
     },
     generatorType() {
       return this.$store.state.generatorType
+    },
+    wrapLabel () {
+      return this.$store.state.wrapLabel
+    },
+    showSubLabel () {
+      return this.$store.state.showSubLabel
     }
   },
   watch: {
@@ -134,6 +148,14 @@ export default {
     },
     fontSize () {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+    },
+    showSubLabel (val) {
+      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+    },
+    subLabel (newVal, oldVal) {
+      if ((!oldVal.length && newVal.length) || (oldVal.length && !newVal.length)) {
+        this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+      }
     },
     labelPosition() {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
@@ -163,12 +185,12 @@ export default {
         this.$store.dispatch('transformData')
       }
 
+      this.drawLabels(sketch)
       this.drawDot(sketch)
       this.drawFix(sketch)
-
       this.drawLogo(sketch)
       this.drawPaint(sketch)
-      this.drawLabels(sketch)
+
       this.drawResovle(this.canvas)
     },
     drawLabels (sketch) {
@@ -176,45 +198,46 @@ export default {
       sketch.fill('black')
       sketch.textAlign()
 
-      // let label = ''
-      // if (this.breakLabel) {
-      //   this.label.split(' ').forEach((word, i) => {
-      //     label += word + '\n' // TODO
-      //   })
-      // } else {
-      //   label = this.label
-      // }
-
       let positionY
       let positionX
+      let label = ''
 
-      let bboxLabel = this.fontBold.textBounds(this.label, 0, 0, this.fontSize)
-      let bboxSubLabel = this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize)
-      sketch.textLeading(bboxLabel.advance)
+      if (this.wrapLabel) {
+        this.label.split(' ').forEach((word, i) => {
+          label += word + '\n' // TODO
+        })
+      } else {
+        label = this.label
+      }
 
-      console.log(bboxLabel, bboxSubLabel);
+      this.bboxLabel = this.fontBold.textBounds(label, 0, 0, this.fontSize)
+      this.bboxSubLabel = (this.subLabel.length && this.showSubLabel) ? this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize) : null
 
       sketch.textSize(this.fontSize)
       let descent = sketch.textDescent()
+      let ascent = sketch.textAscent()
+      sketch.textLeading(ascent)
 
       if (this.labelPosition === 'top') {
-        positionY = bboxLabel.h + this.distance
+        positionY = this.bboxLabel.h + this.distance
         positionX = this.distance
       } else if (this.labelPosition === 'bottom') {
-        positionY =  this.gridHeight + bboxLabel.h
+        positionY =  this.gridHeight + this.bboxLabel.h
         positionX = this.distance
       } else if (this.labelPosition === 'right') {
-        let top = (this.canvasHeight - (bboxLabel.h + bboxSubLabel.h)) / 2
-        positionY =  top + bboxLabel.h - descent
+        let top = (this.canvasHeight - (this.bboxLabel.h + this.bboxSubLabel.h)) / 2
+        positionY =  top + this.bboxLabel.h - descent
         positionX = this.gridWidth + this.distance
       }
 
       this.labelWidth = sketch.textWidth(this.label)
-      sketch.text(this.label, positionX, positionY)
+      sketch.text(label, positionX, positionY)
 
-      sketch.textSize(this.subFontsize)
-      this.subLabelWidth = sketch.textWidth(this.subLabel)
-      sketch.text(this.subLabel, positionX + bboxLabel.x - bboxSubLabel.advance , positionY + bboxSubLabel.h + descent)
+      if (this.subLabel.length && this.showSubLabel) {
+        sketch.textSize(this.subFontsize)
+        this.subLabelWidth = sketch.textWidth(this.subLabel)
+        sketch.text(this.subLabel, positionX + this.bboxLabel.x - this.bboxSubLabel.advance , positionY + this.bboxSubLabel.h + descent)
+      }
     },
     drawDot(sketch) {
       sketch.fill('black')
@@ -266,7 +289,15 @@ export default {
       })
     },
     getPixels (dot) {
-      let translateY = this.labelPosition === 'top' ? this.fontSize + this.subFontsize + this.distance : 0
+      let translateY = 0
+      if (this.labelPosition === 'top') {
+        if (this.showSubLabel && this.subLabel.length) {
+          translateY = this.bboxLabel.h + this.bboxSubLabel.h + this.distance
+        } else {
+          translateY = this.bboxLabel.h + this.distance
+        }
+      }
+      // let translateY = this.labelPosition === 'top' ? this.fontSize + this.subFontsize + this.distance : 0 // TODO
       let pixels = {
         x: dot.x * this.distance + this.margin / 2,
         y: dot.y * this.distance + this.margin / 2 + translateY
