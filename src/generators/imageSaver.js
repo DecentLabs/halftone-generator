@@ -93,24 +93,17 @@ function createCanvasList () {
 
   let promises = []
 
+  const createComp = (name, transparent, data) => {
+    let comp = getComponent(name, data, transparent)
+    compList.push(comp)
+    promises.push(comp.drawed)
+  }
+
   data.forEach((c) => {
     let name = generatorType === 'logo' ? `${generatorType}_${c}` : c
-    let comp = getComponent(name, data[c])
-    compList.push(comp)
-    promises.push(new Promise((resolve) => {
-      setTimeout(() => { // TODO !!!
-        resolve(comp.canvas)
-      }, 500)
-    }))
-
+    createComp(name, false, data[c])
     if (Store.state.alphaExport) {
-      let comp = getComponent(`${name}_alpha`, data[c], true)
-      compList.push(comp)
-      promises.push(new Promise((resolve) => {
-        setTimeout(() => { // TODO !!!
-          resolve(comp.canvas)
-        }, 500)
-      }))
+      createComp(`${name}_alpha`, true, data[c])
     }
   })
 

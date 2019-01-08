@@ -24,7 +24,6 @@ export default {
     return {
       resizeCanvas: null,
       canvas: undefined,
-      fontReg: null,
       fontBold: null
     }
   },
@@ -124,7 +123,7 @@ export default {
   },
   methods: {
     preload (sketch) {
-      this.fontReg = sketch.loadFont(Font_reg)
+      this.drawed =  new Promise(resolve => this.drawResovle = resolve)
       this.fontBold = sketch.loadFont(Font_bold)
     },
     setup(sketch) {
@@ -136,6 +135,7 @@ export default {
       sketch.frameRate(this.frameRate)
 
       sketch.textFont(this.fontBold)
+
     },
     draw(sketch) {
       sketch.clear()
@@ -152,6 +152,7 @@ export default {
 
       this.drawLogo(sketch)
       this.drawPaint(sketch)
+      this.drawResovle(this.canvas)
     },
     drawLabels (sketch) {
       sketch.strokeWeight(0)
