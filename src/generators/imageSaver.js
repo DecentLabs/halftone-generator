@@ -5,7 +5,6 @@ import preview from './../components/preview.vue'
 import Vue from 'vue'
 import { PROJECT_STATES, IMAGE_SIZES } from './../cfg/constants.js'
 
-// TODO refact
 function imageSaver(options) {
   let promises1 = []
   let promises2 = []
@@ -90,10 +89,9 @@ function createCanvasList () {
   let generatorType = Store.state.generatorType
   let compList = []
   let data = generatorType === 'logo' ? Object.keys(PROJECT_STATES) : [ generatorType] // TODO refact
-
   let promises = []
 
-  const createComp = (name, transparent, data) => {
+  const createComp = (name, data, transparent) => {
     let comp = getComponent(name, data, transparent)
     compList.push(comp)
     promises.push(comp.drawed)
@@ -101,12 +99,11 @@ function createCanvasList () {
 
   data.forEach((c) => {
     let name = generatorType === 'logo' ? `${generatorType}_${c}` : c
-    createComp(name, false, data[c])
+    createComp(name, PROJECT_STATES[c], false)
     if (Store.state.alphaExport) {
-      createComp(`${name}_alpha`, true, data[c])
+      createComp(`${name}_alpha`, PROJECT_STATES[c], true)
     }
   })
-
   return {
     compList: compList,
     promises: promises

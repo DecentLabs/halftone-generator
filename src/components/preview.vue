@@ -14,6 +14,7 @@ import VueP5 from 'vue-p5'
 import Font_reg from './../../public/assets/century-gothic/GOTHIC.TTF'
 import Font_bold from './../../public/assets/century-gothic/GOTHIC_BOLD.TTF'
 
+const defaultCanvasSize = 400
 
 export default {
   components: {
@@ -22,12 +23,20 @@ export default {
   props: ['project', 'name', 'exportZoom', 'transparent'],
   data: function() {
     return {
+      drawed: null,
+      drawResovle: null,
       resizeCanvas: null,
-      canvas: undefined,
-      fontBold: null
+      canvas: null,
+      fontBold: null,
+      labelWidth: 0,
+      subLabelWidth: 0
     }
   },
   computed: {
+    maxLabelWidth () {
+      let arr = [this.labelWidth, this.subLabelWidth]
+      return Math.max(...arr)
+    },
     labelPosition () {
       return this.$store.state.labelPosition
     },
@@ -71,27 +80,33 @@ export default {
     grid() {
       return this.$store.state.grid
     },
-    canvasHeight() {
+    gridHeight () {
       if (this.grid.length) {
-        let height = (this.grid.length - 1) * this.distance + this.margin
-        if (this.labelPosition === 'top' || this.labelPosition === 'bottom') {
-          height += this.fontSize + this.subFontsize + this.distance
-        }
-        return height
+        return (this.grid.length - 1) * this.distance + this.margin
       } else {
-        return 400
+        return defaultCanvasSize
       }
     },
-    canvasWidth() {
+    gridWidth () {
       if (this.grid.length) {
-        let width = (this.grid[0].length - 1) * this.distance  + this.margin
-        if (this.labelPosition === 'right') {
-          width = 4 * width
-        }
-        return width
+        return (this.grid[0].length - 1) * this.distance  + this.margin
       } else {
-        return 400
+        return defaultCanvasSize
       }
+    },
+    canvasHeight() {
+      let height = this.gridHeight
+      if (this.labelPosition === 'top' || this.labelPosition === 'bottom') {
+        height += this.fontSize + this.subFontsize + this.distance
+      }
+      return height
+    },
+    canvasWidth() {
+      let width = this.gridWidth
+      if (this.labelPosition === 'right') {
+        width += this.maxLabelWidth + this.distance*2
+      }
+      return width
     },
     margin() {
       return this.distance * 4
@@ -114,7 +129,10 @@ export default {
         this.canvas.canvas.setAttribute('name', val)
       }
     },
-    fontSize (val) {
+    maxLabelWidth () {
+      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+    },
+    fontSize () {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
     },
     labelPosition() {
@@ -141,8 +159,6 @@ export default {
       sketch.clear()
       sketch.background(this.background)
 
-      this.drawLabels(sketch)
-
       if (this.$store.state.loop && (this.generatorType !== 'logo')) {
         this.$store.dispatch('transformData')
       }
@@ -152,33 +168,49 @@ export default {
 
       this.drawLogo(sketch)
       this.drawPaint(sketch)
+      this.drawLabels(sketch)
       this.drawResovle(this.canvas)
     },
     drawLabels (sketch) {
       sketch.strokeWeight(0)
       sketch.fill('black')
-      // sketch.textAlign(sketch.CENTER)
+      sketch.textAlign()
+
+      // let label = ''
+      // if (this.breakLabel) {
+      //   this.label.split(' ').forEach((word, i) => {
+      //     label += word + '\n' // TODO
+      //   })
+      // } else {
+      //   label = this.label
+      // }
 
       let positionY
       let positionX
 
+      let bboxLabel = this.fontBold.textBounds(this.label, 0, 0, this.fontSize)
+      let bboxSubLabel = this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize)
+      sketch.textLeading(bboxLabel.advance)
+
       if (this.labelPosition === 'top') {
-        positionY = this.fontSize + this.distance
-        positionX = this.margin/2 - this.radius
+        positionY = bboxLabel.h + this.distance
+        positionX = this.distance
       } else if (this.labelPosition === 'bottom') {
-        positionY =  (this.grid.length - 1) * this.distance + this.margin + this.distance
-        positionX = this.margin/2 - this.radius
+        positionY =  this.gridHeight + bboxLabel.h
+        positionX = this.distance
       } else if (this.labelPosition === 'right') {
-        positionY =  ((this.grid.length - 1) * this.distance + this.margin) / 2
-        positionX = (this.grid[0].length - 1) * this.distance  + this.margin + this.distance
+        let top = (this.canvasHeight - (bboxLabel.h + bboxSubLabel.h)) / 2
+        positionY =  top + bboxLabel.h - (bboxLabel.advance - bboxSubLabel.advance)
+        positionX = this.gridWidth + this.distance
       }
 
-
       sketch.textSize(this.fontSize)
+      this.labelWidth = sketch.textWidth(this.label)
       sketch.text(this.label, positionX, positionY)
 
       sketch.textSize(this.subFontsize)
-      sketch.text(this.subLabel, positionX, positionY + this.subFontsize*1.2)
+      this.subLabelWidth = sketch.textWidth(this.subLabel)
+      sketch.text(this.subLabel, positionX + bboxLabel.x - bboxSubLabel.advance , positionY + bboxSubLabel.h + bboxLabel.advance)
     },
     drawDot(sketch) {
       sketch.fill('black')
