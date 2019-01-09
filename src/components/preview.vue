@@ -11,7 +11,7 @@
 
 <script>
 import VueP5 from 'vue-p5'
-import Font_reg from './../../public/assets/century-gothic/GOTHIC.TTF'
+// import Font_reg from './../../public/assets/century-gothic/GOTHIC.TTF'
 import Font_bold from './../../public/assets/century-gothic/GOTHIC_BOLD.TTF'
 
 const defaultCanvasSize = 400
@@ -28,15 +28,14 @@ export default {
       resizeCanvas: null,
       canvas: null,
       fontBold: null,
-      labelWidth: 0,
-      subLabelWidth: 0,
-      bboxLabel: null,
-      bboxSubLabel: null
+      // labelWidth: 0,
+      // subLabelWidth: 0,
+      textData: { label: {}, subLabel: {}, height: 0 }
     }
   },
   computed: {
     maxLabelWidth () {
-      let arr = [this.labelWidth, this.subLabelWidth]
+      let arr = [this.textData.label.width, this.textData.subLabel.width]
       return Math.max(...arr)
     },
     labelPosition () {
@@ -49,14 +48,10 @@ export default {
       return this.$store.state.subLabel
     },
     fontSize () {
-      let size = this.$store.state.fontSize + this.$store.state.labelSize
-      if (this.$store.state.generatorType === 'template') {
-        size = 56 + this.$store.state.labelSize
-      }
-      return size * this.zoom
+      return this.$store.getters.getFontSize.label
     },
     subFontsize () {
-      return this.fontSize / 2.2
+      return this.$store.getters.getFontSize.sublabel
     },
     background () {
       return this.transparent ? 'rgba(0, 0, 0, 0)' : 'white'
@@ -98,14 +93,8 @@ export default {
     },
     canvasHeight() {
       let height = this.gridHeight
-      let labelH = this.bboxLabel ? this.bboxLabel.h : 0
-      let subH = this.bboxSubLabel ? this.bboxSubLabel.h : 0 // TODO ez itt nem jo!!!
       if (this.labelPosition === 'top' || this.labelPosition === 'bottom') {
-        if (this.showSubLabel && this.subLabel.length) {
-          height += labelH + subH + this.distance
-        } else {
-          height += labelH + this.distance
-        }
+        height += this.textData.height + this.distance
       }
       return height
     },
@@ -193,50 +182,66 @@ export default {
 
       this.drawResovle(this.canvas)
     },
+    calculateTextSizes (sketch, label, subLabel, descent) {
+      // label sizes
+      sketch.textSize(this.fontSize)
+      let bBox = this.fontBold.textBounds(label, 0, 0, this.fontsize)
+      this.textData.label = bBox
+      this.textData.label.descent = sketch.textDescent()
+      this.textData.label.width = sketch.textWidth(label)
+
+      this.textData.height = bBox.h + this.textData.label.descent
+
+      // sublabel sizes
+      if (subLabel) {
+        sketch.textSize(this.subFontsize)
+        let subBBox = this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize)
+        this.textData.subLabel = subBBox
+        this.textData.subLabel.width = sketch.textWidth(subLabel)
+
+        this.textData.height += subBBox.h
+      }
+    },
     drawLabels (sketch) {
       sketch.strokeWeight(0)
       sketch.fill('black')
-      sketch.textAlign()
+      sketch.textAlign(sketch.LEFT)
 
       let positionY
       let positionX
-      let label = ''
+      let subLabel = this.subLabel.length && this.showSubLabel ? this.subLabel : null
 
-      if (this.wrapLabel) {
-        this.label.split(' ').forEach((word, i) => {
-          label += word + '\n' // TODO
-        })
-      } else {
-        label = this.label
-      }
+      // if (this.wrapLabel) {
+      //   this.label.split(' ').forEach((word, i) => {
+      //     label += word + '\n' // TODO
+      //   })
+      // } else {
+      //   label = this.label
+      // }
 
-      this.bboxLabel = this.fontBold.textBounds(label, 0, 0, this.fontSize)
-      this.bboxSubLabel = (this.subLabel.length && this.showSubLabel) ? this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize) : null
-
-      sketch.textSize(this.fontSize)
-      let descent = sketch.textDescent()
-      let ascent = sketch.textAscent()
-      sketch.textLeading(ascent)
+      this.calculateTextSizes(sketch, this.label, subLabel)
+      // sketch.textLeading(this.textData.label.descent)
 
       if (this.labelPosition === 'top') {
-        positionY = this.bboxLabel.h + this.distance
+        positionY = this.textData.label.h + this.distance
         positionX = this.distance
       } else if (this.labelPosition === 'bottom') {
-        positionY =  this.gridHeight + this.bboxLabel.h
+        positionY =  this.gridHeight + this.textData.label.h
         positionX = this.distance
       } else if (this.labelPosition === 'right') {
-        let top = (this.canvasHeight - (this.bboxLabel.h + this.bboxSubLabel.h)) / 2
-        positionY =  top + this.bboxLabel.h - descent
+        let top = (this.canvasHeight - this.textData.height) / 2
+        positionY =  this.textData.label.h + top
         positionX = this.gridWidth + this.distance
       }
 
-      this.labelWidth = sketch.textWidth(this.label)
-      sketch.text(label, positionX, positionY)
+      sketch.textSize(this.fontSize)
+      sketch.text(this.label, positionX, positionY)
 
-      if (this.subLabel.length && this.showSubLabel) {
+      if (subLabel) {
         sketch.textSize(this.subFontsize)
-        this.subLabelWidth = sketch.textWidth(this.subLabel)
-        sketch.text(this.subLabel, positionX + this.bboxLabel.x - this.bboxSubLabel.advance , positionY + this.bboxSubLabel.h + descent)
+        sketch.text(subLabel,
+                    positionX + this.textData.label.x - this.textData.subLabel.advance,
+                    positionY + this.textData.subLabel.h + this.textData.label.descent)
       }
     },
     drawDot(sketch) {
@@ -292,12 +297,11 @@ export default {
       let translateY = 0
       if (this.labelPosition === 'top') {
         if (this.showSubLabel && this.subLabel.length) {
-          translateY = this.bboxLabel.h + this.bboxSubLabel.h + this.distance
+          translateY = this.textData.height + this.distance
         } else {
-          translateY = this.bboxLabel.h + this.distance
+          translateY = this.textData.label.h + this.distance
         }
       }
-      // let translateY = this.labelPosition === 'top' ? this.fontSize + this.subFontsize + this.distance : 0 // TODO
       let pixels = {
         x: dot.x * this.distance + this.margin / 2,
         y: dot.y * this.distance + this.margin / 2 + translateY

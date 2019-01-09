@@ -18,8 +18,11 @@
       </div>
 
       <div class="input">
-        <label>Wrap label at space</label>
-        <input type="checkbox" v-model="wrapLabel">
+        <label>Sublabel size</label>
+        <select v-model="subLabelSize">
+          <option :value="'big'">Same as label</option>
+          <option :value="'small'">Sublabel</option>
+        </select>
       </div>
 
       <div class="input">
@@ -58,20 +61,14 @@ export default {
       },
       set (val) {
         this.$store.commit('updateShowSubLabel', val)
-        if (val) {
-          this.$store.commit('updateWrapLabel', false)
-        }
       }
     },
-    wrapLabel: {
+    subLabelSize: {
       get () {
-        return this.$store.state.wrapLabel
+        return this.$store.state.subLabelSize
       },
       set (val) {
-        this.$store.commit('updateWrapLabel', val)
-        if (val) {
-          this.$store.commit('updateShowSubLabel', false)
-        }
+        this.$store.commit('updateSubLabelSize', val)
       }
     },
     labelSize: {
