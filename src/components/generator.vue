@@ -15,7 +15,12 @@
       </div>
     </form>
 
-    <decent-canvas @showExportSettings="showExportSettings"></decent-canvas>
+    <div class="editor">
+      <button type="button" name="button" class="export-btn" @click="showExportSettings">Export settings</button>
+      <zoom></zoom>
+    </div>
+
+    <decent-canvas></decent-canvas>
 
     <export-settings v-if="exportSettingsPopup"
                      @closeExportSettings="hideExportSettings"
@@ -32,6 +37,7 @@ import animationSettings from './animationSettings.vue'
 import exportSettings from './exportSettings.vue'
 import imageSaver from './../generators/imageSaver.js'
 import labelSettings from './labelSettings.vue'
+import zoom from './zoom.vue'
 
 export default {
   name: 'generator',
@@ -41,7 +47,8 @@ export default {
     generatorTypeSelector,
     animationSettings,
     exportSettings,
-    labelSettings
+    labelSettings,
+    zoom
   },
   mounted () {
     this.$store.dispatch('generateGrid')
@@ -104,6 +111,15 @@ form {
   flex-wrap: wrap;
   justify-content: flex-start;
   flex-shrink: 0;
+}
+.editor {
+  width: 100%;
+  height: 80px;
+  background-color: transparent;
+  overflow-y: visible;
+  display: flex;
+  justify-content: space-between;
+  z-index: 100;
 }
 input[type="number"] {
   /* width: 80px; */

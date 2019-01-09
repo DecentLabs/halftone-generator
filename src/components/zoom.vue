@@ -18,22 +18,20 @@ export default {
 
 <style>
   .zoom {
-    width: 60px;
-    height: 30px;
+    width: 70px;
+    height: 35px;
     background-color: white;
-    position: absolute;
-    right: 20px;
-    top: 20px;
+    margin: 25px 30px 20px 30px;
   }
   .zoom div {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     display: inline-block;
     border: 1px solid rgb(230, 230, 230);
-    padding: 2px;
+    padding: 3px;
     text-align: center;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.3em;
     cursor: pointer;
   }
   .zoom div:hover {
