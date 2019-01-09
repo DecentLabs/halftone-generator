@@ -211,16 +211,7 @@ export default {
       let positionX
       let subLabel = this.subLabel.length && this.showSubLabel ? this.subLabel : null
 
-      // if (this.wrapLabel) {
-      //   this.label.split(' ').forEach((word, i) => {
-      //     label += word + '\n' // TODO
-      //   })
-      // } else {
-      //   label = this.label
-      // }
-
       this.calculateTextSizes(sketch, this.label, subLabel)
-      // sketch.textLeading(this.textData.label.descent)
 
       if (this.labelPosition === 'top') {
         positionY = this.textData.label.h + this.distance
@@ -231,17 +222,19 @@ export default {
       } else if (this.labelPosition === 'right') {
         let top = (this.canvasHeight - this.textData.height) / 2
         positionY =  this.textData.label.h + top
-        positionX = this.gridWidth + this.distance
+        positionX = this.gridWidth
       }
 
       sketch.textSize(this.fontSize)
-      sketch.text(this.label, positionX, positionY)
+      sketch.text(this.label,
+                  positionX + this.$store.state.translateXLabel,
+                  positionY + this.$store.state.translateYLabel)
 
       if (subLabel) {
         sketch.textSize(this.subFontsize)
         sketch.text(subLabel,
-                    positionX + this.textData.label.x - this.textData.subLabel.advance,
-                    positionY + this.textData.subLabel.h + this.textData.label.descent)
+                    positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.translateXSubLabel,
+                    positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.translateYSubLabel)
       }
     },
     drawDot(sketch) {

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="setting template-settings">
+  <div class="template-settings">
 
     <div class="section">
       <div class="input">

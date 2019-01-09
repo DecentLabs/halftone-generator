@@ -74,8 +74,6 @@ button {
   position: absolute;
   top: 0;
   left: 0;
-  width: 120px;
-  height: 40px;
 }
 
 </style>

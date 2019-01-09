@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="setting image-settings">
+  <div class="image-settings">
 
     <div class="section">
 

@@ -121,6 +121,7 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 1000;
 }
 .popup {
   width: 500px;
@@ -133,6 +134,7 @@ export default {
   margin-top: 200px;
   border-radius: 5px;
   position: relative;
+
 }
 .close {
   position: absolute;
@@ -152,6 +154,7 @@ h2 {
 }
 h4 {
   margin-right: 20px;
+  margin-bottom: 10px;
   padding-top: 5px;
 }
 form {
@@ -169,13 +172,20 @@ input, input[type="checkbox"], select {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.input {
+  padding: 0;
+}
 .row .input {
   width: auto;
   text-align: center;
+  margin-bottom: 0;
 }
 .input input {
   margin-left: auto;
   margin-right: auto;
+}
+select, input[type="text"] {
+  width: 200px;
 }
 label {
   margin-right: 20px;

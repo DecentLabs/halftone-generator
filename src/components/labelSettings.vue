@@ -44,6 +44,48 @@
                     ref="slider"
                     v-model="labelSize"></vue-slider>
       </div>
+
+      <div class="input">
+        <label>Label Translate X</label>
+        <vue-slider class="slider"
+                    :tooltip-dir="'bottom'"
+                    :tooltip="'hover'"
+                    :min="-200"
+                    :max="200"
+                    ref="slider"
+                    v-model="translateXLabel"></vue-slider>
+      </div>
+      <div class="input">
+        <label>Label Translate Y</label>
+        <vue-slider class="slider"
+                    :tooltip-dir="'bottom'"
+                    :tooltip="'hover'"
+                    :min="-200"
+                    :max="200"
+                    ref="slider"
+                    v-model="translateYLabel"></vue-slider>
+      </div>
+
+      <div class="input">
+        <label>Sublabel Translate X</label>
+        <vue-slider class="slider"
+                    :tooltip-dir="'bottom'"
+                    :tooltip="'hover'"
+                    :min="-300"
+                    :max="300"
+                    ref="slider"
+                    v-model="translateXSubLabel"></vue-slider>
+      </div>
+      <div class="input">
+        <label>Sublabel Translate Y</label>
+        <vue-slider class="slider"
+                    :tooltip-dir="'bottom'"
+                    :tooltip="'hover'"
+                    :min="-300"
+                    :max="300"
+                    ref="slider"
+                    v-model="translateYSubLabel"></vue-slider>
+      </div>
     </div>
 
   </div>
@@ -55,6 +97,38 @@ export default {
   name: 'label-settings',
   components: { vueSlider },
   computed: {
+    translateXLabel: {
+      get () {
+        return this.$store.state.translateXLabel
+      },
+      set (val) {
+        this.$store.commit('updateTranslateXLabel', val)
+      }
+    },
+    translateYLabel: {
+      get () {
+        return this.$store.state.translateYLabel
+      },
+      set (val) {
+        this.$store.commit('updateTranslateYLabel', val)
+      }
+    },
+    translateXSubLabel: {
+      get () {
+        return this.$store.state.translateXSubLabel
+      },
+      set (val) {
+        this.$store.commit('updateTranslateXSubLabel', val)
+      }
+    },
+    translateYSubLabel: {
+      get () {
+        return this.$store.state.translateYSubLabel
+      },
+      set (val) {
+        this.$store.commit('updateTranslateYSubLabel', val)
+      }
+    },
     showSubLabel: {
       get () {
         return this.$store.state.showSubLabel

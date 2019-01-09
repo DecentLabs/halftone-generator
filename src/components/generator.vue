@@ -2,20 +2,9 @@
   <div id="generator">
     <generator-type-selector v-if="generatorType"></generator-type-selector>
     <form>
-      <div class="settings type-settings" v-if="generatorType">
-        <div class="display-btn" @click="displaySwitch('type')">x</div>
-        <h2 class="setting-name" @click="displaySwitch('type')">{{generatorType}} settings</h2>
-
-        <logo-settings v-if="generatorType === 'logo' && showTypeSettings"></logo-settings>
-        <image-settings v-if="generatorType === 'image' && showTypeSettings"></image-settings>
-        <grid-settings v-if="generatorType === 'grid' && showTypeSettings"></grid-settings>
-        <template-settings v-if="generatorType === 'template' && showTypeSettings"></template-settings>
-        <button id="generate-btn" v-if="showTypeSettings" type="button" name="button" @click="update">Generate</button>
-      </div>
-
       <div class="settings">
         <div class="display-btn" @click="displaySwitch('common')">x</div>
-        <h2 class="setting-name" @click="displaySwitch('common')">Common settings</h2>
+        <h2 class="setting-name" @click="displaySwitch('common')">Settings</h2>
         <common-settings v-if="showCommonSettings"></common-settings>
       </div>
 
@@ -24,8 +13,8 @@
         <h2 class="setting-name" @click="displaySwitch('label')">Label settings</h2>
         <label-settings v-if="showLabelSettings"></label-settings>
       </div>
-
     </form>
+
     <decent-canvas @showExportSettings="showExportSettings"></decent-canvas>
 
     <export-settings v-if="exportSettingsPopup"
@@ -39,11 +28,7 @@ import generators from './../generators'
 import decentCanvas from './decentCanvas.vue'
 import commonSettings from './commonSettings.vue'
 import generatorTypeSelector from './gridTypeSelector.vue'
-import imageSettings from './imageSettings.vue'
-import gridSettings from './gridSettings.vue'
-import templateSettings from './templateSettings.vue'
 import animationSettings from './animationSettings.vue'
-import logoSettings from './logoSettings.vue'
 import exportSettings from './exportSettings.vue'
 import imageSaver from './../generators/imageSaver.js'
 import labelSettings from './labelSettings.vue'
@@ -54,11 +39,7 @@ export default {
     commonSettings,
     decentCanvas,
     generatorTypeSelector,
-    gridSettings,
-    imageSettings,
-    templateSettings,
     animationSettings,
-    logoSettings,
     exportSettings,
     labelSettings
   },
@@ -69,7 +50,6 @@ export default {
     return {
       showCommonSettings: false,
       showAnimSettings: false,
-      showTypeSettings: false,
       showLabelSettings: false,
       exportSettingsPopup: false
     }
@@ -90,13 +70,8 @@ export default {
     showExportSettings () {
       this.exportSettingsPopup = true
     },
-    update() {
-      this.$store.dispatch('generateGrid')
-    },
     displaySwitch(val) {
-      if (val === 'type') {
-        this.showTypeSettings = !this.showTypeSettings
-      } else if (val === 'animation') {
+      if (val === 'animation') {
         this.showAnimSettings = !this.showAnimSettings
       } else if (val === 'common') {
         this.showCommonSettings = !this.showCommonSettings
@@ -130,20 +105,21 @@ form {
   justify-content: flex-start;
   flex-shrink: 0;
 }
-
-input, select {
-  font-size: 16px;
-  margin: 10px;
-  width: 150px;
-  height: 30px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px;
-}
 input[type="number"] {
-  width: 80px;
+  /* width: 80px; */
+}
+input[type="checkbox"] {
+  padding: 5px;
+  width: 33px;
+  height: 33px;
+  margin: 7px auto 7px auto;
 }
 select, input {
+  font-size: 16px;
+  margin: 5px auto 10px auto;
+  width: 100%;
+  height: 35px;
+  padding: 10px;
   background-color: white;
   color: black;
   border: none;
@@ -151,10 +127,10 @@ select, input {
   border: 2px solid black;
 }
 button {
-  margin: 25px 20px 20px 20px;
+  margin: 25px 30px 20px 30px;
   border-radius: 5px;
-  width: 120px;
-  height: 40px;
+  width: 180px;
+  height: 35px;
 }
 .generate-btn {
   position: absolute;
@@ -193,28 +169,23 @@ span {
   position: relative;
 }
 
-.type-settings {
-  padding-right: 150px;
-  position: relative;
-}
-
-.setting {
-  padding: 10px;
-}
-
 .section {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
-  padding-top: 10px;
-  min-height: 150px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 .input {
-  width: 220px;
+  width: 200px;
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin-right: 30px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  padding: 10px;
 }
 .input label {
   text-align: center;

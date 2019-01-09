@@ -38,7 +38,11 @@ export default new Vuex.Store({
     labelPosition: 'top',
     labelSize: 0,
     showSubLabel: true,
-    subLabelSize: 'small'
+    subLabelSize: 'small',
+    translateXLabel: 0,
+    translateYLabel: 0,
+    translateXSubLabel: 0,
+    translateYSubLabel: 0
   },
   getters: {
     getFontSize (state) {
@@ -63,6 +67,18 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    updateTranslateXLabel (state, value) {
+      state.translateXLabel = value
+    },
+    updateTranslateYLabel (state, value) {
+      state.translateYLabel = value
+    },
+    updateTranslateXSubLabel (state, value) {
+      state.translateXSubLabel = value
+    },
+    updateTranslateYSubLabel (state, value) {
+      state.translateYSubLabel = value
+    },
     updateShowSubLabel (state, value) {
       state.showSubLabel = value
     },

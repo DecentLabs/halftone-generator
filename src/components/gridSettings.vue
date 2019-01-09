@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="setting grid-settings">
+  <div class="grid-settings">
 
     <div class="section">
       <div class="input">

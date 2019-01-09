@@ -1,17 +1,13 @@
 <template lang="html">
   <div class="setting common-settings">
 
-    <!-- <h2>Common settings</h2> -->
+    <button id="generate-btn" type="button" name="button" @click="update">Update</button>
+    <logo-settings v-if="generatorType === 'logo'"></logo-settings>
+    <image-settings v-if="generatorType === 'image'"></image-settings>
+    <grid-settings v-if="generatorType === 'grid'"></grid-settings>
+    <template-settings v-if="generatorType === 'template'"></template-settings>
 
     <div class="section">
-      <div class="input color-input">
-        <label>Select color</label>
-        <div class="color-picker">
-          <div :style="{backgroundColor: selectedColor}" class="selected-color" @click="selectColor"></div>
-          <color-palette v-if="select" @closePalette="close"></color-palette>
-        </div>
-      </div>
-
       <div class="input">
         <label for="distance">Distance</label>
         <input type="number" name="distance" v-model.number="distance">
@@ -40,33 +36,28 @@
         <label>Animation</label>
         <input type="checkbox" id="loop" v-model="loop">
       </div>
-
     </div>
 
   </div>
 </template>
 
 <script>
-import colorPalette from './colorPicker.vue'
+import logoSettings from './logoSettings.vue'
+import imageSettings from './imageSettings.vue'
+import gridSettings from './gridSettings.vue'
+import templateSettings from './templateSettings.vue'
 
 export default {
   name: 'commonSettings',
-  components: {colorPalette},
-  data: function () {
-    return {
-      select: false
-    }
-  },methods: {
-    selectColor() {
-      this.select = !this.select
-    },
-    close() {
-      this.select = false
+  components: {logoSettings, imageSettings, gridSettings, templateSettings},
+  methods: {
+    update() {
+      this.$store.dispatch('generateGrid')
     }
   },
   computed: {
-    selectedColor() {
-      return this.$store.state.color
+    generatorType() {
+      return this.$store.getters.getGeneratorType
     },
     loop: {
       set(val) {
@@ -122,12 +113,6 @@ export default {
 </script>
 
 <style>
-input[type="checkbox"] {
-  padding: 5px;
-  width: 25px;
-  height: 25px;
-  margin: 13px auto 0 auto;
-}
 .selected-color {
   position: relative;
   width: 30px;
