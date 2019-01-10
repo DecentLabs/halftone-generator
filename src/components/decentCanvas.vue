@@ -16,7 +16,6 @@
 
 <script>
 import preview from './preview.vue'
-import canvasToImage from 'canvas-to-image';
 
 export default {
   name: 'decentCanvas',

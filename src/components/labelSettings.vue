@@ -47,44 +47,28 @@
 
       <div class="input">
         <label>Label Translate X</label>
-        <vue-slider class="slider"
-                    :tooltip-dir="'bottom'"
-                    :tooltip="'hover'"
-                    :min="-200"
-                    :max="200"
-                    ref="slider"
-                    v-model="translateXLabel"></vue-slider>
+        <number-input @change="valueChanged"
+                      :value="translateXLabel"
+                      :name="'translateXLabel'"></number-input>
       </div>
       <div class="input">
         <label>Label Translate Y</label>
-        <vue-slider class="slider"
-                    :tooltip-dir="'bottom'"
-                    :tooltip="'hover'"
-                    :min="-200"
-                    :max="200"
-                    ref="slider"
-                    v-model="translateYLabel"></vue-slider>
+        <number-input @change="valueChanged"
+                      :value="translateYLabel"
+                      :name="'translateYLabel'"></number-input>
       </div>
 
       <div class="input">
         <label>Sublabel Translate X</label>
-        <vue-slider class="slider"
-                    :tooltip-dir="'bottom'"
-                    :tooltip="'hover'"
-                    :min="-300"
-                    :max="300"
-                    ref="slider"
-                    v-model="translateXSubLabel"></vue-slider>
+        <number-input @change="valueChanged"
+                      :value="translateXSubLabel"
+                      :name="'translateXSubLabel'"></number-input>
       </div>
       <div class="input">
         <label>Sublabel Translate Y</label>
-        <vue-slider class="slider"
-                    :tooltip-dir="'bottom'"
-                    :tooltip="'hover'"
-                    :min="-300"
-                    :max="300"
-                    ref="slider"
-                    v-model="translateYSubLabel"></vue-slider>
+        <number-input @change="valueChanged" 
+                      :value="translateYSubLabel"
+                      :name="'translateYSubLabel'"></number-input>
       </div>
     </div>
 
@@ -93,9 +77,16 @@
 
 <script>
 import vueSlider from 'vue-slider-component'
+import numberInput from './numberInput.vue'
+
 export default {
   name: 'label-settings',
-  components: { vueSlider },
+  components: { vueSlider, numberInput },
+  methods: {
+    valueChanged (e) {
+      this[e.name] = e.value
+    }
+  },
   computed: {
     translateXLabel: {
       get () {
@@ -181,6 +172,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style media="screen">
 </style>

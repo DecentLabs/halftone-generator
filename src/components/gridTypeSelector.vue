@@ -22,6 +22,7 @@ export default {
       },
       set(val) {
         this.$store.commit('updateGeneratorType', val)
+        this.$store.dispatch('setPreset')
       }
     }
   },

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import gridGenerator from './generators/gridGenerator.js'
 import dataTransform from './generators/dataTransform.js'
 import { PROJECT_STATES, GENERATOR_TYPES, DIRECTIONS, TEMPLATES, ANIMATION_MODE } from './cfg/constants.js'
+import { PRESETS } from './cfg/presets'
 
 Vue.use(Vuex)
 
@@ -190,6 +191,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setPreset (context) {
+      let preset = PRESETS[context.state.generatorType]
+      if (preset) {
+        Object.keys(preset).forEach((key) => {
+          context.state[key] = preset[key]
+        })
+        context.dispatch('generateGrid')
+      }
+    },
     generateGrid(context) {
       console.log('GENERATE');
       let generatorType = context.state.generatorType

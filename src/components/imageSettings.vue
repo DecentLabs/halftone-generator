@@ -10,7 +10,9 @@
 
       <div class="input">
         <label for="">Image sample</label>
-        <input type="number" v-model.number="imageRes">
+        <number-input @change="valueChanged"
+                      :value="imageRes"
+                      :name="'imageRes'"></number-input>
       </div>
 
       <div class="input">
@@ -40,9 +42,10 @@
 
 <script>
 import vueSlider from 'vue-slider-component'
+import numberInput from './numberInput.vue'
 export default {
   name: 'imageSettings',
-  components: { vueSlider },
+  components: { vueSlider, numberInput },
   computed: {
     imageUrl: {
       set(val) {
@@ -78,6 +81,9 @@ export default {
     }
   },
   methods: {
+    valueChanged (e) {
+      this[e.name] = e.value
+    },
     imageChange(e) {
       let file = e.target.files[0]
       let reader  = new FileReader()

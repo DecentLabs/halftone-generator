@@ -2,6 +2,8 @@
   <div class="setting common-settings">
 
     <button id="generate-btn" type="button" name="button" @click="update">Update</button>
+    <button id="reset-btn" type="button" name="button" @click="resetToPreset">Reset to preset</button>
+
     <logo-settings v-if="generatorType === 'logo'"></logo-settings>
     <image-settings v-if="generatorType === 'image'"></image-settings>
     <grid-settings v-if="generatorType === 'grid'"></grid-settings>
@@ -10,17 +12,23 @@
     <div class="section">
       <div class="input">
         <label for="distance">Distance</label>
-        <input type="number" name="distance" v-model.number="distance">
+        <number-input @change="valueChanged"
+                      :value="distance"
+                      :name="'distance'"></number-input>
       </div>
 
       <div class="input">
         <label for="radius">Average point radius</label>
-        <input type="number" name="radius" v-model.number="radius">
+        <number-input @change="valueChanged"
+                      :value="radius"
+                      :name="'radius'"></number-input>
       </div>
 
       <div class="input">
         <label for="paintnum">Number of paints</label>
-        <input type="number" name="paintnum" v-model.number="paintNum">
+        <number-input @change="valueChanged"
+                      :value="paintNum"
+                      :name="'paintNum'"></number-input>
       </div>
 
       <div class="input">
@@ -46,13 +54,26 @@ import logoSettings from './logoSettings.vue'
 import imageSettings from './imageSettings.vue'
 import gridSettings from './gridSettings.vue'
 import templateSettings from './templateSettings.vue'
+import numberInput from './numberInput.vue'
 
 export default {
   name: 'commonSettings',
-  components: {logoSettings, imageSettings, gridSettings, templateSettings},
+  components: {
+    logoSettings,
+    imageSettings,
+    gridSettings,
+    templateSettings,
+    numberInput
+  },
   methods: {
+    valueChanged (e) {
+      this[e.name] = e.value
+    },
     update() {
       this.$store.dispatch('generateGrid')
+    },
+    resetToPreset() {
+      this.$store.dispatch('setPreset')
     }
   },
   computed: {
