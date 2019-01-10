@@ -48,6 +48,7 @@ export default new Vuex.Store({
     getFontSize (state) {
       let label = (state.fontSize + state.labelSize) * state.zoomValue
       let subLabel = state.subLabelSize === 'small' ? label / 2.2 : label
+      console.log(label, subLabel, 'l');
       return {
         label: label,
         sublabel: subLabel

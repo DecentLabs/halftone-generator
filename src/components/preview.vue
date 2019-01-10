@@ -227,14 +227,14 @@ export default {
 
       sketch.textSize(this.fontSize)
       sketch.text(this.label,
-                  positionX + this.$store.state.translateXLabel,
-                  positionY + this.$store.state.translateYLabel)
+                  positionX + this.$store.state.translateXLabel * this.zoom,
+                  positionY + this.$store.state.translateYLabel * this.zoom)
 
       if (subLabel) {
         sketch.textSize(this.subFontsize)
         sketch.text(subLabel,
-                    positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.translateXSubLabel,
-                    positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.translateYSubLabel)
+                    positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.translateXSubLabel * this.zoom,
+                    positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.translateYSubLabel * this.zoom)
       }
     },
     drawDot(sketch) {

@@ -3,6 +3,7 @@
 
     <div class="color-elem"
          v-for="color in palette"
+         v-bind:key="color"
         @click="selectColor(color)"
         :style="{backgroundColor: color}"></div>
 
@@ -10,12 +11,8 @@
 </template>
 
 <script>
-import { Compact } from 'vue-color'
-import Swatches from 'vue-swatches'
-
 export default {
   name: 'colorPicker',
-  components: { Swatches },
   data: function () {
     return {
       palette: [
