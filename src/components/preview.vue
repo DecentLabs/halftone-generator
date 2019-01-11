@@ -311,5 +311,6 @@ export default {
 <style>
   canvas {
     border: 1px solid rgba(220, 220, 220, 0.8);
+    /* margin: 50px; todo */ 
   }
 </style>
