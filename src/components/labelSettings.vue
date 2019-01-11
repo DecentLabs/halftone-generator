@@ -35,14 +35,14 @@
       </div>
 
       <div class="input">
-        <label>Optimise label size</label>
+        <label>Font size</label>
         <vue-slider class="slider"
                     :tooltip-dir="'bottom'"
                     :tooltip="'hover'"
-                    :min="-50"
-                    :max="150"
+                    :min="0"
+                    :max="300"
                     ref="slider"
-                    v-model="labelSize"></vue-slider>
+                    v-model="fontSize"></vue-slider>
       </div>
 
       <div class="input">
@@ -137,12 +137,12 @@ export default {
         this.$store.commit('updateSubLabelSize', val)
       }
     },
-    labelSize: {
+    fontSize: {
       get () {
-        return this.$store.labelSize
+        return this.$store.state.fontSize
       },
       set (val) {
-        this.$store.commit('updateLabelSize', val)
+        this.$store.commit('updateFontSize', val)
       }
     },
     labelPosition: {

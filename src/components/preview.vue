@@ -11,7 +11,6 @@
 
 <script>
 import VueP5 from 'vue-p5'
-// import Font_reg from './../../public/assets/century-gothic/GOTHIC.TTF'
 import Font_bold from './../../public/assets/century-gothic/GOTHIC_BOLD.TTF'
 
 const defaultCanvasSize = 400
@@ -28,8 +27,6 @@ export default {
       resizeCanvas: null,
       canvas: null,
       fontBold: null,
-      // labelWidth: 0,
-      // subLabelWidth: 0,
       textData: { label: {}, subLabel: {}, height: 0 }
     }
   },
@@ -48,10 +45,10 @@ export default {
       return this.$store.state.subLabel
     },
     fontSize () {
-      return this.$store.getters.getFontSize.label
+      return this.$store.state.fontSize * this.zoom
     },
     subFontsize () {
-      return this.$store.getters.getFontSize.sublabel
+      return this.$store.state.subLabelSize === 'small' ? this.fontSize / 2.2 : this.fontSize
     },
     background () {
       return this.transparent ? 'rgba(0, 0, 0, 0)' : 'white'

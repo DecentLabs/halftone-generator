@@ -33,11 +33,10 @@ export default new Vuex.Store({
     projectName: 'Decent',
     fileFormat: 'png',
     alphaExport: true,
-    fontSize: 36,
     labelName : 'DECENT.',
     subLabel: 'labs',
     labelPosition: 'top',
-    labelSize: 0,
+    fontSize: 36,
     showSubLabel: true,
     subLabelSize: 'small',
     translateXLabel: 0,
@@ -46,14 +45,14 @@ export default new Vuex.Store({
     translateYSubLabel: 0
   },
   getters: {
-    getFontSize (state) {
-      let label = (state.fontSize + state.labelSize) * state.zoomValue
-      let subLabel = state.subLabelSize === 'small' ? label / 2.2 : label
-      return {
-        label: label,
-        sublabel: subLabel
-      }
-    },
+    // getFontSize (state) {
+    //   let label = (state.fontSize + state.labelSize) * state.zoomValue
+    //   let subLabel = state.subLabelSize === 'small' ? label / 2.2 : label
+    //   return {
+    //     label: label,
+    //     sublabel: subLabel
+    //   }
+    // },
     getGeneratorType(state) {
       return state.generatorType
     },
@@ -86,8 +85,8 @@ export default new Vuex.Store({
     updateSubLabelSize (state, value) {
       state.subLabelSize = value
     },
-    updateLabelSize (state, value) {
-      state.labelSize = value
+    updateFontSize (state, value) {
+      state.fontSize = value
     },
     updateLabelPosition (state, value) {
       state.labelPosition = value
