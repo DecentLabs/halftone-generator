@@ -49,7 +49,6 @@ export default new Vuex.Store({
     getFontSize (state) {
       let label = (state.fontSize + state.labelSize) * state.zoomValue
       let subLabel = state.subLabelSize === 'small' ? label / 2.2 : label
-      console.log(label, subLabel, 'l');
       return {
         label: label,
         sublabel: subLabel
@@ -201,7 +200,7 @@ export default new Vuex.Store({
       }
     },
     generateGrid(context) {
-      console.log('GENERATE');
+      // console.log('GENERATE');
       let generatorType = context.state.generatorType
 
       if (generatorType === 'image') {
@@ -232,7 +231,7 @@ export default new Vuex.Store({
       }
     },
     transformData(context) {
-      console.log('TRANSFORM');
+      // console.log('TRANSFORM');
       context.commit('updateAnimationPaint', context.state.animationMode)
 
       let transformedData = dataTransform(

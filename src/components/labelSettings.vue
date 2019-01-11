@@ -14,7 +14,7 @@
 
       <div class="input">
         <label>Show sublabel</label>
-        <input type="checkbox" v-model="showSubLabel">
+        <checkbox :value="showSubLabel" :name="'showSubLabel'" @change="valueChanged"></checkbox>
       </div>
 
       <div class="input">
@@ -66,7 +66,7 @@
       </div>
       <div class="input">
         <label>Sublabel Translate Y</label>
-        <number-input @change="valueChanged" 
+        <number-input @change="valueChanged"
                       :value="translateYSubLabel"
                       :name="'translateYSubLabel'"></number-input>
       </div>
@@ -78,10 +78,11 @@
 <script>
 import vueSlider from 'vue-slider-component'
 import numberInput from './numberInput.vue'
+import checkbox from './checkbox.vue'
 
 export default {
   name: 'label-settings',
-  components: { vueSlider, numberInput },
+  components: { vueSlider, numberInput, checkbox },
   methods: {
     valueChanged (e) {
       this[e.name] = e.value

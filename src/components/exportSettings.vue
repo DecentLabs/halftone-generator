@@ -24,7 +24,7 @@
         <div class="row">
           <h4>Export alpha</h4>
           <div class="input">
-            <input type="checkbox" name="alpha" v-model="alphaExport">
+            <checkbox :value="alphaExport" :name="'alphaExport'" @change="valueChanged"></checkbox>
           </div>
         </div>
 
@@ -33,9 +33,17 @@
         </div>
 
         <div class="row">
-          <div class="input" v-for="(value, key) in constSizes">
-            <label>{{key}}</label>
-            <input type="checkbox" :name="key" v-model="sizes[key]">
+          <div class="input">
+            <label>Thumbnail</label>
+            <checkbox :value="thumbnail" :name="'thumbnail'" @change="valueChanged"></checkbox>
+          </div>
+          <div class="input">
+            <label>Medium</label>
+            <checkbox :value="medium" :name="'medium'" @change="valueChanged"></checkbox>
+          </div>
+          <div class="input">
+            <label>Large</label>
+            <checkbox :value="large" :name="'large'" @change="valueChanged"></checkbox>
           </div>
         </div>
 
@@ -54,18 +62,15 @@
 </template>
 
 <script>
-import { IMAGE_SIZES } from './../cfg/constants.js'
+import checkbox from './checkbox.vue'
 export default {
   name: 'export-settings',
-  created () {
-    Object.keys(this.constSizes).forEach((size) => {
-      this.sizes[size] = true
-    })
-  },
+  components: { checkbox },
   data: function () {
     return {
-      constSizes: IMAGE_SIZES,
-      sizes: {},
+      thumbnail: true,
+      medium: true,
+      large: true,
       useCustom: false,
       custom: {
         w: 1280,
@@ -103,8 +108,15 @@ export default {
     }
   },
   methods: {
+    valueChanged (e) {
+      this[e.name] = e.value
+    },
     save () {
-      this.$emit('save', { exportSizes: this.sizes })
+      this.$emit('save', {exportSizes: {
+        thumnail: this.thumnail,
+        medium: this.medium,
+        large: this.large
+      }})
     },
     close() {
       this.$emit('closeExportSettings')
@@ -160,7 +172,7 @@ h4 {
 form {
   flex-direction: row;
 }
-input, input[type="checkbox"], select {
+input, select {
   margin: 0;
 }
 .row {

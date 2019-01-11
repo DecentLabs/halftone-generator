@@ -1,10 +1,14 @@
 <template lang="html">
   <div class="decent-canvas">
 
-    <div v-if="generatorType === 'logo'" v-for="(value, key) in projectStates" class="canvas-container">
-      <h2>{{key}}</h2>
-      <preview :project="value"
-               :name="`${generatorType}_${key}`"></preview>
+    <div v-if="generatorType === 'logo'">
+      <div v-for="(value, key) in projectStates"
+           class="canvas-container"
+           :key="key">
+        <h2>{{key}}</h2>
+        <preview :project="value"
+                 :name="`${generatorType}_${key}`"></preview>
+      </div>
     </div>
 
     <preview class="canvas-simple"
@@ -29,7 +33,7 @@ export default {
     }
   },
   watch: {
-    generatorType(val) {
+    generatorType() {
       this.$store.dispatch('generateGrid')
     }
   }

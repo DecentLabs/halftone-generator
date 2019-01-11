@@ -29,11 +29,11 @@
 </template>
 
 <script>
-import generators from './../generators'
+// import generators from './../generators'
 import decentCanvas from './decentCanvas.vue'
 import commonSettings from './commonSettings.vue'
 import generatorTypeSelector from './gridTypeSelector.vue'
-import animationSettings from './animationSettings.vue'
+// import animationSettings from './animationSettings.vue'
 import exportSettings from './exportSettings.vue'
 import imageSaver from './../generators/imageSaver.js'
 import labelSettings from './labelSettings.vue'
@@ -45,7 +45,7 @@ export default {
     commonSettings,
     decentCanvas,
     generatorTypeSelector,
-    animationSettings,
+    // animationSettings,
     exportSettings,
     labelSettings,
     zoom
@@ -120,15 +120,6 @@ form {
   display: flex;
   justify-content: space-between;
   z-index: 100;
-}
-input[type="number"] {
-  /* width: 80px; */
-}
-input[type="checkbox"] {
-  padding: 5px;
-  width: 33px;
-  height: 33px;
-  margin: 7px auto 7px auto;
 }
 select, input {
   font-size: 16px;

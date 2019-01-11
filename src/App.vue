@@ -18,6 +18,7 @@ html, body, * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  outline: none;
 }
 html, body, #app {
   width: 100%;
@@ -42,9 +43,20 @@ button {
   cursor: pointer;
   font-size: 0.9em;
   font-family: Helvetica;
+  border-style: none;
+  border: 2px solid black;
 }
 button:hover {
   background-color: black;
   color: white;
+}
+
+element.style {
+    transition-duration: 0s;
+    width: 41px;
+    left: 0px;
+}
+.vue-slider-component .vue-slider-process {
+  background-color: black;
 }
 </style>

@@ -42,7 +42,7 @@
 
       <div class="input">
         <label>Animation</label>
-        <input type="checkbox" id="loop" v-model="loop">
+        <checkbox :value="loop" :name="'loop'" @change="valueChanged"></checkbox>
       </div>
     </div>
 
@@ -55,6 +55,7 @@ import imageSettings from './imageSettings.vue'
 import gridSettings from './gridSettings.vue'
 import templateSettings from './templateSettings.vue'
 import numberInput from './numberInput.vue'
+import checkbox from './checkbox.vue'
 
 export default {
   name: 'commonSettings',
@@ -63,7 +64,8 @@ export default {
     imageSettings,
     gridSettings,
     templateSettings,
-    numberInput
+    numberInput,
+    checkbox
   },
   methods: {
     valueChanged (e) {
