@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="label-settings">
+  <div class="setting label-settings">
 
     <div class="section">
       <div class="input">

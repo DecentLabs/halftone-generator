@@ -113,7 +113,7 @@ export default {
     },
     save () {
       this.$emit('save', {exportSizes: {
-        thumnail: this.thumnail,
+        thumbnail: this.thumbnail,
         medium: this.medium,
         large: this.large
       }})

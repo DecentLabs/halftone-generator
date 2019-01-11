@@ -113,7 +113,7 @@ function createCanvasList () {
     return new Vue({
       ...preview,
       propsData: {
-        exportZoom: 10,
+        exportZoom: 5,
         name: name,
         project: project,
         transparent: transparent

@@ -45,6 +45,7 @@ button {
   font-family: Helvetica;
   border-style: none;
   border: 2px solid black;
+  background-color: white;
 }
 button:hover {
   background-color: black;

@@ -48,6 +48,7 @@ export default {
   padding: 30px;
   position: relative;
   margin-top: -80px;
+  text-align: center;
 }
 
 .canvas-container {
@@ -65,6 +66,18 @@ h2 {
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 20px;
+}
+
+@media (max-width: 1023px) {
+  .decent-canvas {
+    margin-top: 0;
+  }
+  .canvas-simple {
+    padding: 0;
+  }
+  .canvas-container {
+    margin: 10px;
+  }
 }
 
 </style>

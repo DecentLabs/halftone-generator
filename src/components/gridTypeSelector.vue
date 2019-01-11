@@ -51,8 +51,12 @@ export default {
     border-left: 1px solid rgba(230, 230, 230);
     font-weight: bold;
   }
+  .generator-type-selector label:first-child {
+    border-left: 0;
+  }
   label.selected {
     background-color: black;
     color: white;
+    /* border-bottom: 1px solid rgba(230, 230, 230); */
   }
 </style>

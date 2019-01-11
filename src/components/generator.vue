@@ -2,15 +2,15 @@
   <div id="generator">
     <generator-type-selector v-if="generatorType"></generator-type-selector>
     <form>
-      <div class="settings">
+      <div class="settings" >
         <div class="display-btn" @click="displaySwitch('common')">x</div>
-        <h2 class="setting-name" @click="displaySwitch('common')">Settings</h2>
+        <h2 v-bind:class="showCommonSettings ? 'active': 'closed'" class="setting-name" @click="displaySwitch('common')">Settings</h2>
         <common-settings v-if="showCommonSettings"></common-settings>
       </div>
 
       <div class="settings">
         <div class="display-btn" @click="displaySwitch('label')">x</div>
-        <h2 class="setting-name" @click="displaySwitch('label')">Label settings</h2>
+        <h2 v-bind:class="showLabelSettings ? 'active': 'closed'" class="setting-name" @click="displaySwitch('label')">Label settings</h2>
         <label-settings v-if="showLabelSettings"></label-settings>
       </div>
     </form>
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-// import generators from './../generators'
 import decentCanvas from './decentCanvas.vue'
 import commonSettings from './commonSettings.vue'
 import generatorTypeSelector from './gridTypeSelector.vue'
@@ -103,14 +102,20 @@ export default {
   font-weight: bold;
   padding-left: 30px;
 }
+.setting-name.active {
+  background-color: black;
+  color: white;
+}
 form {
   background-color: white;
   color: black;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   justify-content: flex-start;
   flex-shrink: 0;
+  max-height: calc(100% - 41px);
+  overflow: hidden;
 }
 .editor {
   width: 100%;
@@ -174,6 +179,14 @@ span {
   text-align: left;
   width: 100%;
   position: relative;
+  max-height: calc(100% - 57px);
+  overflow-y: auto;
+  min-height: 57px;
+}
+
+.setting {
+  max-height: 100%;
+  overflow-y: scroll;
 }
 
 .section {
@@ -196,5 +209,13 @@ span {
 }
 .input label {
   text-align: center;
+}
+
+@media (max-width: 1023px) {
+  .section {
+    justify-content: center;
+  }
+  .input, button {
+  }
 }
 </style>
