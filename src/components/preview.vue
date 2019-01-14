@@ -50,6 +50,9 @@ export default {
     subFontsize () {
       return this.$store.state.subLabelSize === 'small' ? this.fontSize / 2.2 : this.fontSize
     },
+    textHeight () {
+      return this.textData.height
+    },
     background () {
       return this.transparent ? 'rgba(0, 0, 0, 0)' : 'white'
     },
@@ -133,6 +136,9 @@ export default {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
     },
     fontSize () {
+      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
+    },
+    textHeight () {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
     },
     showSubLabel (val) {
@@ -311,6 +317,6 @@ export default {
 <style>
   canvas {
     border: 1px solid rgba(220, 220, 220, 0.8);
-    /* margin: 50px; todo */ 
+    /* margin: 50px; todo */
   }
 </style>
