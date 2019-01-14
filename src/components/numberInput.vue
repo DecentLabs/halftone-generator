@@ -1,8 +1,21 @@
 <template lang="html">
   <div class="number-input">
-    <button @click="minus" class="minus" type="button" name="num-button">-</button>
+    <button @mouseleave="stop"
+            @mouseup="stop"
+            @mousedown="start('minus')"
+            @touchstart="start('minus')"
+            @touchend="stop"
+            class="minus" type="button"
+            name="num-button">-</button>
     <input type="text" :value="val" @change="change">
-    <button @click="plus" class="plus" type="button" name="num-button">+</button>
+    <button @mouseleave="stop"
+            @mouseup="stop" 
+            @mousedown="start('plus')"
+            @touchstart="start('plus')"
+            @touchend="stop"
+            class="plus"
+            type="button"
+            name="num-button">+</button>
   </div>
 </template>
 
@@ -13,9 +26,26 @@ export default {
   data: function () {
     return {
       val: this.value,
+      interval: false
     }
   },
   methods: {
+    start(type) {
+      if (!this.inetrval) {
+        this.interval = setInterval(() => {
+          if (type === 'plus') {
+            this.plus()
+          } else {
+            this.minus()
+          }
+
+        }, 50)
+      }
+    },
+    stop() {
+      clearInterval(this.interval)
+      this.interval = false
+    },
     emitChange() {
       this.$emit('change', {name: this.name, value:this.val})
     },
