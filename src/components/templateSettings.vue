@@ -11,6 +11,12 @@
         </select>
       </div>
     </div>
+
+    <div class="input">
+      <label class="file" for="file">Choose image</label>
+      <input name="file" type="file" accept="application/json" @change="dataInput">
+    </div>
+
   </div>
 </template>
 
@@ -24,6 +30,24 @@ export default {
       },
       get() {
         return this.$store.state.templateName
+      }
+    }
+  },
+  methods: {
+    dataInput (e) {
+      let file = e.target.files[0]
+      let reader  = new FileReader()
+
+      reader.addEventListener("load", () => {
+        let data = JSON.parse(reader.result)
+        Object.keys(data).forEach((key) => {
+          this.$store.state[key] = data[key]
+          console.log(this.$store.state, 'state');
+        })
+      }, false);
+
+      if (file) {
+        reader.readAsText(file);
       }
     }
   }

@@ -77,6 +77,8 @@ function imageSaver(options) {
         values.forEach((val) => {
           folder.file(`${val.name}.${extension}`, val.data);
         })
+
+        folder.file('config.json', JSON.stringify(Store.state))
         zip.generateAsync({type: 'blob'}).then((content) => {
           saveAs(content, `decent_generator.zip`);
         })
