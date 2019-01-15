@@ -13,6 +13,11 @@
       </div>
 
       <div class="input">
+        <label>Show label</label>
+        <checkbox :value="showLabel" :name="'showLabel'" @change="valueChanged"></checkbox>
+      </div>
+
+      <div class="input">
         <label>Show sublabel</label>
         <checkbox :value="showSubLabel" :name="'showSubLabel'" @change="valueChanged"></checkbox>
       </div>
@@ -127,6 +132,14 @@ export default {
       },
       set (val) {
         this.$store.commit('updateShowSubLabel', val)
+      }
+    },
+    showLabel: {
+      get () {
+        return this.$store.state.showLabel
+      },
+      set (val) {
+        this.$store.commit('updateShowLabel', val)
       }
     },
     subLabelSize: {

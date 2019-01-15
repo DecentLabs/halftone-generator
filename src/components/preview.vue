@@ -39,10 +39,14 @@ export default {
       return this.$store.state.labelPosition
     },
     label () {
-      return this.$store.state.labelName
+      let label = this.$store.state.labelName
+      return label.length && this.showLabel ? label : null
+      // return this.$store.state.labelName
     },
     subLabel () {
-      return this.$store.state.subLabel
+      let label = this.$store.state.subLabel
+      return label.length && this.showSubLabel ? label : null
+      // return this.$store.state.subLabel
     },
     fontSize () {
       return this.$store.state.fontSize * this.zoom
@@ -93,7 +97,7 @@ export default {
     },
     canvasHeight() {
       let height = this.gridHeight
-      if (this.labelPosition === 'top' || this.labelPosition === 'bottom') {
+      if ((this.label || this.subLabel) && (this.labelPosition === 'top' || this.labelPosition === 'bottom')) {
         height += this.textData.height + this.distance
       }
       return height
@@ -116,6 +120,9 @@ export default {
     },
     showSubLabel () {
       return this.$store.state.showSubLabel
+    },
+    showLabel () {
+      return this.$store.state.showLabel
     }
   },
   watch: {
@@ -140,14 +147,6 @@ export default {
     },
     textHeight () {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
-    },
-    showSubLabel (val) {
-      this.resizeCanvas(this.canvasWidth, this.canvasHeight)
-    },
-    subLabel (newVal, oldVal) {
-      if ((!oldVal.length && newVal.length) || (oldVal.length && !newVal.length)) {
-        this.resizeCanvas(this.canvasWidth, this.canvasHeight)
-      }
     },
     labelPosition() {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
@@ -185,22 +184,25 @@ export default {
 
       this.drawResovle(this.canvas)
     },
-    calculateTextSizes (sketch, label, subLabel, descent) {
+    calculateTextSizes (sketch) {
+      this.textData.height = 0
       // label sizes
-      sketch.textSize(this.fontSize)
-      let bBox = this.fontBold.textBounds(label, 0, 0, this.fontsize)
-      this.textData.label = bBox
-      this.textData.label.descent = sketch.textDescent()
-      this.textData.label.width = sketch.textWidth(label)
+      if (this.label) {
+        sketch.textSize(this.fontSize)
+        let bBox = this.fontBold.textBounds(this.label, 0, 0, this.fontsize)
+        this.textData.label = bBox
+        this.textData.label.descent = sketch.textDescent()
+        this.textData.label.width = sketch.textWidth(this.label)
 
-      this.textData.height = bBox.h + this.textData.label.descent
+        this.textData.height = bBox.h + this.textData.label.descent
+      }
 
       // sublabel sizes
-      if (subLabel) {
+      if (this.subLabel) {
         sketch.textSize(this.subFontsize)
         let subBBox = this.fontBold.textBounds(this.subLabel, 0, 0, this.subFontsize)
         this.textData.subLabel = subBBox
-        this.textData.subLabel.width = sketch.textWidth(subLabel)
+        this.textData.subLabel.width = sketch.textWidth(this.subLabel)
 
         this.textData.height += subBBox.h
       }
@@ -210,34 +212,48 @@ export default {
       sketch.fill('black')
       sketch.textAlign(sketch.LEFT)
 
+      this.calculateTextSizes(sketch)
+
       let positionY
       let positionX
-      let subLabel = this.subLabel.length && this.showSubLabel ? this.subLabel : null
+      let height
 
-      this.calculateTextSizes(sketch, this.label, subLabel)
+      if (this.label) {
+        height = this.textData.label.h
+      } else if (this.subLabel) {
+        height = this.textData.subLabel.h
+      }
 
+      // TODO REFACTOR THIS !!!!!!!!
       if (this.labelPosition === 'top') {
-        positionY = this.textData.label.h + this.distance
+        positionY = height + this.distance
         positionX = this.distance
       } else if (this.labelPosition === 'bottom') {
-        positionY =  this.gridHeight + this.textData.label.h
+        positionY =  this.gridHeight + height
         positionX = this.distance
       } else if (this.labelPosition === 'right') {
         let top = (this.canvasHeight - this.textData.height) / 2
-        positionY =  this.textData.label.h + top
+        positionY =  height + top
         positionX = this.gridWidth
       }
 
-      sketch.textSize(this.fontSize)
-      sketch.text(this.label,
-                  positionX + this.$store.state.translateXLabel * this.zoom,
-                  positionY + this.$store.state.translateYLabel * this.zoom)
+      if (this.label) {
+        sketch.textSize(this.fontSize)
+        sketch.text(this.label,
+                    positionX + this.$store.state.translateXLabel * this.zoom,
+                    positionY + this.$store.state.translateYLabel * this.zoom)
 
-      if (subLabel) {
+        if (this.subLabel) {
+          sketch.textSize(this.subFontsize)
+          sketch.text(this.subLabel,
+                      positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.translateXSubLabel * this.zoom,
+                      positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.translateYSubLabel * this.zoom)
+        }
+      } else if (this.subLabel) {
         sketch.textSize(this.subFontsize)
-        sketch.text(subLabel,
-                    positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.translateXSubLabel * this.zoom,
-                    positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.translateYSubLabel * this.zoom)
+        sketch.text(this.subLabel,
+                    positionX + this.$store.state.translateXSubLabel * this.zoom,
+                    positionY + this.$store.state.translateYSubLabel * this.zoom)
       }
     },
     drawDot(sketch) {
@@ -292,10 +308,8 @@ export default {
     getPixels (dot) {
       let translateY = 0
       if (this.labelPosition === 'top') {
-        if (this.showSubLabel && this.subLabel.length) {
+        if (this.subLabel || this.label) {
           translateY = this.textData.height + this.distance
-        } else {
-          translateY = this.textData.label.h + this.distance
         }
       }
       let pixels = {

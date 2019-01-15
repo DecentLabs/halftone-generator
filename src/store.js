@@ -38,6 +38,7 @@ export default new Vuex.Store({
     labelPosition: 'top',
     fontSize: 36,
     showSubLabel: true,
+    showLabel: true,
     subLabelSize: 'small',
     translateXLabel: 0,
     translateYLabel: 0,
@@ -45,14 +46,6 @@ export default new Vuex.Store({
     translateYSubLabel: 0
   },
   getters: {
-    // getFontSize (state) {
-    //   let label = (state.fontSize + state.labelSize) * state.zoomValue
-    //   let subLabel = state.subLabelSize === 'small' ? label / 2.2 : label
-    //   return {
-    //     label: label,
-    //     sublabel: subLabel
-    //   }
-    // },
     getGeneratorType(state) {
       return state.generatorType
     },
@@ -81,6 +74,9 @@ export default new Vuex.Store({
     },
     updateShowSubLabel (state, value) {
       state.showSubLabel = value
+    },
+    updateShowLabel (state, value) {
+      state.showLabel = value
     },
     updateSubLabelSize (state, value) {
       state.subLabelSize = value
