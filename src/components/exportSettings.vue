@@ -169,9 +169,6 @@ h4 {
   margin-bottom: 10px;
   padding-top: 5px;
 }
-form {
-  flex-direction: row;
-}
 input, select {
   margin: 0;
 }
