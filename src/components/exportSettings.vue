@@ -205,4 +205,19 @@ label {
 button {
   margin: 20px 20px 10px 20px;
 }
+
+@media (max-width: 414px) {
+  .export-settings {
+    /* display: flex;
+    justify-content: center;
+    flex-direction: column; */
+  }
+  .popup {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    /* todo */
+    overflow-y: auto;
+  }
+}
 </style>

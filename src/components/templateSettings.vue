@@ -42,7 +42,6 @@ export default {
         let data = JSON.parse(reader.result)
         Object.keys(data).forEach((key) => {
           this.$store.state[key] = data[key]
-          console.log(this.$store.state, 'state');
         })
       }, false);
 

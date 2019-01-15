@@ -211,7 +211,7 @@ span {
   text-align: center;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 414px) {
   .section {
     justify-content: center;
   }
