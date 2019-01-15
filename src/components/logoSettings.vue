@@ -4,10 +4,10 @@
     <div class="section">
 
       <div class="input color-input">
-        <label>Select color</label>
+        <label>Project color</label>
         <div class="color-picker">
           <div :style="{backgroundColor: selectedColor}" class="selected-color" @click="selectColor"></div>
-          <color-palette v-if="select" @closePalette="close"></color-palette>
+          <color-palette :name="'project'" v-if="select" @closePalette="close"></color-palette>
         </div>
       </div>
 
@@ -30,8 +30,9 @@ export default {
     selectColor() {
       this.select = !this.select
     },
-    close() {
+    close(e) {
       this.select = false
+      this.$store.commit('updateColor', e.color)
     }
   },
   computed: {
@@ -43,29 +44,4 @@ export default {
 </script>
 
 <style scoped>
-.color-input {
-
-}
-.selected-color {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 5px;
-  border: 1px solid white;
-  display: inline-block;
-}
-.color-palette {
-  position: absolute;
-  left: 140%;
-  top: -40%;
-}
-.color-picker {
-  position: relative;
-  display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-  width: 32px;
-  height: 32px;
-}
 </style>

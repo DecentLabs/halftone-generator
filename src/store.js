@@ -29,6 +29,9 @@ export default new Vuex.Store({
     opacityLimit: 150,
     lightnessLimit: 220,
     color: '#000000',
+    mainColor: '#000000',
+    bgColor: '#ffffff',
+    labelColor: '#000000',
     zoomValue: 2,
     projectName: 'Decent',
     fileFormat: 'png',
@@ -111,6 +114,15 @@ export default new Vuex.Store({
     },
     updateColor (state, value) {
       state.color = value
+    },
+    updateMainColor (state, value) {
+      state.mainColor = value
+    },
+    updateBgColor (state, value) {
+      state.bgColor = value
+    },
+    updateLabelColor (state, value) {
+      state.labelColor = value
     },
     updateAnimationPaint(state, mode) {
       if (mode === ANIMATION_MODE.BASIC) {

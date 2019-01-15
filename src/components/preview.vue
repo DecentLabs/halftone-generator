@@ -27,7 +27,8 @@ export default {
       resizeCanvas: null,
       canvas: null,
       fontBold: null,
-      textData: { label: {}, subLabel: {}, height: 0 }
+      textData: { label: {}, subLabel: {}, height: 0 },
+      showGuides: false
     }
   },
   computed: {
@@ -64,10 +65,16 @@ export default {
       return this.textData.height
     },
     background () {
-      return this.transparent ? 'rgba(0, 0, 0, 0)' : 'white'
+      return this.transparent ? 'rgba(0, 0, 0, 0)' : this.$store.state.bgColor
     },
     zoom () {
       return this.exportZoom ? this.exportZoom : this.$store.getters.getZoomValue
+    },
+    mainColor () {
+      return this.$store.state.mainColor
+    },
+    labelColor () {
+      return this.$store.state.labelColor
     },
     color() {
       return this.$store.state.color
@@ -187,6 +194,7 @@ export default {
       this.drawFix(sketch)
       this.drawLogo(sketch)
       this.drawPaint(sketch)
+      this.guide(sketch)
 
       this.drawResovle(this.canvas)
     },
@@ -216,7 +224,7 @@ export default {
     },
     drawLabels (sketch) {
       sketch.strokeWeight(0)
-      sketch.fill('black')
+      sketch.fill(this.labelColor)
       sketch.textAlign(sketch.LEFT)
 
       this.calculateTextSizes(sketch)
@@ -264,7 +272,7 @@ export default {
       }
     },
     drawDot(sketch) {
-      sketch.fill('black')
+      sketch.fill(this.mainColor)
       sketch.strokeWeight(0)
 
       this.transformedData['1'].forEach((dot) => {
@@ -273,7 +281,7 @@ export default {
       })
     },
     drawFix(sketch) {
-      sketch.fill('black')
+      sketch.fill(this.mainColor)
       sketch.strokeWeight(0)
 
       this.transformedData['2'].forEach((dot) => {
@@ -282,7 +290,7 @@ export default {
       })
     },
     drawPaint(sketch) {
-      sketch.stroke('black')
+      sketch.stroke(this.mainColor)
       let stroke = this.radius * 2 * this.zoom
       sketch.strokeWeight(stroke)
 
@@ -303,10 +311,10 @@ export default {
           sketch.fill(this.color)
           sketch.ellipse(px.x, px.y, this.radius * 2 * this.zoom, this.radius * 2 * this.zoom)
         } else if (i > 4) {
-          sketch.fill('black')
+          sketch.fill(this.mainColor)
           sketch.ellipse(px.x, px.y, dot.size * this.zoom, dot.size * this.zoom)
         } else {
-          sketch.stroke('black')
+          sketch.stroke(this.mainColor)
           sketch.strokeWeight(this.radius * 2 * this.zoom)
           sketch.line(px.x, px.y, px.x2, px.y2)
         }
@@ -330,6 +338,14 @@ export default {
       }
 
       return pixels
+    },
+    guide(sketch) {
+      if (this.showGuides) {
+        sketch.stroke('orangered')
+        sketch.strokeWeight(1)
+        sketch.line(this.canvasWidth/2, 0, this.canvasWidth/2, this.canvasHeight)
+        sketch.line(0, this.canvasHeight/2, this.canvasWidth, this.canvasHeight/2)
+      }
     }
   }
 }

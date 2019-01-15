@@ -13,6 +13,7 @@
 <script>
 export default {
   name: 'colorPicker',
+  props: ['name'],
   data: function () {
     return {
       palette: [
@@ -26,20 +27,9 @@ export default {
       ]
     }
   },
-  computed: {
-    color: {
-      get() {
-        return this.$store.state.color
-      },
-      set(val) {
-        this.$store.commit('updateColor', val)
-      }
-    }
-  },
   methods: {
     selectColor(val) {
-      this.color = val
-      this.$emit('closePalette')
+      this.$emit('closePalette', {color: val, name: this.name})
     }
   }
 }

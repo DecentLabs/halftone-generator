@@ -75,6 +75,14 @@
                       :value="translateYSubLabel"
                       :name="'translateYSubLabel'"></number-input>
       </div>
+
+      <div class="input color-input">
+        <label>Label color</label>
+        <div class="color-picker">
+          <div :style="{backgroundColor: labelColor}" class="selected-color" @click="selectColor()"></div>
+          <color-palette :name="'label'" v-if="select" @closePalette="close"></color-palette>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -84,16 +92,32 @@
 import vueSlider from 'vue-slider-component'
 import numberInput from './numberInput.vue'
 import checkbox from './checkbox.vue'
+import colorPalette from './colorPicker.vue'
 
 export default {
   name: 'label-settings',
-  components: { vueSlider, numberInput, checkbox },
+  components: { vueSlider, numberInput, checkbox, colorPalette },
+  data: function () {
+    return {
+      select: false
+    }
+  },
   methods: {
+    selectColor(type) {
+      this.select = !this.select
+    },
+    close(e) {
+      this.select = false
+      this.$store.commit('updateLabelColor', e.color)
+    },
     valueChanged (e) {
       this[e.name] = e.value
     }
   },
   computed: {
+    labelColor () {
+      return this.$store.state.labelColor
+    },
     translateXLabel: {
       get () {
         return this.$store.state.translateXLabel
