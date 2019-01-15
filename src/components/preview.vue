@@ -32,7 +32,13 @@ export default {
   },
   computed: {
     maxLabelWidth () {
-      let arr = [this.textData.label.width, this.textData.subLabel.width]
+      let arr = [0]
+      if (this.label && this.textData.label.width) {
+        arr.push(this.textData.label.width)
+      }
+      if (this.subLabel && this.textData.subLabel.width) {
+        arr.push(this.textData.subLabel.width)
+      }
       return Math.max(...arr)
     },
     labelPosition () {
@@ -104,7 +110,7 @@ export default {
     },
     canvasWidth() {
       let width = this.gridWidth
-      if (this.labelPosition === 'right') {
+      if (this.labelPosition === 'right' && (this.label || this.subLabel)) {
         width += this.maxLabelWidth + this.distance*2
       }
       return width
@@ -186,6 +192,7 @@ export default {
     },
     calculateTextSizes (sketch) {
       this.textData.height = 0
+
       // label sizes
       if (this.label) {
         sketch.textSize(this.fontSize)
