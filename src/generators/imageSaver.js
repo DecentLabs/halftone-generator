@@ -10,7 +10,7 @@ function imageSaver(options) {
   let promises2 = []
 
   const zip = new JSZip();
-  let folder = zip.folder(Store.state.projectName)
+  let folder = zip.folder(Store.state.generator.projectName)
   let canvasList = []
 
   let result = createCanvasList()
@@ -73,7 +73,7 @@ function imageSaver(options) {
       })
 
       Promise.all(promises2).then((values) => {
-        let extension = Store.state.fileFormat
+        let extension = Store.state.generator.fileFormat
         values.forEach((val) => {
           folder.file(`${val.name}.${extension}`, val.data);
         })
@@ -88,7 +88,7 @@ function imageSaver(options) {
 }
 
 function createCanvasList () {
-  let generatorType = Store.state.generatorType
+  let generatorType = Store.state.generator.generatorType
   let compList = []
   let data = generatorType === 'logo' ? Object.keys(PROJECT_STATES) : [ generatorType] // TODO refact
   let promises = []
@@ -102,7 +102,7 @@ function createCanvasList () {
   data.forEach((c) => {
     let name = generatorType === 'logo' ? `${generatorType}_${c}` : c
     createComp(name, PROJECT_STATES[c], false)
-    if (Store.state.alphaExport) {
+    if (Store.state.generator.alphaExport) {
       createComp(`${name}_alpha`, PROJECT_STATES[c], true)
     }
   })

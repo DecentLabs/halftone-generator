@@ -33,18 +33,18 @@ export default {
   computed: {
     xSize: {
       set(val) {
-        this.$store.commit('updateGridSize', {x: val})
+        this.$store.commit('generator/updateGridSize', {x: val})
       },
       get() {
-        return this.$store.state.gridSize.x
+        return this.$store.state.generator.gridSize.x
       }
     },
     ySize: {
       set(val) {
-        this.$store.commit('updateGridSize', {y: val})
+        this.$store.commit('generator/updateGridSize', {y: val})
       },
       get() {
-        return this.$store.state.gridSize.y
+        return this.$store.state.generator.gridSize.y
       }
     }
   }

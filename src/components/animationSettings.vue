@@ -24,23 +24,23 @@
 export default {
   name: 'animation-settings',
   mounted () {
-    this.$store.commit('updateAnimationMode', 'basic')
+    this.$store.commit('generator/updateAnimationMode', 'basic')
   },
   computed: {
     loop: {
       set(val) {
-        this.$store.commit('updateLoop', val)
+        this.$store.commit('generator/updateLoop', val)
       },
       get() {
-        return this.$store.state.loop
+        return this.$store.state.generator.loop
       }
     },
     animationMode: {
       set(val) {
-        this.$store.commit('updateAnimationMode', val)
+        this.$store.commit('generator/updateAnimationMode', val)
       },
       get() {
-        return this.$store.state.animationMode
+        return this.$store.state.generator.animationMode
       }
     }
   }

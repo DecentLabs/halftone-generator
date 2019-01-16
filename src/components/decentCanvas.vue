@@ -26,15 +26,15 @@ export default {
   components: { preview },
   computed: {
     generatorType () {
-      return this.$store.state.generatorType
+      return this.$store.state.generator.generatorType
     },
     projectStates () {
-      return this.$store.getters.getProjectStates
+      return this.$store.getters['generator/getProjectStates']
     }
   },
   watch: {
     generatorType() {
-      this.$store.dispatch('generateGrid')
+      this.$store.dispatch('generator/generateGrid')
     }
   }
 }

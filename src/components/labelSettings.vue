@@ -108,7 +108,7 @@ export default {
     },
     close(e) {
       this.select = false
-      this.$store.commit('updateLabelColor', e.color)
+      this.$store.commit('generator/updateLabelColor', e.color)
     },
     valueChanged (e) {
       this[e.name] = e.value
@@ -116,94 +116,94 @@ export default {
   },
   computed: {
     labelColor () {
-      return this.$store.state.labelColor
+      return this.$store.state.generator.labelColor
     },
     translateXLabel: {
       get () {
-        return this.$store.state.translateXLabel
+        return this.$store.state.generator.translateXLabel
       },
       set (val) {
-        this.$store.commit('updateTranslateXLabel', val)
+        this.$store.commit('generator/updateTranslateXLabel', val)
       }
     },
     translateYLabel: {
       get () {
-        return this.$store.state.translateYLabel
+        return this.$store.state.generator.translateYLabel
       },
       set (val) {
-        this.$store.commit('updateTranslateYLabel', val)
+        this.$store.commit('generator/updateTranslateYLabel', val)
       }
     },
     translateXSubLabel: {
       get () {
-        return this.$store.state.translateXSubLabel
+        return this.$store.state.generator.translateXSubLabel
       },
       set (val) {
-        this.$store.commit('updateTranslateXSubLabel', val)
+        this.$store.commit('generator/updateTranslateXSubLabel', val)
       }
     },
     translateYSubLabel: {
       get () {
-        return this.$store.state.translateYSubLabel
+        return this.$store.state.generator.translateYSubLabel
       },
       set (val) {
-        this.$store.commit('updateTranslateYSubLabel', val)
+        this.$store.commit('generator/updateTranslateYSubLabel', val)
       }
     },
     showSubLabel: {
       get () {
-        return this.$store.state.showSubLabel
+        return this.$store.state.generator.showSubLabel
       },
       set (val) {
-        this.$store.commit('updateShowSubLabel', val)
+        this.$store.commit('generator/updateShowSubLabel', val)
       }
     },
     showLabel: {
       get () {
-        return this.$store.state.showLabel
+        return this.$store.state.generator.showLabel
       },
       set (val) {
-        this.$store.commit('updateShowLabel', val)
+        this.$store.commit('generator/updateShowLabel', val)
       }
     },
     subLabelSize: {
       get () {
-        return this.$store.state.subLabelSize
+        return this.$store.state.generator.subLabelSize
       },
       set (val) {
-        this.$store.commit('updateSubLabelSize', val)
+        this.$store.commit('generator/updateSubLabelSize', val)
       }
     },
     fontSize: {
       get () {
-        return this.$store.state.fontSize
+        return this.$store.state.generator.fontSize
       },
       set (val) {
-        this.$store.commit('updateFontSize', val)
+        this.$store.commit('generator/updateFontSize', val)
       }
     },
     labelPosition: {
       get () {
-        return this.$store.state.labelPosition
+        return this.$store.state.generator.labelPosition
       },
       set (val) {
-        this.$store.commit('updateLabelPosition', val)
+        this.$store.commit('generator/updateLabelPosition', val)
       }
     },
     label: {
       get () {
-        return this.$store.state.labelName
+        return this.$store.state.generator.labelName
       },
       set (val) {
-        this.$store.commit('updateLabelName', val)
+        this.$store.commit('generator/updateLabelName', val)
       }
     },
     subLabel: {
       get () {
-        return this.$store.state.subLabel
+        return this.$store.state.generator.subLabel
       },
       set (val) {
-        this.$store.commit('updateSubLabel', val)
+        this.$store.commit('generator/updateSubLabel', val)
       }
     }
   }

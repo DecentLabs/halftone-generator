@@ -10,6 +10,7 @@ import generator from './components/generator.vue'
 export default {
   name: 'app',
   components: { generator },
+  mounted () {}
 }
 </script>
 

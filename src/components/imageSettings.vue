@@ -49,34 +49,34 @@ export default {
   computed: {
     imageUrl: {
       set(val) {
-        this.$store.commit('updateImageUrl', val)
+        this.$store.commit('generator/updateImageUrl', val)
       },
       get () {
-        return this.$store.state.imageUrl
+        return this.$store.state.generator.imageUrl
       }
     },
     imageRes: {
       set(val) {
-        this.$store.commit('updateImageRes', val)
+        this.$store.commit('generator/updateImageRes', val)
       },
       get () {
-        return this.$store.state.imageRes
+        return this.$store.state.generator.imageRes
       }
     },
     opacity: {
       set(val) {
-        this.$store.commit('updateOpacityLimit', val)
+        this.$store.commit('generator/updateOpacityLimit', val)
       },
       get () {
-        return this.$store.state.opacityLimit
+        return this.$store.state.generator.opacityLimit
       }
     },
     lightness: {
       set(val) {
-        this.$store.commit('updateLightnessLimit', val)
+        this.$store.commit('generator/updateLightnessLimit', val)
       },
       get () {
-        return this.$store.state.lightnessLimit
+        return this.$store.state.generator.lightnessLimit
       }
     }
   },

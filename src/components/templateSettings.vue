@@ -7,16 +7,23 @@
         <select v-model="templateName">
           <option value="beer">beer</option>
           <option value="decent">decent logo</option>
-          <!-- <option value="decent2">decent logo2</option> -->
         </select>
       </div>
-    </div>
 
-    <div class="input">
-      <label class="file" for="file">Choose image</label>
-      <input name="file" type="file" accept="application/json" @change="dataInput">
-    </div>
+      <div class="input">
+        <label>Choose project</label>
+        <select v-model="selectedProject">
+          <option disabled value="null">Select one</option>
+          <option v-for="(value, key) in projectList">{{key}}</option>
+        </select>
+      </div>
 
+      <div class="input">
+        <label class="file" for="file">Choose image</label>
+        <input name="file" type="file" accept="application/json" @change="dataInput">
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -26,11 +33,22 @@ export default {
   computed: {
     templateName: {
       set(val) {
-        this.$store.commit('updateTemplateName', val)
+        this.$store.commit('generator/updateTemplateName', val)
       },
       get() {
-        return this.$store.state.templateName
+        return this.$store.state.generator.templateName
       }
+    },
+    selectedProject: {
+      set(val) {
+        this.$store.dispatch('user/selectProject', val)
+      },
+      get() {
+        return this.$store.state.user.selectedProject
+      }
+    },
+    projectList () {
+      return this.$store.state.user.projectList
     }
   },
   methods: {

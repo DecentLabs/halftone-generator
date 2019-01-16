@@ -5,7 +5,7 @@
       <div class="close" @click="close">x</div>
 
       <h2>Export: {{generatorType}}</h2>
-      <form class="" action="index.html" method="post">
+      <form>
 
         <div class="row">
           <h4>Project name</h4>
@@ -81,30 +81,30 @@ export default {
   computed: {
     fileFormat: {
       get () {
-        return this.$store.state.fileFormat
+        return this.$store.state.generator.fileFormat
       },
       set (val) {
-        this.$store.commit('updateFileFormat', val)
+        this.$store.commit('generator/updateFileFormat', val)
       }
     },
     alphaExport: {
       get () {
-        return this.$store.state.alphaExport
+        return this.$store.state.generator.alphaExport
       },
       set (val) {
-        this.$store.commit('updateAlphaExport', val)
+        this.$store.commit('generator/updateAlphaExport', val)
       }
     },
     projectName: {
       get () {
-        return this.$store.state.projectName
+        return this.$store.state.generator.projectName
       },
       set (val) {
-        this.$store.commit('updateProjectName', val)
+        this.$store.commit('generator/updateProjectName', val)
       }
     },
     generatorType () {
-      return this.$store.state.generatorType
+      return this.$store.state.generator.generatorType
     }
   },
   methods: {
@@ -146,7 +146,6 @@ export default {
   margin-top: 200px;
   border-radius: 5px;
   position: relative;
-
 }
 .close {
   position: absolute;
@@ -159,8 +158,6 @@ export default {
 h2 {
   padding: 0;
   margin-bottom: 20px;
-  /* margin-top: -10px;
-  margin-left: -10px; */
   width: 100%;
   text-align: left;
 }
@@ -207,11 +204,6 @@ button {
 }
 
 @media (max-width: 414px) {
-  .export-settings {
-    /* display: flex;
-    justify-content: center;
-    flex-direction: column; */
-  }
   .popup {
     margin: 0;
     width: 100%;

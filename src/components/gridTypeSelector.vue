@@ -18,11 +18,11 @@ export default {
   computed: {
     generatorType: {
       get() {
-        return this.$store.state.generatorType
+        return this.$store.state.generator.generatorType
       },
       set(val) {
-        this.$store.commit('updateGeneratorType', val)
-        this.$store.dispatch('setPreset')
+        this.$store.commit('generator/updateGeneratorType', val)
+        this.$store.dispatch('generator/setPreset')
       }
     }
   },

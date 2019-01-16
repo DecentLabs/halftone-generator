@@ -32,12 +32,12 @@ export default {
     },
     close(e) {
       this.select = false
-      this.$store.commit('updateColor', e.color)
+      this.$store.commit('generator/updateColor', e.color)
     }
   },
   computed: {
     selectedColor() {
-      return this.$store.state.color
+      return this.$store.state.generator.color
     }
   }
 }

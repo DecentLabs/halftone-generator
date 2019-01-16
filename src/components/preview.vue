@@ -43,56 +43,56 @@ export default {
       return Math.max(...arr)
     },
     labelPosition () {
-      return this.$store.state.labelPosition
+      return this.$store.state.generator.labelPosition
     },
     label () {
-      let label = this.$store.state.labelName
+      let label = this.$store.state.generator.labelName
       return label.length && this.showLabel ? label : null
-      // return this.$store.state.labelName
+      // return this.$store.state.generator.labelName
     },
     subLabel () {
-      let label = this.$store.state.subLabel
+      let label = this.$store.state.generator.subLabel
       return label.length && this.showSubLabel ? label : null
-      // return this.$store.state.subLabel
+      // return this.$store.state.generator.subLabel
     },
     fontSize () {
-      return this.$store.state.fontSize * this.zoom
+      return this.$store.state.generator.fontSize * this.zoom
     },
     subFontsize () {
-      return this.$store.state.subLabelSize === 'small' ? this.fontSize / 2.2 : this.fontSize
+      return this.$store.state.generator.subLabelSize === 'small' ? this.fontSize / 2.2 : this.fontSize
     },
     textHeight () {
       return this.textData.height
     },
     background () {
-      return this.transparent ? 'rgba(0, 0, 0, 0)' : this.$store.state.bgColor
+      return this.transparent ? 'rgba(0, 0, 0, 0)' : this.$store.state.generator.bgColor
     },
     zoom () {
-      return this.exportZoom ? this.exportZoom : this.$store.getters.getZoomValue
+      return this.exportZoom ? this.exportZoom : this.$store.getters['generator/getZoomValue']
     },
     mainColor () {
-      return this.$store.state.mainColor
+      return this.$store.state.generator.mainColor
     },
     labelColor () {
-      return this.$store.state.labelColor
+      return this.$store.state.generator.labelColor
     },
     color() {
-      return this.$store.state.color
+      return this.$store.state.generator.color
     },
     transformedData() {
-      return this.$store.getters.getTransformedData
+      return this.$store.getters['generator/getTransformedData']
     },
     distance() {
-      return this.$store.state.distance * this.zoom
+      return this.$store.state.generator.distance * this.zoom
     },
     radius() {
-      return this.$store.state.radius
+      return this.$store.state.generator.radius
     },
     frameRate() {
-      return this.$store.state.frameRate
+      return this.$store.state.generator.frameRate
     },
     grid() {
-      return this.$store.state.grid
+      return this.$store.state.generator.grid
     },
     gridHeight () {
       if (this.grid.length) {
@@ -126,16 +126,16 @@ export default {
       return this.distance * 4
     },
     generatorType() {
-      return this.$store.state.generatorType
+      return this.$store.state.generator.generatorType
     },
     wrapLabel () {
-      return this.$store.state.wrapLabel
+      return this.$store.state.generator.wrapLabel
     },
     showSubLabel () {
-      return this.$store.state.showSubLabel
+      return this.$store.state.generator.showSubLabel
     },
     showLabel () {
-      return this.$store.state.showLabel
+      return this.$store.state.generator.showLabel
     }
   },
   watch: {
@@ -179,14 +179,15 @@ export default {
       sketch.frameRate(this.frameRate)
 
       sketch.textFont(this.fontBold)
+      // sketch.noLoop()
 
     },
     draw(sketch) {
       sketch.clear()
       sketch.background(this.background)
 
-      if (this.$store.state.loop && (this.generatorType !== 'logo')) {
-        this.$store.dispatch('transformData')
+      if (this.$store.state.generator.loop && (this.generatorType !== 'logo')) {
+        this.$store.dispatch('generator/transformData')
       }
 
       this.drawLabels(sketch)
@@ -255,20 +256,20 @@ export default {
       if (this.label) {
         sketch.textSize(this.fontSize)
         sketch.text(this.label,
-                    positionX + this.$store.state.translateXLabel * this.zoom,
-                    positionY + this.$store.state.translateYLabel * this.zoom)
+                    positionX + this.$store.state.generator.translateXLabel * this.zoom,
+                    positionY + this.$store.state.generator.translateYLabel * this.zoom)
 
         if (this.subLabel) {
           sketch.textSize(this.subFontsize)
           sketch.text(this.subLabel,
-                      positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.translateXSubLabel * this.zoom,
-                      positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.translateYSubLabel * this.zoom)
+                      positionX + this.textData.label.x - this.textData.subLabel.advance + this.$store.state.generator.translateXSubLabel * this.zoom,
+                      positionY + this.textData.subLabel.h + this.textData.label.descent + this.$store.state.generator.translateYSubLabel * this.zoom)
         }
       } else if (this.subLabel) {
         sketch.textSize(this.subFontsize)
         sketch.text(this.subLabel,
-                    positionX + this.$store.state.translateXSubLabel * this.zoom,
-                    positionY + this.$store.state.translateYSubLabel * this.zoom)
+                    positionX + this.$store.state.generator.translateXSubLabel * this.zoom,
+                    positionY + this.$store.state.generator.translateYSubLabel * this.zoom)
       }
     },
     drawDot(sketch) {

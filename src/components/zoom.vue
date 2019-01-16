@@ -10,7 +10,7 @@ export default {
   name: 'zoom',
   methods: {
     zoom(type) {
-      this.$store.commit('updateZoomValue', type)
+      this.$store.commit('generator/updateZoomValue', type)
     }
   }
 }

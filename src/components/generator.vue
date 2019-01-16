@@ -17,6 +17,7 @@
 
     <div class="editor">
       <button type="button" name="button" class="export-btn" @click="showExportSettings">Export settings</button>
+      <button type="button" name="button" class="save-btn" @click="showProjectSetting">Save project</button>
       <zoom></zoom>
     </div>
 
@@ -24,7 +25,11 @@
 
     <export-settings v-if="exportSettingsPopup"
                      @closeExportSettings="hideExportSettings"
-                     @save="save"></export-settings>
+                     @save="exportLogo"></export-settings>
+
+    <save-project-popup v-if="projectPopup"
+                        @closePopup="closePopup"
+                        @save="saveProject"></save-project-popup>
   </div>
 </template>
 
@@ -32,11 +37,12 @@
 import decentCanvas from './decentCanvas.vue'
 import commonSettings from './commonSettings.vue'
 import generatorTypeSelector from './gridTypeSelector.vue'
-// import animationSettings from './animationSettings.vue'
 import exportSettings from './exportSettings.vue'
 import imageSaver from './../generators/imageSaver.js'
 import labelSettings from './labelSettings.vue'
 import zoom from './zoom.vue'
+import saveProjectPopup from './saveProjectPopup'
+
 
 export default {
   name: 'generator',
@@ -44,29 +50,40 @@ export default {
     commonSettings,
     decentCanvas,
     generatorTypeSelector,
-    // animationSettings,
     exportSettings,
     labelSettings,
-    zoom
+    zoom,
+    saveProjectPopup
   },
   mounted () {
-    this.$store.dispatch('generateGrid')
+    this.$store.dispatch('user/getProjectList')
+    this.$store.dispatch('generator/generateGrid')
   },
   data: function () {
     return {
       showCommonSettings: false,
       showAnimSettings: false,
       showLabelSettings: false,
-      exportSettingsPopup: false
+      exportSettingsPopup: false,
+      projectPopup: false
     }
   },
   computed: {
     generatorType() {
-      return this.$store.getters.getGeneratorType
+      return this.$store.getters['generator/getGeneratorType']
     }
   },
   methods: {
-    save(options) {
+    showProjectSetting () {
+      this.projectPopup = true
+    },
+    closePopup () {
+      this.projectPopup = false
+    },
+    saveProject(e) {
+      this.$store.dispatch('user/saveProject', e.projectName)
+    },
+    exportLogo(options) {
       imageSaver(options)
       this.hideExportSettings()
     },

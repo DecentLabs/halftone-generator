@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="setting common-settings">
-
     <button id="generate-btn" type="button" name="button" @click="update">Update</button>
     <button id="reset-btn" type="button" name="button" @click="resetToPreset">Reset to preset</button>
 
@@ -61,9 +60,7 @@
           <color-palette :name="'bg'" v-if="selectBgColor" @closePalette="close"></color-palette>
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -104,79 +101,79 @@ export default {
     close(e) {
       if (e.name === 'bg') {
         this.selectBgColor = false
-        this.$store.commit('updateBgColor', e.color)
+        this.$store.commit('generator/updateBgColor', e.color)
       } else if (e.name === 'main') {
         this.selectMainColor = false
-        this.$store.commit('updateMainColor', e.color)
+        this.$store.commit('generator/updateMainColor', e.color)
       }
     },
     valueChanged (e) {
       this[e.name] = e.value
     },
     update() {
-      this.$store.dispatch('generateGrid')
+      this.$store.dispatch('generator/generateGrid')
     },
     resetToPreset() {
-      this.$store.dispatch('setPreset')
+      this.$store.dispatch('generator/setPreset')
     }
   },
   computed: {
     generatorType() {
-      return this.$store.getters.getGeneratorType
+      return this.$store.getters['generator/getGeneratorType']
     },
     mainColor () {
-      return this.$store.state.mainColor
+      return this.$store.state.generator.mainColor
     },
     bgColor () {
-      return this.$store.state.bgColor
+      return this.$store.state.generator.bgColor
     },
     loop: {
       set(val) {
-        this.$store.commit('updateLoop', val)
+        this.$store.commit('generator/updateLoop', val)
       },
       get() {
-        return this.$store.state.loop
+        return this.$store.state.generator.loop
       }
     },
     distance: {
       set(val) {
         if (val >= 1) {
-          this.$store.commit('updateDistance', val)
+          this.$store.commit('generator/updateDistance', val)
         }
       },
       get() {
-        return this.$store.state.distance
+        return this.$store.state.generator.distance
       }
     },
     radius: {
       set(val) {
         if (val > 0) {
-          this.$store.commit('updateRadius', val)
-          this.$store.dispatch('transformData')
+          this.$store.commit('generator/updateRadius', val)
+          this.$store.dispatch('generator/transformData')
         }
       },
       get() {
-        return this.$store.state.radius
+        return this.$store.state.generator.radius
       }
     },
     paintNum: {
       set(val) {
         if (val >= 0) {
-          this.$store.commit('updatePaintNum', val)
-          this.$store.dispatch('transformData')
+          this.$store.commit('generator/updatePaintNum', val)
+          this.$store.dispatch('generator/transformData')
         }
       },
       get() {
-        return this.$store.state.paintNum
+        return this.$store.state.generator.paintNum
       }
     },
     direction: {
       set(val) {
-        this.$store.commit('updateDirection', val)
-        this.$store.dispatch('transformData')
+        this.$store.commit('generator/updateDirection', val)
+        this.$store.dispatch('generator/transformData')
       },
       get() {
-        return this.$store.state.direction
+        return this.$store.state.generator.direction
       }
     }
   }
