@@ -144,7 +144,7 @@ export default {
         this.resizeCanvas(this.canvasWidth, this.canvasHeight)
       }
     },
-    distance(val) {
+    distance() {
       this.resizeCanvas(this.canvasWidth, this.canvasHeight)
     },
     name(val) {

@@ -103,7 +103,7 @@ export default {
     }
   },
   methods: {
-    selectColor(type) {
+    selectColor() {
       this.select = !this.select
     },
     close(e) {

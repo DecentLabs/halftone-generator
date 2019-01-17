@@ -1,5 +1,3 @@
-import TEMPLATES from './../templates'
-
 function dataTransform (grid, paintNum, radius, direction, logo) {
   let data = {
     0: [], // empty

@@ -11,7 +11,7 @@ function imageSaver(options) {
 
   const zip = new JSZip();
   let folder = zip.folder(Store.state.generator.projectName)
-  let canvasList = []
+  // let canvasList = []
 
   let result = createCanvasList()
   let compList = result.compList
@@ -22,7 +22,7 @@ function imageSaver(options) {
       options.exportSizes[defSize]).map(selected =>
       IMAGE_SIZES[selected])
 
-    canvases.forEach((c, index) => {
+    canvases.forEach((c) => {
       let canvas = c.canvas
       let canvasName = canvas.getAttribute('name')
       let aspect = canvas.width / canvas.height
@@ -44,7 +44,7 @@ function imageSaver(options) {
     })
 
     Promise.all(promises1).then((canvasData) => {
-      canvasData.forEach((canvasData, index) => {
+      canvasData.forEach((canvasData) => {
         exportSizes.forEach((size) => {
           promises2.push(new Promise((resolve, reject) => {
             let img = new Image()
