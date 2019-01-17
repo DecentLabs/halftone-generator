@@ -1,6 +1,6 @@
 import JSZip from 'jszip'
 import saveAs from 'file-saver';
-import Store from './../store.js'
+import Store from './../store'
 import preview from './../components/preview.vue'
 import Vue from 'vue'
 import { PROJECT_STATES, IMAGE_SIZES } from './../cfg/constants.js'
@@ -11,7 +11,6 @@ function imageSaver(options) {
 
   const zip = new JSZip();
   let folder = zip.folder(Store.state.generator.projectName)
-  // let canvasList = []
 
   let result = createCanvasList()
   let compList = result.compList

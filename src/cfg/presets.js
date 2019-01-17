@@ -1,5 +1,3 @@
-// import Store from './../store.js'
-// import { GENERATOR_TYPES } from './constants.js'
 import IMAGE from './../../public/assets/ring.jpg'
 
 export const PRESETS = {

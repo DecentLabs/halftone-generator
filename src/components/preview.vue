@@ -48,12 +48,10 @@ export default {
     label () {
       let label = this.$store.state.generator.labelName
       return label.length && this.showLabel ? label : null
-      // return this.$store.state.generator.labelName
     },
     subLabel () {
       let label = this.$store.state.generator.subLabel
       return label.length && this.showSubLabel ? label : null
-      // return this.$store.state.generator.subLabel
     },
     fontSize () {
       return this.$store.state.generator.fontSize * this.zoom
