@@ -10,7 +10,7 @@
         </select>
       </div>
 
-      <div class="input">
+      <div class="input" v-if="loggedin">
         <label>Choose project</label>
         <select v-model="selectedProject">
           <option disabled value="null">Select one</option>
@@ -49,6 +49,9 @@ export default {
     },
     projectList () {
       return this.$store.state.user.projectList
+    },
+    loggedin () {
+      return this.$store.getters['user/isLoggedIn']
     }
   },
   methods: {

@@ -16,8 +16,8 @@
     </form>
 
     <div class="editor">
-      <button type="button" name="button" class="export-btn" @click="showExportSettings">Export settings</button>
-      <button type="button" name="button" class="save-btn" @click="showProjectSetting">Save project</button>
+      <button type="button" class="export-btn" @click="showExportSettings">Export settings</button>
+      <button v-if="canWrite" type="button" class="save-btn" @click="showProjectSetting">Save project</button>
       <zoom></zoom>
     </div>
 
@@ -56,7 +56,6 @@ export default {
     saveProjectPopup
   },
   mounted () {
-    this.$store.dispatch('user/getProjectList')
     this.$store.dispatch('generator/generateGrid')
   },
   data: function () {
@@ -69,6 +68,9 @@ export default {
     }
   },
   computed: {
+    canWrite () {
+      return this.$store.state.user.canWrite
+    },
     generatorType() {
       return this.$store.getters['generator/getGeneratorType']
     }
