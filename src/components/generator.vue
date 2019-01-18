@@ -16,7 +16,7 @@
     </form>
 
     <div class="editor">
-      <button type="button" class="export-btn" @click="showExportSettings">Export settings</button>
+      <button v-if="canWrite" type="button" class="export-btn" @click="showExportSettings">Export settings</button>
       <button v-if="canWrite" type="button" class="save-btn" @click="showProjectSetting">Save project</button>
       <zoom></zoom>
     </div>
@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     canWrite () {
-      return this.$store.state.user.canWrite
+      return this.$store.getters['user/canWrite']
     },
     generatorType() {
       return this.$store.getters['generator/getGeneratorType']
@@ -235,6 +235,16 @@ span {
     justify-content: center;
   }
   .input, button {
+  }
+  button {
+    margin: 10px;
+  }
+  .zoom {
+    margin: 10px;
+    min-width: 70px;
+  }
+  .editor {
+    height: 55px;
   }
 }
 </style>

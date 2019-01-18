@@ -10,7 +10,7 @@
         </select>
       </div>
 
-      <div class="input" v-if="loggedin">
+      <div class="input">
         <label>Choose project</label>
         <select v-model="selectedProject">
           <option disabled value="null">Select one</option>
@@ -31,6 +31,9 @@
 export default {
   name: 'template-settings',
   computed: {
+    canWrite () {
+      return this.$store.getters['user/canWrite']
+    },
     templateName: {
       set(val) {
         this.$store.commit('generator/updateTemplateName', val)
@@ -49,9 +52,6 @@ export default {
     },
     projectList () {
       return this.$store.state.user.projectList
-    },
-    loggedin () {
-      return this.$store.getters['user/isLoggedIn']
     }
   },
   methods: {
@@ -73,6 +73,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css">
-</style>

@@ -9,7 +9,19 @@ export default {
     errors: [],
     projectList: null,
     selectedProject: null,
-    canWrite: false
+    users: null
+  },
+  getters: {
+    canWrite (state) {
+      if (state.users && state.user) {
+        let valid = Object.keys(state.users).find((id) => {
+          return state.user.uid === id
+        })
+        return valid && state.users[valid].canWrite
+      } else {
+        return false
+      }
+    }
   },
   actions: {
     login (context) {
@@ -23,14 +35,16 @@ export default {
           localStorage.setItem('user', JSON.stringify(result.user))
           localStorage.setItem('token', JSON.stringify(result.credential.accessToken))
           context.dispatch('getProjectList')
+          context.dispatch('getUsers')
         }).catch(function(error) {
           context.state.errors.push(error)
         })
       } else {
         context.state.token = JSON.parse(token)
         context.state.user = JSON.parse(user)
+        context.dispatch('getProjectList')
+        context.dispatch('getUsers')
       }
-      context.dispatch('userCanWrite')
     },
     logout (context) {
       firebase.auth().signOut().then(() => {
@@ -52,17 +66,9 @@ export default {
         })
       }
     },
-    userCanWrite (context) {
+    getUsers (context) {
       db.ref('users').once('value').then((res) => {
-        let users = res.val()
-        let valid = Object.keys(users).find((id) => {
-          return context.state.user.uid === id
-        })
-        if (valid && users[valid].canWrite ) {
-          context.state.user.canWrite = true
-        } else {
-          context.state.user.canWrite = false
-        }
+        context.state.users = res.val()
       }, (error) => {
         context.state.errors.push(error)
       })

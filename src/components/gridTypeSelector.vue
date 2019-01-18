@@ -18,9 +18,9 @@
            @click="select('template')">TEMPLATE</label>
 
     <div class="user">
-      <p v-if="!user" @click="login">Login</p>
-      <p v-if="user">{{user.displayName}}</p>
-      <p v-if="user" @click="logout">Logout</p>
+
+      <p v-if="!user" class="sign-in" @click="login">Sign In</p>
+      <p v-if="user" @click="logout">Sign out</p>
       <img v-if="user" :src="user.photoURL" alt="profile-picture">
     </div>
 
@@ -68,14 +68,14 @@ export default {
     background-color: white;
   }
   .generator-type-selector label {
-    width: calc(100% / 5);
+    width: calc(90% / 4);
     display: inline-block;
     padding: 10px;
     cursor: pointer;
     background-color: white;
     border-left: 1px solid rgba(230, 230, 230);
     font-weight: bold;
-    height: 35px;
+    height: 40px;
   }
   .generator-type-selector label:first-child {
     border-left: 0;
@@ -85,18 +85,51 @@ export default {
     color: white;
   }
   .user {
-    width: calc(100% / 5);
+    width: 10%;
     border-left: 1px solid rgba(230, 230, 230);
-    height: 35px;
+    height: 40px;
     font-size: 0.8em;
     display: flex;
     justify-content: space-between;
+    min-width: 125px;
   }
   .user p {
-    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    color: darkslateblue;
+    width: calc(100% - 40px);
+    /* text-decoration: underline; */
+  }
+  .user p:hover {
+    background-color: darkslateblue;
+    color: white;
   }
   .user img {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+  }
+  .user p.sign-in {
+    width: 100%;
+  }
+
+  @media (max-width: 414px) {
+    .user img {
+      display: none;
+    }
+    .user {
+      min-width: 70px;
+    }
+    .user p {
+      width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .generator-type-selector label {
+      padding-left: 5px;
+      padding-right: 5px;
+      font-size: 14px;
+    }
   }
 </style>
