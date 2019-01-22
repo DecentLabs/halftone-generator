@@ -43,7 +43,9 @@ export default {
     translateXLabel: 0,
     translateYLabel: 0,
     translateXSubLabel: 0,
-    translateYSubLabel: 0
+    translateYSubLabel: 0,
+    fixCanvas: true,
+    canvasSize: {width: 1536, height: 768}
   },
   getters: {
     getGeneratorType(state) {
@@ -60,6 +62,9 @@ export default {
     }
   },
   mutations: {
+    updateFixCanvas (state, value) {
+      state.fixCanvas = value
+    },
     updateTranslateXLabel (state, value) {
       state.translateXLabel = value
     },

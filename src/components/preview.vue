@@ -107,18 +107,26 @@ export default {
       }
     },
     canvasHeight() {
-      let height = this.gridHeight
-      if ((this.label || this.subLabel) && (this.labelPosition === 'top' || this.labelPosition === 'bottom')) {
-        height += this.textData.height + this.distance
+      if (this.$store.state.fixCanvas) {
+        return this.$store.state.canvasSize.height
+      } else {
+        let height = this.gridHeight
+        if ((this.label || this.subLabel) && (this.labelPosition === 'top' || this.labelPosition === 'bottom')) {
+          height += this.textData.height + this.distance
+        }
+        return height
       }
-      return height
     },
     canvasWidth() {
-      let width = this.gridWidth
-      if (this.labelPosition === 'right' && (this.label || this.subLabel)) {
-        width += this.maxLabelWidth + this.distance*2
+      if (this.$store.state.fixCanvas) {
+        return this.$store.state.canvasSize.width
+      } else {
+        let width = this.gridWidth
+        if (this.labelPosition === 'right' && (this.label || this.subLabel)) {
+          width += this.maxLabelWidth + this.distance*2
+        }
+        return width
       }
-      return width
     },
     margin() {
       return this.distance * 4
