@@ -107,8 +107,8 @@ export default {
       }
     },
     canvasHeight() {
-      if (this.$store.state.fixCanvas) {
-        return this.$store.state.canvasSize.height
+      if (this.$store.state.generator.fixCanvas) {
+        return this.$store.state.generator.canvasSize.height * this.zoom
       } else {
         let height = this.gridHeight
         if ((this.label || this.subLabel) && (this.labelPosition === 'top' || this.labelPosition === 'bottom')) {
@@ -118,8 +118,8 @@ export default {
       }
     },
     canvasWidth() {
-      if (this.$store.state.fixCanvas) {
-        return this.$store.state.canvasSize.width
+      if (this.$store.state.generator.fixCanvas) {
+        return this.$store.state.generator.canvasSize.width * this.zoom
       } else {
         let width = this.gridWidth
         if (this.labelPosition === 'right' && (this.label || this.subLabel)) {

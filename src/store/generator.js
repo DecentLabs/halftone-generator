@@ -44,8 +44,8 @@ export default {
     translateYLabel: 0,
     translateXSubLabel: 0,
     translateYSubLabel: 0,
-    fixCanvas: true,
-    canvasSize: {width: 1536, height: 768}
+    fixCanvas: false,
+    canvasSize: {width: 1128, height: 191}
   },
   getters: {
     getGeneratorType(state) {
