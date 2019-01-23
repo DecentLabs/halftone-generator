@@ -45,7 +45,8 @@ export default {
     translateXSubLabel: 0,
     translateYSubLabel: 0,
     fixCanvas: false,
-    canvasSize: {width: 1128, height: 191}
+    canvasSize: {width: 1128, height: 191},
+    loadingTemplate: false
   },
   getters: {
     getGeneratorType(state) {
@@ -209,34 +210,39 @@ export default {
       }
     },
     generateGrid(context) {
-      let generatorType = context.state.generatorType
+      if (!context.state.loadingTemplate) {
+        let generatorType = context.state.generatorType
 
-      if (generatorType === 'image') {
-        context.commit('updateGrid', [])
-        context.dispatch('transformData')
+        if (generatorType === 'image') {
+          context.commit('updateGrid', [])
+          context.dispatch('transformData')
 
-        gridGenerator.imageGrid(
-          context.state.imageUrl,
-          context.state.imageRes,
-          context.state.opacityLimit,
-          context.state.lightnessLimit).then((res) => {
-            context.commit('updateGrid', res)
-            context.dispatch('transformData')
-          })
-      } else {
-        let grid = []
+          gridGenerator.imageGrid(
+            context.state.imageUrl,
+            context.state.imageRes,
+            context.state.opacityLimit,
+            context.state.lightnessLimit).then((res) => {
+              context.commit('updateGrid', res)
+              context.dispatch('transformData')
+            })
+        } else {
+          let grid = []
 
-        if (generatorType === 'grid') {
-          grid = gridGenerator.simpleGrid(context.state.gridSize.x, context.state.gridSize.y)
-        } else if (generatorType === 'template') {
-          grid = gridGenerator.templateGrid(context.state.templateName)
-        } else if (generatorType === 'logo') {
-          grid = gridGenerator.logoGrid()
+          if (generatorType === 'grid') {
+            grid = gridGenerator.simpleGrid(context.state.gridSize.x, context.state.gridSize.y)
+          } else if (generatorType === 'template') {
+            grid = gridGenerator.templateGrid(context.state.templateName)
+          } else if (generatorType === 'logo') {
+            grid = gridGenerator.logoGrid()
+          }
+
+          context.commit('updateGrid', grid)
+          context.dispatch('transformData')
         }
-
-        context.commit('updateGrid', grid)
-        context.dispatch('transformData')
+      } else {
+        context.state.loadingTemplate = false
       }
+
     },
     transformData(context) {
       context.commit('updateAnimationPaint', context.state.animationMode)

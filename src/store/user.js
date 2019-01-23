@@ -82,7 +82,13 @@ export default {
     },
     selectProject (context, val) {
       context.state.selectedProject = val
-      context.rootState.generator = JSON.parse(context.state.projectList[val].data)
+      context.rootState.generator.loadingTemplate = true
+      let data = JSON.parse(context.state.projectList[val].data)
+      Object.keys(data).forEach((key) => {
+        if (key !== 'loadingTemplate') {
+          context.rootState.generator[key] = data[key]
+        }
+      })
     }
   }
 }
