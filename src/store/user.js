@@ -55,7 +55,7 @@ export default {
       })
     },
     saveProject (context, projectName) {
-      if (context.state.user && context.state.canWrite) {
+      if (context.state.user && context.getters['canWrite']) {
         let data = JSON.stringify(context.rootState.generator)
         db.ref(`projects/${projectName}`).set({
           data: data
