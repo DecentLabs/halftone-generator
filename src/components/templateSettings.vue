@@ -19,7 +19,7 @@
       </div>
 
       <div class="input">
-        <label class="file" for="file">Choose image</label>
+        <label class="file" for="file">Add config</label>
         <input name="file" type="file" accept="application/json" @change="dataInput">
       </div>
 
@@ -60,9 +60,14 @@ export default {
       let reader  = new FileReader()
 
       reader.addEventListener("load", () => {
+        this.$store.state.generator.loadingTemplate = true
         let data = JSON.parse(reader.result)
+        // TODO
+        data = data.generator ? data.generator : data
         Object.keys(data).forEach((key) => {
-          this.$store.state[key] = data[key]
+          if (key !== 'loadingTemplate') {
+            this.$store.state.generator[key] = data[key]
+          }
         })
       }, false);
 
