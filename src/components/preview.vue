@@ -180,6 +180,8 @@ export default {
       this.resizeCanvas = function(width, height) {
         sketch.resizeCanvas(width, height)
       }
+      let density = sketch.displayDensity()
+      sketch.pixelDensity(density)
       this.canvas = sketch.createCanvas(this.canvasWidth, this.canvasHeight)
       this.canvas.canvas.setAttribute('name', this.name)
       sketch.frameRate(this.frameRate)
