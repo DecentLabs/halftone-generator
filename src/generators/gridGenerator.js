@@ -1,6 +1,7 @@
 import TEMPLATES from './../templates'
 
 function templateGrid (name) {
+  console.log(name, 2);
   return TEMPLATES[name]
 }
 

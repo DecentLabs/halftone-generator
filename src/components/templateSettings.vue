@@ -37,6 +37,7 @@ export default {
     templateName: {
       set(val) {
         this.$store.commit('generator/updateTemplateName', val)
+        this.$store.dispatch('generator/generateGrid')
       },
       get() {
         return this.$store.state.generator.templateName

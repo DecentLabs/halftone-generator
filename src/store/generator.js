@@ -210,6 +210,7 @@ export default {
       }
     },
     generateGrid(context) {
+      console.log(context.state.loadingTemplate, 'load');
       if (!context.state.loadingTemplate) {
         let generatorType = context.state.generatorType
 
@@ -231,6 +232,7 @@ export default {
           if (generatorType === 'grid') {
             grid = gridGenerator.simpleGrid(context.state.gridSize.x, context.state.gridSize.y)
           } else if (generatorType === 'template') {
+            console.log(context.state.templateName, 'name');
             grid = gridGenerator.templateGrid(context.state.templateName)
           } else if (generatorType === 'logo') {
             grid = gridGenerator.logoGrid()
